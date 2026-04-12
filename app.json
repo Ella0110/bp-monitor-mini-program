@@ -4,6 +4,7 @@
     "pages/records/records",
     "pages/add-record/add-record",
     "pages/family/family",
+    "pages/join-family/join-family",
     "pages/settings/settings"
   ],
   "tabBar": {

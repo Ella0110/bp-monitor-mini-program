@@ -47,3 +47,17 @@ page {
   font-weight: 700;
   text-align: center;
 }
+
+.tap-row {
+  min-height: 96rpx;
+  display: flex;
+  align-items: center;
+}
+
+.muted {
+  color: var(--text2);
+}
+
+.danger-text {
+  color: var(--red);
+}

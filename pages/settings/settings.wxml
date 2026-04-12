@@ -1,0 +1,23 @@
+<scroll-view scroll-y class="container">
+  <text class="sec-label">成员权限</text>
+  <view wx:if="{{!members.length && !loading}}" class="empty-card">
+    <text>暂无可配置成员</text>
+  </view>
+
+  <view wx:for="{{members}}" wx:key="openid" class="member-card">
+    <view>
+      <text class="member-name">{{item.nickname || '家人'}}</text>
+      <text class="member-sub">普通成员</text>
+    </view>
+    <view class="perm-row">
+      <view class="perm" bindtap="onPermissionToggle" data-openid="{{item.openid}}" data-key="canWrite">
+        <text>可录入</text>
+        <view class="switch {{item.canWrite ? 'on' : ''}}"><view class="knob"></view></view>
+      </view>
+      <view class="perm" bindtap="onPermissionToggle" data-openid="{{item.openid}}" data-key="canEdit">
+        <text>可编辑</text>
+        <view class="switch {{item.canEdit ? 'on' : ''}}"><view class="knob"></view></view>
+      </view>
+    </view>
+  </view>
+</scroll-view>

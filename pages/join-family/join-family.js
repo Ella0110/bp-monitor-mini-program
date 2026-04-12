@@ -7,6 +7,18 @@ Page({
 
   onLoad(options) {
     this.setData({ inviteToken: options.inviteToken || '' })
+    this.loadInviteInfo()
+  },
+
+  async loadInviteInfo() {
+    if (!this.data.inviteToken) return
+    const res = await wx.cloud.callFunction({
+      name: 'getInviteInfo',
+      data: { inviteToken: this.data.inviteToken },
+    })
+    if (res.result && res.result.success) {
+      this.setData({ displayName: res.result.displayName || '家庭健康记录' })
+    }
   },
 
   async onJoin() {

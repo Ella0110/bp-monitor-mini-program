@@ -28,6 +28,7 @@ Use `docs/superpowers/specs/2026-04-12-blood-pressure-miniprogram-mvp-design.md`
 - `cloudfunctions/login/*`: Upsert user, return session context.
 - `cloudfunctions/createFamily/*`: Create family with `displayName`, invite code/token, admin member.
 - `cloudfunctions/getFamily/*`: Read family context for current user.
+- `cloudfunctions/getInviteInfo/*`: Read display-only invite information for the join confirmation page.
 - `cloudfunctions/joinFamily/*`: Join via `inviteToken` or `inviteCode`.
 - `cloudfunctions/updateMemberPermission/*`: Admin-only permission update.
 - `scripts/verify-health-rules.js`: Node smoke checks for reference-rule utilities.
@@ -513,6 +514,8 @@ git commit -m "feat: add shared cloud auth helpers"
 - Create: `cloudfunctions/createFamily/package.json`
 - Create: `cloudfunctions/getFamily/index.js`
 - Create: `cloudfunctions/getFamily/package.json`
+- Create: `cloudfunctions/getInviteInfo/index.js`
+- Create: `cloudfunctions/getInviteInfo/package.json`
 - Create: `cloudfunctions/joinFamily/index.js`
 - Create: `cloudfunctions/joinFamily/package.json`
 
@@ -655,6 +658,32 @@ exports.main = async (event) => {
 ```
 
 - [ ] **Step 5: Implement `joinFamily/index.js`**
+
+Before this step, add `getInviteInfo/index.js` so `pages/join-family` can display the correct family name before the user joins:
+
+```js
+const cloud = require('wx-server-sdk')
+
+cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
+const db = cloud.database()
+
+exports.main = async (event) => {
+  const { inviteToken } = event
+  if (!inviteToken) return { success: false, error: '邀请无效' }
+
+  const res = await db.collection('families')
+    .where({ inviteToken })
+    .field({ displayName: true })
+    .limit(1)
+    .get()
+
+  if (!res.data.length) return { success: false, error: '邀请已失效' }
+  return {
+    success: true,
+    displayName: res.data[0].displayName || '家庭健康记录',
+  }
+}
+```
 
 ```js
 const cloud = require('wx-server-sdk')
@@ -1169,6 +1198,7 @@ In DevTools, deploy these functions:
 login
 createFamily
 getFamily
+getInviteInfo
 joinFamily
 updateMemberPermission
 ```

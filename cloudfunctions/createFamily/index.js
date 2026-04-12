@@ -41,9 +41,20 @@ exports.main = async (event) => {
     },
   })
 
-  await db.collection('users').doc(OPENID).update({
+  const userRef = db.collection('users').doc(OPENID)
+  await userRef.update({
     data: { familyId: familyRes._id, role: 'admin' },
-  })
+  }).catch(() => userRef.set({
+    data: {
+      _id: OPENID,
+      nickname: event.nickname || '',
+      avatarUrl: event.avatarUrl || '',
+      familyId: familyRes._id,
+      role: 'admin',
+      preferences: {},
+      createdAt: db.serverDate(),
+    },
+  }))
 
   return { success: true, familyId: familyRes._id }
 }

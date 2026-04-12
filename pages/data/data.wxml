@@ -1,4 +1,45 @@
-<view class="shell">
-  <text class="shell-title">血压心率记录</text>
-  <text class="shell-subtitle">功能建设中。</text>
-</view>
+<scroll-view scroll-y class="container">
+  <view class="hero">
+    <text class="title">血压心率记录</text>
+    <view wx:if="{{latestRecord}}" class="latest-card">
+      <text class="time">最近一次：{{latestTime}}</text>
+      <view class="values">
+        <view><text class="num">{{latestRecord.systolic}}</text><text class="unit">高压</text></view>
+        <view><text class="num">{{latestRecord.diastolic}}</text><text class="unit">低压</text></view>
+        <view><text class="num">{{latestRecord.heartRate}}</text><text class="unit">心率</text></view>
+      </view>
+      <text class="status">血压{{latestBPStatus.label}} · 心率{{latestHRStatus.label}}</text>
+    </view>
+    <view wx:else class="latest-card empty-card">
+      <text>还没有记录</text>
+    </view>
+    <button class="add" bindtap="onAddRecord">＋ 添加记录</button>
+  </view>
+
+  <view class="toolbar">
+    <view class="periods">
+      <view wx:for="{{['7天','30天','90天']}}" wx:key="*this" class="period {{period===item?'active':''}}" bindtap="onPeriodChange" data-period="{{item}}">{{item}}</view>
+    </view>
+    <text class="all" bindtap="onAllRecords">全部记录 ></text>
+  </view>
+
+  <view class="section-head">
+    <text class="section-title">血压数据</text>
+    <text class="notice" bindtap="onBPNotice">?</text>
+  </view>
+  <view class="stat-card">
+    <view class="stat"><text class="stat-num">{{stats.bp.inRange}}</text><text>参考范围内</text></view>
+    <view class="stat"><text class="stat-num attention">{{stats.bp.attention}}</text><text>需关注</text></view>
+    <view class="stat"><text class="stat-num small">{{stats.avg.systolic}}/{{stats.avg.diastolic}}</text><text>均值</text></view>
+  </view>
+
+  <view class="section-head">
+    <text class="section-title">心率数据</text>
+    <text class="notice" bindtap="onHRNotice">?</text>
+  </view>
+  <view class="stat-card bottom">
+    <view class="stat"><text class="stat-num">{{stats.hr.inRange}}</text><text>参考范围内</text></view>
+    <view class="stat"><text class="stat-num attention">{{stats.hr.attention}}</text><text>需关注</text></view>
+    <view class="stat"><text class="stat-num">{{stats.avg.heartRate}}</text><text>均值</text></view>
+  </view>
+</scroll-view>

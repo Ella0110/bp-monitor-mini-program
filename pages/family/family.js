@@ -91,4 +91,8 @@ Page({
       path: `/pages/join-family/join-family?inviteToken=${family.inviteToken}`,
     }
   },
+
+  onReportTap() {
+    wx.navigateTo({ url: '/pages/report/report' })
+  },
 })

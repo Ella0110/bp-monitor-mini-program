@@ -27,7 +27,7 @@
       </view>
     </view>
 
-    <view class="action-card">
+    <view class="action-card" bindtap="onReportTap">
       <text class="action-title">📄 生成就诊报告</text>
       <text class="muted">选择时间段，导出图片</text>
     </view>

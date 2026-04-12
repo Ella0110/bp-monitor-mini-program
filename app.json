@@ -2,6 +2,7 @@
   "pages": [
     "pages/data/data",
     "pages/records/records",
+    "pages/report/report",
     "pages/add-record/add-record",
     "pages/family/family",
     "pages/join-family/join-family",

@@ -40,6 +40,18 @@ function clear(ctx, width, height) {
   ctx.fillRect(0, 0, width, height)
 }
 
+function drawChartArea(ctx, width, height, options, draw) {
+  const x = options.x || 0
+  const y = options.y || 0
+  ctx.clearRect(x, y, width, height)
+  setFill(ctx, COLORS.background)
+  ctx.fillRect(x, y, width, height)
+  if (ctx.save) ctx.save()
+  if (x || y) ctx.translate(x, y)
+  draw()
+  if (ctx.restore) ctx.restore()
+}
+
 function valueToY(value, range, plot) {
   const span = range.max - range.min || 1
   return plot.bottom - ((value - range.min) / span) * (plot.bottom - plot.top)
@@ -129,41 +141,43 @@ function drawTitle(ctx, title) {
 }
 
 function drawBloodPressureChart(ctx, chart, width, height, options = {}) {
-  clear(ctx, width, height)
-  if (!chart || !chart.records.length) return
+  drawChartArea(ctx, width, height, options, () => {
+    if (!chart || !chart.records.length) return
 
-  const plot = { left: 32, right: width - 16, top: options.title ? 42 : 16, bottom: height - 36 }
-  drawTitle(ctx, options.title)
-  drawGrid(ctx, chart, plot)
-  drawLine(ctx, chart.records, 'systolic', chart, plot, COLORS.systolic)
-  drawLine(ctx, chart.records, 'diastolic', chart, plot, COLORS.diastolic)
-  drawLabels(ctx, chart.records, plot)
-  drawLegend(ctx, [
-    { label: '高压', color: COLORS.systolic, width: 58 },
-    { label: '低压', color: COLORS.diastolic, width: 58 },
-    { label: '异常点', color: COLORS.abnormal, width: 72 },
-  ], 16, height - 8)
+    const plot = { left: 32, right: width - 16, top: options.title ? 42 : 16, bottom: height - 36 }
+    drawTitle(ctx, options.title)
+    drawGrid(ctx, chart, plot)
+    drawLine(ctx, chart.records, 'systolic', chart, plot, COLORS.systolic)
+    drawLine(ctx, chart.records, 'diastolic', chart, plot, COLORS.diastolic)
+    drawLabels(ctx, chart.records, plot)
+    drawLegend(ctx, [
+      { label: '高压', color: COLORS.systolic, width: 58 },
+      { label: '低压', color: COLORS.diastolic, width: 58 },
+      { label: '异常点', color: COLORS.abnormal, width: 72 },
+    ], 16, height - 8)
+  })
 }
 
 function drawHeartRateChart(ctx, chart, width, height, options = {}) {
-  clear(ctx, width, height)
-  if (!chart || !chart.records.length) return
+  drawChartArea(ctx, width, height, options, () => {
+    if (!chart || !chart.records.length) return
 
-  const plot = { left: 32, right: width - 16, top: options.title ? 42 : 16, bottom: height - 36 }
-  drawTitle(ctx, options.title)
-  drawGrid(ctx, chart, plot)
-  const barWidth = Math.max(6, Math.min(18, (plot.right - plot.left) / Math.max(chart.records.length * 1.8, 1)))
-  chart.records.forEach((record, index) => {
-    const x = pointX(index, chart.records.length, plot) - barWidth / 2
-    const y = valueToY(record.heartRate, chart.range, plot)
-    setFill(ctx, record.abnormal ? COLORS.abnormal : COLORS.heartRate)
-    ctx.fillRect(x, y, barWidth, plot.bottom - y)
+    const plot = { left: 32, right: width - 16, top: options.title ? 42 : 16, bottom: height - 36 }
+    drawTitle(ctx, options.title)
+    drawGrid(ctx, chart, plot)
+    const barWidth = Math.max(6, Math.min(18, (plot.right - plot.left) / Math.max(chart.records.length * 1.8, 1)))
+    chart.records.forEach((record, index) => {
+      const x = pointX(index, chart.records.length, plot) - barWidth / 2
+      const y = valueToY(record.heartRate, chart.range, plot)
+      setFill(ctx, record.abnormal ? COLORS.abnormal : COLORS.heartRate)
+      ctx.fillRect(x, y, barWidth, plot.bottom - y)
+    })
+    drawLabels(ctx, chart.records, plot)
+    drawLegend(ctx, [
+      { label: '心率', color: COLORS.heartRate, width: 58 },
+      { label: '异常', color: COLORS.abnormal, width: 58 },
+    ], 16, height - 8)
   })
-  drawLabels(ctx, chart.records, plot)
-  drawLegend(ctx, [
-    { label: '心率', color: COLORS.heartRate, width: 58 },
-    { label: '异常', color: COLORS.abnormal, width: 58 },
-  ], 16, height - 8)
 }
 
 module.exports = {

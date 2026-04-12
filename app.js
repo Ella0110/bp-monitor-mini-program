@@ -1,7 +1,7 @@
 App({
   onLaunch() {
     wx.cloud.init({
-      env: '__WECHAT_CLOUD_ENV_ID__',
+      env: wx.cloud.DYNAMIC_CURRENT_ENV,
       traceUser: true,
     })
     this.doLogin()

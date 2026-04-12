@@ -2,7 +2,7 @@
     "appid": "__WECHAT_APPID__",
     "projectname": "blood-pressure-monitor",
     "description": "家庭血压心率记录",
-    "miniprogramRoot": "./",
+    "miniprogramRoot": "",
     "cloudfunctionRoot": "cloudfunctions/",
     "setting": {
         "es6": true,

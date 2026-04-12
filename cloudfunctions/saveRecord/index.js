@@ -31,6 +31,9 @@ exports.main = async (event) => {
 
   if (event.id) {
     if (!canEditRecord(member)) return { success: false, error: '没有编辑权限' }
+    const existing = (await db.collection('records').doc(event.id).get()).data
+    if (existing.familyId !== event.familyId) return { success: false, error: '记录不属于当前家庭组' }
+    delete data.recordedBy
     await db.collection('records').doc(event.id).update({ data })
     return { success: true, id: event.id }
   }

@@ -84,6 +84,59 @@ Page({
   },
 
   onSaveReport() {
-    wx.showToast({ title: '报告保存建设中', icon: 'none' })
+    if (!this.data.report) {
+      wx.showToast({ title: '报告生成失败', icon: 'none' })
+      return
+    }
+
+    const query = wx.createSelectorQuery()
+    query.select('#reportExportCanvas')
+      .fields({ node: true, size: true })
+      .exec((res) => {
+        const result = res[0]
+        const canvas = result && result.node
+        if (!canvas) {
+          wx.showToast({ title: '报告生成失败', icon: 'none' })
+          return
+        }
+
+        const width = 750
+        const height = reportImageHeight(this.data.report)
+        const dpr = wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2
+        canvas.width = width * dpr
+        canvas.height = height * dpr
+        const ctx = canvas.getContext('2d')
+        ctx.scale(dpr, dpr)
+        drawReportImage(ctx, this.data.report, width, height)
+
+        wx.canvasToTempFilePath({
+          canvas,
+          destWidth: width * dpr,
+          destHeight: height * dpr,
+          success: file => this.saveReportImage(file.tempFilePath),
+          fail: () => wx.showToast({ title: '报告生成失败', icon: 'none' }),
+        })
+      })
+  },
+
+  saveReportImage(filePath) {
+    wx.saveImageToPhotosAlbum({
+      filePath,
+      success: () => wx.showToast({ title: '已保存到相册', icon: 'success' }),
+      fail: (err) => {
+        if (err.errMsg && err.errMsg.includes('auth deny')) {
+          wx.showModal({
+            title: '需要相册权限',
+            content: '请允许保存到相册后再保存报告图片。',
+            confirmText: '去设置',
+            success: (res) => {
+              if (res.confirm) wx.openSetting()
+            },
+          })
+          return
+        }
+        wx.showToast({ title: '保存失败', icon: 'none' })
+      },
+    })
   },
 })

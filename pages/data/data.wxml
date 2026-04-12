@@ -32,14 +32,25 @@
     <view class="stat"><text class="stat-num attention">{{stats.bp.attention}}</text><text>需关注</text></view>
     <view class="stat"><text class="stat-num small">{{stats.avg.systolic}}/{{stats.avg.diastolic}}</text><text>均值</text></view>
   </view>
+  <view class="chart-card">
+    <canvas wx:if="{{hasChartRecords}}" id="bpChart" type="2d" class="chart-canvas"></canvas>
+    <view wx:else class="chart-empty">当前周期暂无记录</view>
+    <button class="download" bindtap="onDownloadBPChart">下载图表</button>
+  </view>
 
   <view class="section-head">
     <text class="section-title">心率数据</text>
     <text class="notice" bindtap="onHRNotice">?</text>
   </view>
-  <view class="stat-card bottom">
+  <view class="stat-card">
     <view class="stat"><text class="stat-num">{{stats.hr.inRange}}</text><text>参考范围内</text></view>
     <view class="stat"><text class="stat-num attention">{{stats.hr.attention}}</text><text>需关注</text></view>
     <view class="stat"><text class="stat-num">{{stats.avg.heartRate}}</text><text>均值</text></view>
   </view>
+  <view class="chart-card bottom">
+    <canvas wx:if="{{hasChartRecords}}" id="hrChart" type="2d" class="chart-canvas"></canvas>
+    <view wx:else class="chart-empty">当前周期暂无记录</view>
+    <button class="download" bindtap="onDownloadHRChart">下载图表</button>
+  </view>
+  <canvas id="exportChart" type="2d" class="export-canvas"></canvas>
 </scroll-view>

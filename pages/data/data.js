@@ -1,5 +1,7 @@
 const { calcAverage, countReferenceStats, getBPStatus, getHRStatus } = require('../../utils/health-rules')
 const { daysAgo, formatDateTime } = require('../../utils/date')
+const { buildBloodPressureChart, buildHeartRateChart } = require('../../utils/chart-data')
+const { drawBloodPressureChart, drawHeartRateChart } = require('../../utils/canvas-charts')
 
 const PERIODS = { '7天': 7, '30天': 30, '90天': 90 }
 
@@ -16,6 +18,9 @@ Page({
       hr: { inRange: 0, attention: 0 },
       avg: { systolic: '--', diastolic: '--', heartRate: '--' },
     },
+    bpChart: null,
+    hrChart: null,
+    hasChartRecords: false,
     loading: false,
   },
 
@@ -26,7 +31,15 @@ Page({
   async loadRecords() {
     const app = getApp()
     if (!app.globalData.familyId) {
-      this.setData({ records: [], latestRecord: null, latestTime: '', loading: false })
+      this.setData({
+        records: [],
+        latestRecord: null,
+        latestTime: '',
+        bpChart: null,
+        hrChart: null,
+        hasChartRecords: false,
+        loading: false,
+      })
       return
     }
     this.setData({ loading: true })
@@ -37,6 +50,8 @@ Page({
     })
     const records = res.result.records || []
     const latestRecord = records[0] || null
+    const bpChart = buildBloodPressureChart(records)
+    const hrChart = buildHeartRateChart(records)
     this.setData({
       records,
       latestRecord,
@@ -47,8 +62,40 @@ Page({
         ...countReferenceStats(records, {}),
         avg: calcAverage(records),
       },
+      bpChart,
+      hrChart,
+      hasChartRecords: records.length > 0,
       loading: false,
     })
+    this.drawCharts()
+  },
+
+  drawCharts() {
+    if (!this.data.hasChartRecords) return
+    wx.nextTick(() => {
+      this.drawChart('#bpChart', 'bp')
+      this.drawChart('#hrChart', 'hr')
+    })
+  },
+
+  drawChart(selector, type) {
+    const query = wx.createSelectorQuery()
+    query.select(selector)
+      .fields({ node: true, size: true })
+      .exec((res) => {
+        const result = res[0]
+        const canvas = result && result.node
+        if (!canvas) return
+        const width = result.width
+        const height = result.height
+        const dpr = wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2
+        canvas.width = width * dpr
+        canvas.height = height * dpr
+        const ctx = canvas.getContext('2d')
+        ctx.scale(dpr, dpr)
+        if (type === 'bp') drawBloodPressureChart(ctx, this.data.bpChart, width, height)
+        if (type === 'hr') drawHeartRateChart(ctx, this.data.hrChart, width, height)
+      })
   },
 
   onPeriodChange(e) {

@@ -22,4 +22,9 @@
 .stat-num { display: block; color: #0F172A; font-size: 48rpx; font-weight: 900; margin-bottom: 10rpx; }
 .stat-num.attention { color: #FF9500; }
 .stat-num.small { font-size: 36rpx; }
+.chart-card { margin: -12rpx 32rpx 32rpx; background: #fff; border-radius: 32rpx; padding: 24rpx; box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09); }
+.chart-canvas { width: 100%; height: 360rpx; display: block; }
+.chart-empty { height: 220rpx; display: flex; align-items: center; justify-content: center; color: #64748B; font-size: 28rpx; }
+.download { min-height: 76rpx; margin-top: 18rpx; background: #3182F7; color: #fff; border-radius: 16rpx; font-size: 28rpx; font-weight: 800; }
+.export-canvas { position: fixed; left: -9999px; top: -9999px; width: 750px; height: 900px; }
 .bottom { margin-bottom: 120rpx; }

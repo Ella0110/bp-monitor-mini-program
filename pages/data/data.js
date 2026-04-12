@@ -111,6 +111,78 @@ Page({
     wx.navigateTo({ url: '/pages/records/records' })
   },
 
+  onDownloadBPChart() {
+    this.downloadChart('bp')
+  },
+
+  onDownloadHRChart() {
+    this.downloadChart('hr')
+  },
+
+  downloadChart(type) {
+    if (!this.data.hasChartRecords) {
+      wx.showToast({ title: '当前周期暂无可下载图表', icon: 'none' })
+      return
+    }
+
+    const chart = type === 'bp' ? this.data.bpChart : this.data.hrChart
+    const title = type === 'bp' ? '血压趋势图' : '心率趋势图'
+    const query = wx.createSelectorQuery()
+    query.select('#exportChart')
+      .fields({ node: true, size: true })
+      .exec((res) => {
+        const result = res[0]
+        const canvas = result && result.node
+        if (!canvas) {
+          wx.showToast({ title: '图表生成失败', icon: 'none' })
+          return
+        }
+
+        const width = 750
+        const height = 900
+        const chartHeight = height - 80
+        const dpr = wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2
+        canvas.width = width * dpr
+        canvas.height = height * dpr
+        const ctx = canvas.getContext('2d')
+        ctx.scale(dpr, dpr)
+        if (type === 'bp') drawBloodPressureChart(ctx, chart, width, chartHeight, { title: `${title}（${this.data.period}）` })
+        if (type === 'hr') drawHeartRateChart(ctx, chart, width, chartHeight, { title: `${title}（${this.data.period}）` })
+        ctx.fillStyle = '#64748B'
+        ctx.font = '22px -apple-system, BlinkMacSystemFont, sans-serif'
+        ctx.fillText('仅供健康记录与就诊沟通参考', 24, height - 28)
+
+        wx.canvasToTempFilePath({
+          canvas,
+          destWidth: width * dpr,
+          destHeight: height * dpr,
+          success: file => this.saveChartImage(file.tempFilePath),
+          fail: () => wx.showToast({ title: '图表生成失败', icon: 'none' }),
+        })
+      })
+  },
+
+  saveChartImage(filePath) {
+    wx.saveImageToPhotosAlbum({
+      filePath,
+      success: () => wx.showToast({ title: '已保存到相册', icon: 'success' }),
+      fail: (err) => {
+        if (err.errMsg && err.errMsg.includes('auth deny')) {
+          wx.showModal({
+            title: '需要相册权限',
+            content: '请允许保存到相册后再下载图表。',
+            confirmText: '去设置',
+            success: (res) => {
+              if (res.confirm) wx.openSetting()
+            },
+          })
+          return
+        }
+        wx.showToast({ title: '保存失败', icon: 'none' })
+      },
+    })
+  },
+
   onBPNotice() {
     wx.showModal({
       title: '血压数据须知',

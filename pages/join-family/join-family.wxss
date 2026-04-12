@@ -1,0 +1,9 @@
+.container { min-height: 100vh; background: #EEF3FB; padding: 64rpx 40rpx; box-sizing: border-box; }
+.join-card { background: #fff; border-radius: 32rpx; padding: 48rpx 36rpx; text-align: center; box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09); }
+.title { display: block; font-size: 40rpx; font-weight: 800; color: #0F172A; margin-bottom: 36rpx; }
+.invite-text { display: block; font-size: 30rpx; color: #64748B; margin-bottom: 12rpx; }
+.family-name { display: block; font-size: 38rpx; font-weight: 800; color: #0F172A; margin-bottom: 20rpx; }
+.hint { display: block; font-size: 28rpx; color: #64748B; line-height: 1.6; margin-bottom: 40rpx; }
+.primary, .secondary { min-height: 96rpx; border-radius: 28rpx; font-size: 32rpx; font-weight: 700; margin-top: 20rpx; }
+.primary { background: #3182F7; color: #fff; }
+.secondary { background: #F8FAFF; color: #64748B; border: 2rpx solid #DDE6F5; }

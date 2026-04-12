@@ -1,0 +1,47 @@
+<view class="container">
+  <view class="fam-header">
+    <text class="fam-title">家庭</text>
+  </view>
+
+  <view wx:if="{{!family && !loading}}" class="empty">
+    <text class="empty-title">你还没有加入家庭组</text>
+    <button class="primary" bindtap="onCreateFamily">创建家庭组</button>
+    <button class="secondary" bindtap="onJoinFamilyTap">加入家人的家庭组</button>
+    <text class="empty-hint">如果家人发给你的是微信邀请卡片，直接点开卡片即可加入。</text>
+  </view>
+
+  <scroll-view wx:if="{{family}}" scroll-y class="body">
+    <view class="card">
+      <text class="section-title">{{family.displayName || '家庭健康记录'}}</text>
+      <text class="muted">被监护人：{{family.profile.name || '未设置'}}</text>
+    </view>
+
+    <view class="card">
+      <view class="row-title">家庭成员</view>
+      <view class="member-row">
+        <view wx:for="{{family.members}}" wx:key="openid" class="member">
+          <view class="avatar">{{item.nickname ? item.nickname[0] : '家'}}</view>
+          <text>{{item.nickname || '家人'}}</text>
+        </view>
+        <button class="invite-button" bindtap="onInviteTap">＋\n邀请</button>
+      </view>
+    </view>
+
+    <view class="action-card">
+      <text class="action-title">📄 生成就诊报告</text>
+      <text class="muted">选择时间段，导出图片</text>
+    </view>
+
+    <view class="action-card disabled">
+      <text class="action-title">💊 药物管理</text>
+      <text class="muted">即将上线</text>
+    </view>
+  </scroll-view>
+
+  <view wx:if="{{sharePanelOpen}}" class="mask" bindtap="onCloseSharePanel"></view>
+  <view wx:if="{{sharePanelOpen}}" class="share-panel">
+    <button class="sheet-button primary-sheet" open-type="share">发送微信邀请</button>
+    <button class="sheet-button" bindtap="onCopyInviteCode">复制邀请码</button>
+    <button class="sheet-button cancel" bindtap="onCloseSharePanel">取消</button>
+  </view>
+</view>

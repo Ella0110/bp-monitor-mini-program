@@ -1,0 +1,10 @@
+<view class="container">
+  <view class="join-card">
+    <text class="title">加入家庭组</text>
+    <text class="invite-text">家人邀请你加入</text>
+    <text class="family-name">{{displayName}}</text>
+    <text class="hint">加入后可以查看家庭共享的健康数据和报告。</text>
+    <button class="primary" bindtap="onJoin" loading="{{joining}}">同意加入</button>
+    <button class="secondary" bindtap="onCancel">暂不加入</button>
+  </view>
+</view>

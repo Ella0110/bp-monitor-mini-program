@@ -13,7 +13,6 @@ exports.main = async () => {
   } catch (e) {
     await userRef.set({
       data: {
-        _id: OPENID,
         nickname: '',
         avatarUrl: '',
         familyId: '',

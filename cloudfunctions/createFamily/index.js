@@ -46,7 +46,6 @@ exports.main = async (event) => {
     data: { familyId: familyRes._id, role: 'admin' },
   }).catch(() => userRef.set({
     data: {
-      _id: OPENID,
       nickname: event.nickname || '',
       avatarUrl: event.avatarUrl || '',
       familyId: familyRes._id,

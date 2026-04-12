@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/data/data",
+    "pages/records/records",
+    "pages/add-record/add-record",
+    "pages/family/family",
+    "pages/settings/settings"
+  ],
+  "tabBar": {
+    "color": "#94A3B8",
+    "selectedColor": "#3182F7",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/data/data",
+        "text": "数据",
+        "iconPath": "assets/icons/data.png",
+        "selectedIconPath": "assets/icons/data-active.png"
+      },
+      {
+        "pagePath": "pages/family/family",
+        "text": "家庭",
+        "iconPath": "assets/icons/family.png",
+        "selectedIconPath": "assets/icons/family-active.png"
+      }
+    ]
+  },
+  "window": {
+    "navigationBarBackgroundColor": "#3182F7",
+    "navigationBarTitleText": "血压心率记录",
+    "navigationBarTextStyle": "white",
+    "backgroundTextStyle": "light",
+    "backgroundColor": "#EEF3FB"
+  },
+  "usingComponents": {}
+}

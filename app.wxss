@@ -1,0 +1,49 @@
+/* Global design tokens */
+page {
+  --blue: #3182F7;
+  --blue-dark: #1A5FCC;
+  --blue-light: #EAF2FF;
+  --bg: #EEF3FB;
+  --card: #FFFFFF;
+  --red: #FF3B30;
+  --orange: #FF9500;
+  --green: #34C759;
+  --text: #0F172A;
+  --text2: #64748B;
+  --border: #DDE6F5;
+  font-family: -apple-system, 'PingFang SC', sans-serif;
+  background: var(--bg);
+  font-size: 28rpx;
+}
+
+/* Reusable card */
+.card {
+  background: var(--card);
+  border-radius: 32rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09);
+  margin-bottom: 8rpx;
+}
+
+/* Section label (uppercase) */
+.sec-label {
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 2rpx;
+  margin: 40rpx 0 20rpx;
+}
+
+/* Primary button */
+.btn-primary {
+  width: 100%;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 28rpx;
+  padding: 30rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  text-align: center;
+}

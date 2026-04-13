@@ -1,13 +1,14 @@
 <view class="container">
   <view class="fam-header">
     <text class="fam-title">家庭</text>
+    <view class="settings-entry" bindtap="onSettingsTap">⚙</view>
   </view>
 
   <view wx:if="{{!family && !loading}}" class="empty">
-    <text class="empty-title">你还没有加入家庭组</text>
-    <button class="primary" bindtap="onCreateFamily">创建家庭组</button>
-    <button class="secondary" bindtap="onJoinFamilyTap">加入家人的家庭组</button>
-    <text class="empty-hint">如果家人发给你的是微信邀请卡片，直接点开卡片即可加入。</text>
+    <text class="empty-title">还没有健康记录</text>
+    <button class="primary" bindtap="onCreateFamily">创建我的记录</button>
+    <button class="secondary" bindtap="onJoinFamilyTap">查看家人的记录</button>
+    <text class="empty-hint">有家人发来的微信邀请卡片时，直接点开卡片即可查看。</text>
   </view>
 
   <scroll-view wx:if="{{family}}" scroll-y class="body">
@@ -25,6 +26,7 @@
         <text>当前用药：{{family.profile.medicationsText || '未设置'}}</text>
         <text>紧急联系人：{{profileView.emergencyText}}</text>
       </view>
+      <text class="trust-hint">仅用于报告展示，您可以填写昵称或简称。</text>
     </view>
 
     <view class="card">

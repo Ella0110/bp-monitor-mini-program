@@ -2,7 +2,7 @@ Page({
   data: {
     inviteToken: '',
     joining: false,
-    displayName: '家庭健康记录',
+    displayName: '健康记录',
   },
 
   onLoad(options) {
@@ -17,7 +17,7 @@ Page({
       data: { inviteToken: this.data.inviteToken },
     })
     if (res.result && res.result.success) {
-      this.setData({ displayName: res.result.displayName || '家庭健康记录' })
+      this.setData({ displayName: res.result.displayName || '健康记录' })
     }
   },
 

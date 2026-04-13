@@ -23,7 +23,7 @@ Page({
   async loadReport() {
     const app = getApp()
     if (!app.globalData.familyId) {
-      this.setData({ loading: false, error: '请先创建或加入家庭组' })
+      this.setData({ loading: false, error: '请先保存一条记录，或查看家人的记录' })
       return
     }
 

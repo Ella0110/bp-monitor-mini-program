@@ -70,10 +70,14 @@ Page({
     }
   },
 
+  onSettingsTap() {
+    wx.navigateTo({ url: '/pages/settings/settings' })
+  },
+
   async onCreateFamily() {
     const res = await wx.cloud.callFunction({
       name: 'createFamily',
-      data: { nickname: '我' },
+      data: { nickname: '我', displayName: '我的记录' },
     })
     if (res.result && res.result.success) {
       getApp().globalData.familyId = res.result.familyId
@@ -85,8 +89,8 @@ Page({
     wx.showModal({
       title: '输入邀请码',
       editable: true,
-      placeholderText: '6位邀请码',
-      content: '如果家人发给你的是微信邀请卡片，直接点开卡片即可加入。',
+      placeholderText: '请输入邀请码',
+      content: '如果家人发给你的是微信邀请卡片，直接点开卡片即可查看记录。',
       success: async (res) => {
         if (!res.confirm) return
         await this.joinByCode(res.content)
@@ -129,7 +133,7 @@ Page({
   onShareAppMessage() {
     const family = this.data.family || {}
     return {
-      title: `邀请你加入「${family.displayName || '家庭健康记录'}」`,
+      title: `邀请你查看「${family.displayName || '健康记录'}」`,
       path: `/pages/join-family/join-family?inviteToken=${family.inviteToken}`,
     }
   },

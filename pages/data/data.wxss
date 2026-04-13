@@ -28,3 +28,9 @@
 .download { min-height: 76rpx; margin-top: 18rpx; background: #3182F7; color: #fff; border-radius: 16rpx; font-size: 28rpx; font-weight: 800; }
 .export-canvas { position: fixed; left: -9999px; top: -9999px; width: 750px; height: 900px; }
 .bottom { margin-bottom: 120rpx; }
+.empty-title { display: block; color: #0F172A; font-size: 34rpx; font-weight: 800; margin-bottom: 10rpx; }
+.empty-sub { display: block; color: #64748B; font-size: 26rpx; margin-bottom: 24rpx; }
+.quick-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14rpx; margin-bottom: 20rpx; }
+.quick-input { min-height: 84rpx; background: #F8FBFF; border-radius: 18rpx; text-align: center; color: #0F172A; font-size: 30rpx; font-weight: 800; }
+.quick-save { min-height: 88rpx; background: #3182F7; color: #fff; border-radius: 22rpx; font-size: 32rpx; font-weight: 800; margin: 8rpx 0 18rpx; }
+.join-link { color: #3182F7; font-size: 26rpx; font-weight: 700; }

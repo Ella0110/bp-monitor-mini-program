@@ -22,6 +22,12 @@ Page({
     hrChart: null,
     hasChartRecords: false,
     loading: false,
+    quickForm: {
+      systolic: '',
+      diastolic: '',
+      heartRate: '',
+    },
+    quickSaving: false,
   },
 
   onShow() {
@@ -101,6 +107,94 @@ Page({
   onPeriodChange(e) {
     this.setData({ period: e.currentTarget.dataset.period })
     this.loadRecords()
+  },
+
+  onQuickInput(e) {
+    const field = e.currentTarget.dataset.field
+    this.setData({ [`quickForm.${field}`]: e.detail.value })
+  },
+
+  validateQuickForm() {
+    const sys = Number(this.data.quickForm.systolic)
+    const dia = Number(this.data.quickForm.diastolic)
+    const hr = Number(this.data.quickForm.heartRate)
+    if (!sys || sys < 60 || sys > 300) {
+      wx.showToast({ title: '高压值不正确', icon: 'none' })
+      return false
+    }
+    if (!dia || dia < 40 || dia > 200) {
+      wx.showToast({ title: '低压值不正确', icon: 'none' })
+      return false
+    }
+    if (!hr || hr < 30 || hr > 250) {
+      wx.showToast({ title: '心率不正确', icon: 'none' })
+      return false
+    }
+    return true
+  },
+
+  async onQuickSave() {
+    if (!this.validateQuickForm()) return
+    const app = getApp()
+    this.setData({ quickSaving: true })
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'saveRecord',
+        data: {
+          familyId: app.globalData.familyId || undefined,
+          systolic: Number(this.data.quickForm.systolic),
+          diastolic: Number(this.data.quickForm.diastolic),
+          heartRate: Number(this.data.quickForm.heartRate),
+          measuredAt: new Date().toISOString(),
+          period: null,
+        },
+      })
+      if (!res.result.success) {
+        wx.showToast({ title: res.result.error || '保存失败', icon: 'none' })
+        return
+      }
+      if (res.result.familyId) app.globalData.familyId = res.result.familyId
+      this.setData({
+        quickForm: { systolic: '', diastolic: '', heartRate: '' },
+      })
+      wx.showToast({ title: '保存成功', icon: 'success' })
+      await this.loadRecords()
+    } finally {
+      this.setData({ quickSaving: false })
+    }
+  },
+
+  onJoinByCodeTap() {
+    wx.showModal({
+      title: '输入邀请码',
+      editable: true,
+      placeholderText: '请输入邀请码',
+      content: '如果家人发给你的是微信邀请卡片，直接点开卡片即可查看记录。',
+      success: async (res) => {
+        if (!res.confirm) return
+        await this.joinByCode(res.content)
+      },
+    })
+  },
+
+  async joinByCode(code) {
+    const inviteCode = String(code || '').trim().toUpperCase()
+    if (!inviteCode) {
+      wx.showToast({ title: '请输入邀请码', icon: 'none' })
+      return
+    }
+    const res = await wx.cloud.callFunction({
+      name: 'joinFamily',
+      data: { inviteCode, nickname: '家人' },
+    })
+    if (!res.result.success) {
+      wx.showToast({ title: res.result.error || '加入失败', icon: 'none' })
+      return
+    }
+    const app = getApp()
+    app.globalData.familyId = res.result.familyId
+    wx.showToast({ title: '加入成功', icon: 'success' })
+    await this.loadRecords()
   },
 
   onAddRecord() {

@@ -11,9 +11,17 @@
       <text class="status">血压{{latestBPStatus.label}} · 心率{{latestHRStatus.label}}</text>
     </view>
     <view wx:else class="latest-card empty-card">
-      <text>还没有记录</text>
+      <text class="empty-title">还没有记录</text>
+      <text class="empty-sub">先记一条血压心率，图表会自动生成</text>
+      <view class="quick-grid">
+        <input class="quick-input" type="number" value="{{quickForm.systolic}}" data-field="systolic" bindinput="onQuickInput" placeholder="高压" />
+        <input class="quick-input" type="number" value="{{quickForm.diastolic}}" data-field="diastolic" bindinput="onQuickInput" placeholder="低压" />
+        <input class="quick-input" type="number" value="{{quickForm.heartRate}}" data-field="heartRate" bindinput="onQuickInput" placeholder="心率" />
+      </view>
+      <button class="quick-save" loading="{{quickSaving}}" bindtap="onQuickSave">保存记录</button>
+      <text class="join-link" bindtap="onJoinByCodeTap">查看家人的记录？输入邀请码</text>
     </view>
-    <button class="add" bindtap="onAddRecord">＋ 添加记录</button>
+    <button wx:if="{{latestRecord}}" class="add" bindtap="onAddRecord">＋ 添加记录</button>
   </view>
 
   <view class="toolbar">

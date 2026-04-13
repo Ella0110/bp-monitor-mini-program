@@ -66,10 +66,6 @@ Page({
   async onSave() {
     if (!this.validate()) return
     const app = getApp()
-    if (!app.globalData.familyId) {
-      wx.showToast({ title: '请先创建或加入家庭组', icon: 'none' })
-      return
-    }
 
     this.setData({ saving: true })
     try {
@@ -77,7 +73,7 @@ Page({
         name: 'saveRecord',
         data: {
           id: this.data.id || undefined,
-          familyId: app.globalData.familyId,
+          familyId: app.globalData.familyId || undefined,
           systolic: Number(this.data.systolic),
           diastolic: Number(this.data.diastolic),
           heartRate: Number(this.data.heartRate),
@@ -89,6 +85,7 @@ Page({
         wx.showToast({ title: res.result.error || '保存失败', icon: 'none' })
         return
       }
+      if (res.result.familyId) app.globalData.familyId = res.result.familyId
       wx.showToast({ title: '保存成功', icon: 'success' })
       wx.navigateBack()
     } finally {

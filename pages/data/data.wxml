@@ -1,5 +1,6 @@
 <scroll-view scroll-y class="container">
   <view class="hero">
+    <text class="title">血压心率记录</text>
     <view class="device-card">
       <text wx:if="{{latestRecord}}" class="time">最近一次记录时间：{{latestTime}}</text>
       <text wx:else class="time">本次记录时间：----</text>
@@ -56,34 +57,38 @@
 
   <view class="section-head">
     <view class="section-title-wrap">
+      <view class="section-icon bp-icon"></view>
       <text class="section-title">血压数据</text>
       <text class="notice" bindtap="onBPNotice">?</text>
     </view>
     <text wx:if="{{hasChartRecords}}" class="download" bindtap="onDownloadBPChart">↓ 下载图表</text>
   </view>
-  <view class="stat-card">
-    <view class="stat"><text class="stat-num">{{hasChartRecords ? stats.bp.inRange : '--'}}</text><text>已达标（次）</text></view>
-    <view class="stat"><text class="stat-num attention">{{hasChartRecords ? stats.bp.attention : '--'}}</text><text>不达标（次）</text></view>
-    <view class="stat"><text class="stat-num small">{{hasChartRecords ? stats.avg.systolic + '/' + stats.avg.diastolic : '--'}}</text><text>均值（mmHg）</text></view>
-  </view>
-  <view class="chart-card">
+  <view class="analysis-card">
+    <view class="stat-row">
+      <view class="stat"><text class="stat-num">{{hasChartRecords ? stats.bp.inRange : '--'}}</text><text>已达标（次）</text></view>
+      <view class="stat"><text class="stat-num attention">{{hasChartRecords ? stats.bp.attention : '--'}}</text><text>不达标（次）</text></view>
+      <view class="stat"><text class="stat-num small">{{hasChartRecords ? stats.avg.systolic + '/' + stats.avg.diastolic : '--'}}</text><text>均值（mmHg）</text></view>
+    </view>
+    <view class="chart-divider"></view>
     <canvas wx:if="{{hasChartRecords}}" id="bpChart" type="2d" class="chart-canvas"></canvas>
     <view wx:else class="chart-empty">暂无信息</view>
   </view>
 
   <view class="section-head">
     <view class="section-title-wrap">
+      <view class="section-icon hr-icon"></view>
       <text class="section-title">心率数据</text>
       <text class="notice" bindtap="onHRNotice">?</text>
     </view>
     <text wx:if="{{hasChartRecords}}" class="download" bindtap="onDownloadHRChart">↓ 下载图表</text>
   </view>
-  <view class="stat-card">
-    <view class="stat"><text class="stat-num">{{hasChartRecords ? stats.hr.inRange : '--'}}</text><text>已达标（次）</text></view>
-    <view class="stat"><text class="stat-num attention">{{hasChartRecords ? stats.hr.attention : '--'}}</text><text>不达标（次）</text></view>
-    <view class="stat"><text class="stat-num">{{hasChartRecords ? stats.avg.heartRate : '--'}}</text><text>均值（bpm）</text></view>
-  </view>
-  <view class="chart-card bottom">
+  <view class="analysis-card bottom">
+    <view class="stat-row">
+      <view class="stat"><text class="stat-num">{{hasChartRecords ? stats.hr.inRange : '--'}}</text><text>已达标（次）</text></view>
+      <view class="stat"><text class="stat-num attention">{{hasChartRecords ? stats.hr.attention : '--'}}</text><text>不达标（次）</text></view>
+      <view class="stat"><text class="stat-num">{{hasChartRecords ? stats.avg.heartRate : '--'}}</text><text>均值（bpm）</text></view>
+    </view>
+    <view class="chart-divider"></view>
     <canvas wx:if="{{hasChartRecords}}" id="hrChart" type="2d" class="chart-canvas"></canvas>
     <view wx:else class="chart-empty">暂无信息</view>
   </view>

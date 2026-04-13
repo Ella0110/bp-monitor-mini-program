@@ -4,6 +4,8 @@ const { buildBloodPressureChart, buildHeartRateChart } = require('../../utils/ch
 const { drawBloodPressureChart, drawHeartRateChart } = require('../../utils/canvas-charts')
 
 const PERIODS = { '7天': 7, '30天': 30, '90天': 90 }
+const QUICK_FIELDS = ['systolic', 'diastolic', 'heartRate']
+const QUICK_LABELS = { systolic: '高压', diastolic: '低压', heartRate: '心率' }
 
 Page({
   data: {
@@ -27,6 +29,9 @@ Page({
       diastolic: '',
       heartRate: '',
     },
+    quickEntryActive: false,
+    quickField: 'systolic',
+    quickFieldLabel: '高压',
     quickSaving: false,
   },
 
@@ -109,9 +114,71 @@ Page({
     this.loadRecords()
   },
 
-  onQuickInput(e) {
-    const field = e.currentTarget.dataset.field
-    this.setData({ [`quickForm.${field}`]: e.detail.value })
+  onStartQuickEntry() {
+    if (this.data.quickEntryActive) return
+    this.setData({
+      quickEntryActive: true,
+      quickField: 'systolic',
+      quickFieldLabel: QUICK_LABELS.systolic,
+      quickForm: { systolic: '', diastolic: '', heartRate: '' },
+    })
+  },
+
+  setQuickField(field) {
+    this.setData({
+      quickField: field,
+      quickFieldLabel: QUICK_LABELS[field],
+    })
+  },
+
+  moveToNextField() {
+    const index = QUICK_FIELDS.indexOf(this.data.quickField)
+    if (index < QUICK_FIELDS.length - 1) this.setQuickField(QUICK_FIELDS[index + 1])
+  },
+
+  moveToPreviousField() {
+    const index = QUICK_FIELDS.indexOf(this.data.quickField)
+    if (index > 0) this.setQuickField(QUICK_FIELDS[index - 1])
+  },
+
+  onKeypadDigit(e) {
+    const digit = String(e.currentTarget.dataset.value || '')
+    if (!digit) return
+    const field = this.data.quickField
+    const current = String(this.data.quickForm[field] || '')
+    if (current.length >= 3) return
+    const next = `${current}${digit}`
+    this.setData({ [`quickForm.${field}`]: next }, () => {
+      if (next.length >= 3) this.moveToNextField()
+    })
+  },
+
+  onKeypadDelete() {
+    const field = this.data.quickField
+    const current = String(this.data.quickForm[field] || '')
+    if (current) {
+      this.setData({ [`quickForm.${field}`]: current.slice(0, -1) })
+      return
+    }
+    this.moveToPreviousField()
+  },
+
+  onKeypadNext() {
+    const current = String(this.data.quickForm[this.data.quickField] || '')
+    if (!current) {
+      wx.showToast({ title: '请先输入当前项', icon: 'none' })
+      return
+    }
+    this.moveToNextField()
+  },
+
+  onCancelQuickEntry() {
+    this.setData({
+      quickEntryActive: false,
+      quickField: 'systolic',
+      quickFieldLabel: QUICK_LABELS.systolic,
+      quickForm: { systolic: '', diastolic: '', heartRate: '' },
+    })
   },
 
   validateQuickForm() {
@@ -156,6 +223,9 @@ Page({
       if (res.result.familyId) app.globalData.familyId = res.result.familyId
       this.setData({
         quickForm: { systolic: '', diastolic: '', heartRate: '' },
+        quickEntryActive: false,
+        quickField: 'systolic',
+        quickFieldLabel: QUICK_LABELS.systolic,
       })
       wx.showToast({ title: '保存成功', icon: 'success' })
       await this.loadRecords()
@@ -165,7 +235,7 @@ Page({
   },
 
   onAddRecord() {
-    wx.navigateTo({ url: '/pages/add-record/add-record' })
+    this.onStartQuickEntry()
   },
 
   onAllRecords() {

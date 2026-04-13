@@ -1,26 +1,51 @@
 <scroll-view scroll-y class="container">
   <view class="hero">
     <text class="title">血压心率记录</text>
-    <view wx:if="{{latestRecord}}" class="latest-card">
-      <text class="time">最近一次：{{latestTime}}</text>
-      <view class="values">
-        <view><text class="num">{{latestRecord.systolic}}</text><text class="unit">高压</text></view>
-        <view><text class="num">{{latestRecord.diastolic}}</text><text class="unit">低压</text></view>
-        <view><text class="num">{{latestRecord.heartRate}}</text><text class="unit">心率</text></view>
+    <view class="device-card">
+      <text wx:if="{{latestRecord}}" class="time">最近一次记录时间：{{latestTime}}</text>
+      <text wx:else class="time">本次记录时间：----</text>
+      <view class="device-screen">
+        <text class="wave">⌁</text>
+        <view class="traffic"><text></text><text></text><text></text></view>
+        <view class="metric systolic">
+          <text class="metric-label">高压值 (mmHg)</text>
+          <view class="metric-value orange">
+            <block wx:if="{{quickEntryActive}}">
+              <block wx:if="{{quickField==='systolic'}}"><text>{{quickForm.systolic}}</text><text class="blinking-cursor"></text></block>
+              <block wx:elif="{{quickForm.systolic}}"><text>{{quickForm.systolic}}</text></block>
+              <block wx:else><text>--</text></block>
+            </block>
+            <block wx:elif="{{latestRecord}}"><text>{{latestRecord.systolic}}</text></block>
+            <block wx:else><text>--</text></block>
+          </view>
+        </view>
+        <view class="metric diastolic">
+          <text class="metric-label">低压值 (mmHg)</text>
+          <view class="metric-value orange">
+            <block wx:if="{{quickEntryActive}}">
+              <block wx:if="{{quickField==='diastolic'}}"><text>{{quickForm.diastolic}}</text><text class="blinking-cursor"></text></block>
+              <block wx:elif="{{quickForm.diastolic}}"><text>{{quickForm.diastolic}}</text></block>
+              <block wx:else><text>--</text></block>
+            </block>
+            <block wx:elif="{{latestRecord}}"><text>{{latestRecord.diastolic}}</text></block>
+            <block wx:else><text>--</text></block>
+          </view>
+        </view>
+        <view class="metric heart">
+          <text class="metric-label">心率 (bpm)</text>
+          <view class="metric-value green">
+            <block wx:if="{{quickEntryActive}}">
+              <block wx:if="{{quickField==='heartRate'}}"><text>{{quickForm.heartRate}}</text><text class="blinking-cursor"></text></block>
+              <block wx:elif="{{quickForm.heartRate}}"><text>{{quickForm.heartRate}}</text></block>
+              <block wx:else><text>--</text></block>
+            </block>
+            <block wx:elif="{{latestRecord}}"><text>{{latestRecord.heartRate}}</text></block>
+            <block wx:else><text>--</text></block>
+          </view>
+        </view>
       </view>
-      <text class="status">血压{{latestBPStatus.label}} · 心率{{latestHRStatus.label}}</text>
     </view>
-    <view wx:else class="latest-card empty-card">
-      <text class="empty-title">还没有记录</text>
-      <text class="empty-sub">先记一条血压心率，图表会自动生成</text>
-      <view class="quick-grid">
-        <input class="quick-input" type="number" value="{{quickForm.systolic}}" data-field="systolic" bindinput="onQuickInput" placeholder="高压" />
-        <input class="quick-input" type="number" value="{{quickForm.diastolic}}" data-field="diastolic" bindinput="onQuickInput" placeholder="低压" />
-        <input class="quick-input" type="number" value="{{quickForm.heartRate}}" data-field="heartRate" bindinput="onQuickInput" placeholder="心率" />
-      </view>
-      <button class="quick-save" loading="{{quickSaving}}" bindtap="onQuickSave">保存记录</button>
-    </view>
-    <button wx:if="{{latestRecord}}" class="add" bindtap="onAddRecord">＋ 添加记录</button>
+    <button class="add" bindtap="onAddRecord">{{quickEntryActive ? '正在录入' : '＋ 添加记录'}}</button>
   </view>
 
   <view class="toolbar">
@@ -31,33 +56,59 @@
   </view>
 
   <view class="section-head">
-    <text class="section-title">血压数据</text>
-    <text class="notice" bindtap="onBPNotice">?</text>
+    <view class="section-title-wrap">
+      <text class="section-title">血压数据</text>
+      <text class="notice" bindtap="onBPNotice">?</text>
+    </view>
+    <text wx:if="{{hasChartRecords}}" class="download" bindtap="onDownloadBPChart">↓ 下载图表</text>
   </view>
   <view class="stat-card">
-    <view class="stat"><text class="stat-num">{{stats.bp.inRange}}</text><text>参考范围内</text></view>
-    <view class="stat"><text class="stat-num attention">{{stats.bp.attention}}</text><text>需关注</text></view>
-    <view class="stat"><text class="stat-num small">{{stats.avg.systolic}}/{{stats.avg.diastolic}}</text><text>均值</text></view>
+    <view class="stat"><text class="stat-num">{{hasChartRecords ? stats.bp.inRange : '--'}}</text><text>已达标（次）</text></view>
+    <view class="stat"><text class="stat-num attention">{{hasChartRecords ? stats.bp.attention : '--'}}</text><text>不达标（次）</text></view>
+    <view class="stat"><text class="stat-num small">{{hasChartRecords ? stats.avg.systolic + '/' + stats.avg.diastolic : '--'}}</text><text>均值（mmHg）</text></view>
   </view>
   <view class="chart-card">
     <canvas wx:if="{{hasChartRecords}}" id="bpChart" type="2d" class="chart-canvas"></canvas>
-    <view wx:else class="chart-empty">当前周期暂无记录</view>
-    <button class="download" bindtap="onDownloadBPChart">下载图表</button>
+    <view wx:else class="chart-empty">暂无信息</view>
   </view>
 
   <view class="section-head">
-    <text class="section-title">心率数据</text>
-    <text class="notice" bindtap="onHRNotice">?</text>
+    <view class="section-title-wrap">
+      <text class="section-title">心率数据</text>
+      <text class="notice" bindtap="onHRNotice">?</text>
+    </view>
+    <text wx:if="{{hasChartRecords}}" class="download" bindtap="onDownloadHRChart">↓ 下载图表</text>
   </view>
   <view class="stat-card">
-    <view class="stat"><text class="stat-num">{{stats.hr.inRange}}</text><text>参考范围内</text></view>
-    <view class="stat"><text class="stat-num attention">{{stats.hr.attention}}</text><text>需关注</text></view>
-    <view class="stat"><text class="stat-num">{{stats.avg.heartRate}}</text><text>均值</text></view>
+    <view class="stat"><text class="stat-num">{{hasChartRecords ? stats.hr.inRange : '--'}}</text><text>已达标（次）</text></view>
+    <view class="stat"><text class="stat-num attention">{{hasChartRecords ? stats.hr.attention : '--'}}</text><text>不达标（次）</text></view>
+    <view class="stat"><text class="stat-num">{{hasChartRecords ? stats.avg.heartRate : '--'}}</text><text>均值（bpm）</text></view>
   </view>
   <view class="chart-card bottom">
     <canvas wx:if="{{hasChartRecords}}" id="hrChart" type="2d" class="chart-canvas"></canvas>
-    <view wx:else class="chart-empty">当前周期暂无记录</view>
-    <button class="download" bindtap="onDownloadHRChart">下载图表</button>
+    <view wx:else class="chart-empty">暂无信息</view>
   </view>
   <canvas id="exportChart" type="2d" class="export-canvas"></canvas>
 </scroll-view>
+
+<view wx:if="{{quickEntryActive}}" class="keypad-panel">
+  <view class="keypad-head">
+    <text>正在输入：{{quickFieldLabel}}</text>
+    <text class="keypad-cancel" bindtap="onCancelQuickEntry">取消</text>
+  </view>
+  <view class="keypad-grid">
+    <button class="key" data-value="1" bindtap="onKeypadDigit">1</button>
+    <button class="key" data-value="2" bindtap="onKeypadDigit">2</button>
+    <button class="key" data-value="3" bindtap="onKeypadDigit">3</button>
+    <button class="key" data-value="4" bindtap="onKeypadDigit">4</button>
+    <button class="key" data-value="5" bindtap="onKeypadDigit">5</button>
+    <button class="key" data-value="6" bindtap="onKeypadDigit">6</button>
+    <button class="key" data-value="7" bindtap="onKeypadDigit">7</button>
+    <button class="key" data-value="8" bindtap="onKeypadDigit">8</button>
+    <button class="key" data-value="9" bindtap="onKeypadDigit">9</button>
+    <button class="key action" bindtap="onKeypadDelete">删除</button>
+    <button class="key" data-value="0" bindtap="onKeypadDigit">0</button>
+    <button class="key action" bindtap="onKeypadNext">下一项</button>
+    <button class="key submit" loading="{{quickSaving}}" bindtap="onQuickSave">立即添加</button>
+  </view>
+</view>

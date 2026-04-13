@@ -3,3 +3,4 @@ mydoc/
 .codex/
 .worktrees/
 project.private.config.json
+.DS_Store

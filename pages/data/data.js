@@ -6,6 +6,7 @@ const { drawBloodPressureChart, drawHeartRateChart } = require('../../utils/canv
 const PERIODS = { '7天': 7, '30天': 30, '90天': 90 }
 const QUICK_FIELDS = ['systolic', 'diastolic', 'heartRate']
 const QUICK_LABELS = { systolic: '高压', diastolic: '低压', heartRate: '心率' }
+const EMPTY_VALUE_CLASS = 'empty'
 
 Page({
   data: {
@@ -15,6 +16,8 @@ Page({
     latestTime: '',
     latestBPStatus: null,
     latestHRStatus: null,
+    bpValueClass: EMPTY_VALUE_CLASS,
+    hrValueClass: EMPTY_VALUE_CLASS,
     stats: {
       bp: { inRange: 0, attention: 0 },
       hr: { inRange: 0, attention: 0 },
@@ -32,6 +35,8 @@ Page({
     quickEntryActive: false,
     quickField: 'systolic',
     quickFieldLabel: '高压',
+    quickBpValueClass: EMPTY_VALUE_CLASS,
+    quickHrValueClass: EMPTY_VALUE_CLASS,
     quickSaving: false,
   },
 
@@ -46,6 +51,10 @@ Page({
         records: [],
         latestRecord: null,
         latestTime: '',
+        latestBPStatus: null,
+        latestHRStatus: null,
+        bpValueClass: EMPTY_VALUE_CLASS,
+        hrValueClass: EMPTY_VALUE_CLASS,
         bpChart: null,
         hrChart: null,
         hasChartRecords: false,
@@ -61,14 +70,18 @@ Page({
     })
     const records = res.result.records || []
     const latestRecord = records[0] || null
+    const latestBPStatus = latestRecord ? getBPStatus(latestRecord.systolic, latestRecord.diastolic) : null
+    const latestHRStatus = latestRecord ? getHRStatus(latestRecord.heartRate) : null
     const bpChart = buildBloodPressureChart(records)
     const hrChart = buildHeartRateChart(records)
     this.setData({
       records,
       latestRecord,
       latestTime: latestRecord ? formatDateTime(latestRecord.measuredAt) : '',
-      latestBPStatus: latestRecord ? getBPStatus(latestRecord.systolic, latestRecord.diastolic) : null,
-      latestHRStatus: latestRecord ? getHRStatus(latestRecord.heartRate) : null,
+      latestBPStatus,
+      latestHRStatus,
+      bpValueClass: this.getStatusClass(latestBPStatus),
+      hrValueClass: this.getStatusClass(latestHRStatus),
       stats: {
         ...countReferenceStats(records, {}),
         avg: calcAverage(records),
@@ -114,6 +127,25 @@ Page({
     this.loadRecords()
   },
 
+  getStatusClass(status) {
+    if (!status) return EMPTY_VALUE_CLASS
+    if (status.level === 'inRange') return 'normal'
+    if (status.level === 'critical' || status.level === 'veryHigh' || status.level === 'veryFast' || status.level === 'verySlow') return 'danger'
+    return 'warning'
+  },
+
+  getQuickValueClasses(form) {
+    const systolic = Number(form.systolic)
+    const diastolic = Number(form.diastolic)
+    const heartRate = Number(form.heartRate)
+    const bpReady = systolic >= 60 && diastolic >= 40
+    const hrReady = heartRate >= 30
+    return {
+      quickBpValueClass: bpReady ? this.getStatusClass(getBPStatus(systolic, diastolic)) : EMPTY_VALUE_CLASS,
+      quickHrValueClass: hrReady ? this.getStatusClass(getHRStatus(heartRate)) : EMPTY_VALUE_CLASS,
+    }
+  },
+
   onStartQuickEntry() {
     if (this.data.quickEntryActive) return
     this.setData({
@@ -121,6 +153,8 @@ Page({
       quickField: 'systolic',
       quickFieldLabel: QUICK_LABELS.systolic,
       quickForm: { systolic: '', diastolic: '', heartRate: '' },
+      quickBpValueClass: EMPTY_VALUE_CLASS,
+      quickHrValueClass: EMPTY_VALUE_CLASS,
     })
   },
 
@@ -148,7 +182,8 @@ Page({
     const current = String(this.data.quickForm[field] || '')
     if (current.length >= 3) return
     const next = `${current}${digit}`
-    this.setData({ [`quickForm.${field}`]: next }, () => {
+    const nextForm = { ...this.data.quickForm, [field]: next }
+    this.setData({ [`quickForm.${field}`]: next, ...this.getQuickValueClasses(nextForm) }, () => {
       if (next.length >= 3) this.moveToNextField()
     })
   },
@@ -157,7 +192,9 @@ Page({
     const field = this.data.quickField
     const current = String(this.data.quickForm[field] || '')
     if (current) {
-      this.setData({ [`quickForm.${field}`]: current.slice(0, -1) })
+      const next = current.slice(0, -1)
+      const nextForm = { ...this.data.quickForm, [field]: next }
+      this.setData({ [`quickForm.${field}`]: next, ...this.getQuickValueClasses(nextForm) })
       return
     }
     this.moveToPreviousField()
@@ -178,6 +215,8 @@ Page({
       quickField: 'systolic',
       quickFieldLabel: QUICK_LABELS.systolic,
       quickForm: { systolic: '', diastolic: '', heartRate: '' },
+      quickBpValueClass: EMPTY_VALUE_CLASS,
+      quickHrValueClass: EMPTY_VALUE_CLASS,
     })
   },
 
@@ -226,6 +265,8 @@ Page({
         quickEntryActive: false,
         quickField: 'systolic',
         quickFieldLabel: QUICK_LABELS.systolic,
+        quickBpValueClass: EMPTY_VALUE_CLASS,
+        quickHrValueClass: EMPTY_VALUE_CLASS,
       })
       wx.showToast({ title: '保存成功', icon: 'success' })
       await this.loadRecords()

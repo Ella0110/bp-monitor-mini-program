@@ -1,6 +1,5 @@
 .container { min-height: 100vh; background: #EEF3FB; }
-.hero { background: linear-gradient(170deg, #72BBFF 0%, #3182F7 45%, #1A5FCC 100%); padding: 88rpx 32rpx 46rpx; border-radius: 0 0 48rpx 48rpx; }
-.title { display: block; text-align: center; color: #fff; font-size: 38rpx; font-weight: 800; margin-bottom: 28rpx; }
+.hero { background: linear-gradient(170deg, #72BBFF 0%, #3182F7 45%, #1A5FCC 100%); padding: 36rpx 32rpx 46rpx; border-radius: 0 0 48rpx 48rpx; }
 .device-card { border-radius: 32rpx; padding: 22rpx; background: rgba(255,255,255,0.28); border: 2rpx solid rgba(255,255,255,0.42); box-shadow: 0 8rpx 32rpx rgba(19, 102, 216, 0.22); }
 .time { display: block; color: rgba(255,255,255,0.92); font-size: 26rpx; text-align: center; margin-bottom: 18rpx; font-weight: 700; }
 .device-screen { position: relative; min-height: 300rpx; background: #EEF4FB; border-radius: 24rpx; padding: 34rpx 40rpx; overflow: hidden; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 22rpx 28rpx; }
@@ -14,8 +13,10 @@
 .metric.heart { align-self: end; }
 .metric-label { display: block; color: #5F7188; font-size: 26rpx; line-height: 1.35; font-weight: 700; margin-bottom: 4rpx; }
 .metric-value { min-height: 78rpx; display: flex; align-items: flex-end; color: #7B8FA4; font-size: 76rpx; font-weight: 900; line-height: 0.95; }
-.metric-value.orange { color: #FF9500; }
-.metric-value.green { color: #22C55E; }
+.metric-value.empty { color: #7B8FA4; }
+.metric-value.normal { color: #22C55E; }
+.metric-value.warning { color: #FF9500; }
+.metric-value.danger { color: #FF3B30; }
 .blinking-cursor { width: 5rpx; height: 70rpx; background: #3182F7; border-radius: 4rpx; margin-left: 8rpx; margin-bottom: 2rpx; animation: cursorBlink 0.9s steps(2, start) infinite; }
 @keyframes cursorBlink { 50% { opacity: 0; } }
 .add { min-height: 96rpx; background: #fff; color: #3182F7; border-radius: 24rpx; margin-top: 24rpx; font-size: 34rpx; font-weight: 800; }

@@ -1,6 +1,5 @@
 <scroll-view scroll-y class="container">
   <view class="hero">
-    <text class="title">血压心率记录</text>
     <view class="device-card">
       <text wx:if="{{latestRecord}}" class="time">最近一次记录时间：{{latestTime}}</text>
       <text wx:else class="time">本次记录时间：----</text>
@@ -9,7 +8,7 @@
         <view class="traffic"><text></text><text></text><text></text></view>
         <view class="metric systolic">
           <text class="metric-label">高压值 (mmHg)</text>
-          <view class="metric-value orange">
+          <view class="metric-value {{quickEntryActive ? quickBpValueClass : bpValueClass}}">
             <block wx:if="{{quickEntryActive}}">
               <block wx:if="{{quickField==='systolic'}}"><text>{{quickForm.systolic}}</text><text class="blinking-cursor"></text></block>
               <block wx:elif="{{quickForm.systolic}}"><text>{{quickForm.systolic}}</text></block>
@@ -21,7 +20,7 @@
         </view>
         <view class="metric diastolic">
           <text class="metric-label">低压值 (mmHg)</text>
-          <view class="metric-value orange">
+          <view class="metric-value {{quickEntryActive ? quickBpValueClass : bpValueClass}}">
             <block wx:if="{{quickEntryActive}}">
               <block wx:if="{{quickField==='diastolic'}}"><text>{{quickForm.diastolic}}</text><text class="blinking-cursor"></text></block>
               <block wx:elif="{{quickForm.diastolic}}"><text>{{quickForm.diastolic}}</text></block>
@@ -33,7 +32,7 @@
         </view>
         <view class="metric heart">
           <text class="metric-label">心率 (bpm)</text>
-          <view class="metric-value green">
+          <view class="metric-value {{quickEntryActive ? quickHrValueClass : hrValueClass}}">
             <block wx:if="{{quickEntryActive}}">
               <block wx:if="{{quickField==='heartRate'}}"><text>{{quickForm.heartRate}}</text><text class="blinking-cursor"></text></block>
               <block wx:elif="{{quickForm.heartRate}}"><text>{{quickForm.heartRate}}</text></block>

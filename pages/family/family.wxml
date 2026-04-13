@@ -1,6 +1,5 @@
 <view class="container">
-  <view class="fam-header">
-    <text class="fam-title">家庭</text>
+  <view wx:if="{{family}}" class="fam-header">
     <view wx:if="{{family}}" class="settings-entry" bindtap="onSettingsTap">⚙</view>
   </view>
 

@@ -1,23 +1,23 @@
 <view class="container">
   <view class="fam-header">
     <text class="fam-title">家庭</text>
-    <view class="settings-entry" bindtap="onSettingsTap">⚙</view>
+    <view wx:if="{{family}}" class="settings-entry" bindtap="onSettingsTap">⚙</view>
   </view>
 
   <view wx:if="{{!family && !loading}}" class="empty">
     <text class="empty-title">还没有健康记录</text>
-    <button class="primary" bindtap="onCreateFamily">创建我的记录</button>
-    <button class="secondary" bindtap="onJoinFamilyTap">查看家人的记录</button>
-    <text class="empty-hint">有家人发来的微信邀请卡片时，直接点开卡片即可查看。</text>
+    <text class="empty-hint">先去记录一条血压心率，记录后可在这里补充档案、邀请家人查看。</text>
+    <button class="primary" bindtap="onGoRecordTap">去记录一条</button>
+    <text class="empty-hint">家人发来的邀请卡片，可直接点开查看。</text>
   </view>
 
   <scroll-view wx:if="{{family}}" scroll-y class="body">
     <view class="card">
-      <view class="card-head">
-        <text class="section-title">被监护人档案</text>
+      <view wx:if="{{hasProfileInfo}}" class="card-head">
+        <text class="section-title">{{family.profile.name || family.displayName || '我的记录'}}</text>
         <text wx:if="{{canManage}}" class="link" bindtap="onEditProfileTap">编辑 ></text>
       </view>
-      <view class="profile-grid">
+      <view wx:if="{{hasProfileInfo}}" class="profile-grid">
         <text>姓名：{{family.profile.name || '未设置'}}</text>
         <text>出生年：{{family.profile.birthYear || '未设置'}}</text>
         <text>年龄：{{profileView.age}}</text>
@@ -25,6 +25,13 @@
         <text>当前心率：{{profileView.currentHrText}}</text>
         <text>当前用药：{{family.profile.medicationsText || '未设置'}}</text>
         <text>紧急联系人：{{profileView.emergencyText}}</text>
+      </view>
+      <view wx:else class="profile-empty">
+        <text class="section-title">{{family.displayName || '我的记录'}}</text>
+        <text class="profile-empty-title">档案信息可稍后补充</text>
+        <text class="profile-empty-sub">当前血压：{{profileView.currentBpText}}</text>
+        <text class="profile-empty-sub">当前心率：{{profileView.currentHrText}}</text>
+        <button wx:if="{{canManage}}" class="secondary compact" bindtap="onEditProfileTap">完善档案</button>
       </view>
       <text class="trust-hint">仅用于报告展示，您可以填写昵称或简称。</text>
     </view>
@@ -50,7 +57,7 @@
       <text class="muted">即将上线</text>
     </view>
 
-    <view wx:if="{{canManage}}" class="card">
+    <view wx:if="{{canManage && latestRecord}}" class="card">
       <text class="section-title">快捷设置</text>
       <view class="setting-row" bindtap="onToggleMedicationReminder">
         <view>
@@ -115,7 +122,6 @@
   <view wx:if="{{sharePanelOpen}}" class="mask" bindtap="onCloseSharePanel"></view>
   <view wx:if="{{sharePanelOpen}}" class="share-panel">
     <button class="sheet-button primary-sheet" open-type="share">发送微信邀请</button>
-    <button class="sheet-button" bindtap="onCopyInviteCode">复制邀请码</button>
     <button class="sheet-button cancel" bindtap="onCloseSharePanel">取消</button>
   </view>
 </view>

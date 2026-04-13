@@ -164,39 +164,6 @@ Page({
     }
   },
 
-  onJoinByCodeTap() {
-    wx.showModal({
-      title: '输入邀请码',
-      editable: true,
-      placeholderText: '请输入邀请码',
-      content: '如果家人发给你的是微信邀请卡片，直接点开卡片即可查看记录。',
-      success: async (res) => {
-        if (!res.confirm) return
-        await this.joinByCode(res.content)
-      },
-    })
-  },
-
-  async joinByCode(code) {
-    const inviteCode = String(code || '').trim().toUpperCase()
-    if (!inviteCode) {
-      wx.showToast({ title: '请输入邀请码', icon: 'none' })
-      return
-    }
-    const res = await wx.cloud.callFunction({
-      name: 'joinFamily',
-      data: { inviteCode, nickname: '家人' },
-    })
-    if (!res.result.success) {
-      wx.showToast({ title: res.result.error || '加入失败', icon: 'none' })
-      return
-    }
-    const app = getApp()
-    app.globalData.familyId = res.result.familyId
-    wx.showToast({ title: '加入成功', icon: 'success' })
-    await this.loadRecords()
-  },
-
   onAddRecord() {
     wx.navigateTo({ url: '/pages/add-record/add-record' })
   },

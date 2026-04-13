@@ -10,12 +10,23 @@ function buildProfileView(profile, latestRecord) {
   }
 }
 
+function hasProfileInfo(profile) {
+  return Boolean(
+    profile.name ||
+    profile.birthYear ||
+    profile.medicationsText ||
+    profile.emergencyContactName ||
+    profile.emergencyContactPhone
+  )
+}
+
 Page({
   data: {
     loading: true,
     family: null,
     currentMember: null,
     canManage: false,
+    hasProfileInfo: false,
     latestRecord: null,
     latestTime: '',
     profileView: {
@@ -60,6 +71,7 @@ Page({
         family: { ...family, profile, settings },
         currentMember: res.result.member || null,
         canManage: res.result.member && res.result.member.role === 'admin',
+        hasProfileInfo: hasProfileInfo(profile),
         latestRecord,
         latestTime: latestRecord ? formatDateTime(latestRecord.measuredAt) : '',
         profileView: buildProfileView(profile, latestRecord),
@@ -74,47 +86,8 @@ Page({
     wx.navigateTo({ url: '/pages/settings/settings' })
   },
 
-  async onCreateFamily() {
-    const res = await wx.cloud.callFunction({
-      name: 'createFamily',
-      data: { nickname: '我', displayName: '我的记录' },
-    })
-    if (res.result && res.result.success) {
-      getApp().globalData.familyId = res.result.familyId
-      this.loadFamily()
-    }
-  },
-
-  onJoinFamilyTap() {
-    wx.showModal({
-      title: '输入邀请码',
-      editable: true,
-      placeholderText: '请输入邀请码',
-      content: '如果家人发给你的是微信邀请卡片，直接点开卡片即可查看记录。',
-      success: async (res) => {
-        if (!res.confirm) return
-        await this.joinByCode(res.content)
-      },
-    })
-  },
-
-  async joinByCode(code) {
-    const inviteCode = String(code || '').trim().toUpperCase()
-    if (!inviteCode) {
-      wx.showToast({ title: '请输入邀请码', icon: 'none' })
-      return
-    }
-    const res = await wx.cloud.callFunction({
-      name: 'joinFamily',
-      data: { inviteCode, nickname: '家人' },
-    })
-    if (!res.result.success) {
-      wx.showToast({ title: res.result.error || '加入失败', icon: 'none' })
-      return
-    }
-    getApp().globalData.familyId = res.result.familyId
-    wx.showToast({ title: '加入成功', icon: 'success' })
-    this.loadFamily()
+  onGoRecordTap() {
+    wx.switchTab({ url: '/pages/data/data' })
   },
 
   onInviteTap() {
@@ -122,11 +95,6 @@ Page({
   },
 
   onCloseSharePanel() {
-    this.setData({ sharePanelOpen: false })
-  },
-
-  onCopyInviteCode() {
-    wx.setClipboardData({ data: this.data.family.inviteCode })
     this.setData({ sharePanelOpen: false })
   },
 

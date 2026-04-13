@@ -8,6 +8,7 @@
 .primary, .secondary { min-height: 96rpx; border-radius: 28rpx; font-size: 32rpx; font-weight: 700; margin-top: 20rpx; }
 .primary { background: #3182F7; color: #fff; }
 .secondary { background: #EAF2FF; color: #3182F7; }
+.secondary.compact { min-height: 80rpx; border-radius: 22rpx; font-size: 28rpx; margin-top: 24rpx; }
 .body { padding: 32rpx; }
 .card, .action-card { background: #fff; border-radius: 32rpx; padding: 32rpx; margin-bottom: 24rpx; box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09); }
 .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18rpx; }
@@ -15,6 +16,9 @@
 .card-head .section-title { margin-bottom: 0; }
 .link { font-size: 28rpx; font-weight: 700; color: #3182F7; }
 .profile-grid { display: flex; flex-direction: column; gap: 18rpx; color: #0F172A; font-size: 30rpx; line-height: 1.45; }
+.profile-empty { display: flex; flex-direction: column; gap: 12rpx; }
+.profile-empty-title { color: #0F172A; font-size: 30rpx; font-weight: 800; }
+.profile-empty-sub { color: #64748B; font-size: 28rpx; line-height: 1.5; }
 .trust-hint { display: block; color: #94A3B8; font-size: 24rpx; line-height: 1.5; margin-top: 20rpx; }
 .row-title { font-size: 32rpx; font-weight: 700; color: #0F172A; margin-bottom: 24rpx; }
 .member-row { display: flex; gap: 20rpx; overflow-x: auto; padding-bottom: 8rpx; }

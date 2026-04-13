@@ -711,6 +711,7 @@ Run these checks in WeChat DevTools after deploying `saveRecord`.
 - 本计划故意不改数据库集合名，避免现在引入 `recordBooks` 数据迁移风险。
 - `families` 在本阶段承担“记录空间”职责，前台文案先改为“记录 / 家人的记录”。
 - 多记录本 Switcher、邀请码 hash、限流、离线队列、合并迁移是独立功能，不和首屏记录体验绑在同一个实现里。
+- 2026-04-13 追加决策：MVP 前端隐藏手动邀请码入口，只保留微信分享卡片；后端 `inviteCode` 兼容先保留，后续需要时再上线。
 - 如果实现时发现 `createFamily` 和 `saveRecord` 的默认 profile/settings 字段不一致，优先按 `utils/family-settings.js` 的 `createDefaultProfile()` 和 `createDefaultSettings()` 对齐。
 
 ## Future Backlog

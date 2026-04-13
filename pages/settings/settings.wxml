@@ -1,23 +1,103 @@
 <scroll-view scroll-y class="container">
-  <text class="sec-label">成员权限</text>
-  <view wx:if="{{!members.length && !loading}}" class="empty-card">
-    <text>暂无可配置成员</text>
+  <view wx:if="{{!settings && !loading}}" class="empty-card">
+    <text>请先创建或加入家庭组</text>
   </view>
 
-  <view wx:for="{{members}}" wx:key="openid" class="member-card">
-    <view>
-      <text class="member-name">{{item.nickname || '家人'}}</text>
-      <text class="member-sub">普通成员</text>
-    </view>
-    <view class="perm-row">
-      <view class="perm" bindtap="onPermissionToggle" data-openid="{{item.openid}}" data-key="canWrite">
-        <text>可录入</text>
-        <view class="switch {{item.canWrite ? 'on' : ''}}"><view class="knob"></view></view>
+  <block wx:if="{{settings}}">
+    <text class="sec-label">通知设置</text>
+    <view class="settings-card">
+      <view class="setting-row" bindtap="onToggle" data-key="abnormalBpNotifyEnabled">
+        <view>
+          <text class="setting-title">异常血压通知</text>
+          <text class="setting-sub">超过阈值时通知已选择成员</text>
+        </view>
+        <view class="switch {{settings.abnormalBpNotifyEnabled ? 'on' : ''}}"><view class="knob"></view></view>
       </view>
-      <view class="perm" bindtap="onPermissionToggle" data-openid="{{item.openid}}" data-key="canEdit">
-        <text>可编辑</text>
-        <view class="switch {{item.canEdit ? 'on' : ''}}"><view class="knob"></view></view>
+      <view class="setting-row" bindtap="onNotifyMembersTap">
+        <view>
+          <text class="setting-title">通知对象</text>
+          <text class="setting-sub">血压异常时通知谁</text>
+        </view>
+        <text class="value">{{notifyMemberText}} ></text>
+      </view>
+      <view class="setting-row">
+        <view>
+          <text class="setting-title">高压告警阈值</text>
+          <text class="setting-sub">收缩压超过此值时触发通知</text>
+        </view>
+        <input class="number-input" type="number" value="{{settings.alertSystolic}}" bindblur="onThresholdChange" data-key="alertSystolic" />
+      </view>
+      <view class="setting-row no-border">
+        <view>
+          <text class="setting-title">低压告警阈值</text>
+          <text class="setting-sub">舒张压超过此值时触发通知</text>
+        </view>
+        <input class="number-input" type="number" value="{{settings.alertDiastolic}}" bindblur="onThresholdChange" data-key="alertDiastolic" />
       </view>
     </view>
-  </view>
+
+    <text class="sec-label">提醒设置</text>
+    <view class="settings-card">
+      <view class="setting-row" bindtap="onToggle" data-key="medicationReminderEnabled">
+        <view>
+          <text class="setting-title">用药提醒</text>
+          <text class="setting-sub">每日定时提醒服药</text>
+        </view>
+        <view class="switch {{settings.medicationReminderEnabled ? 'on' : ''}}"><view class="knob"></view></view>
+      </view>
+      <picker mode="time" value="{{settings.morningReminderTime}}" bindchange="onTimeChange" data-key="morningReminderTime">
+        <view class="setting-row">
+          <view>
+            <text class="setting-title">晨提醒时间</text>
+            <text class="setting-sub">早晨服药提醒时间</text>
+          </view>
+          <text class="value">{{settings.morningReminderTime}} ></text>
+        </view>
+      </picker>
+      <picker mode="time" value="{{settings.eveningReminderTime}}" bindchange="onTimeChange" data-key="eveningReminderTime">
+        <view class="setting-row no-border">
+          <view>
+            <text class="setting-title">晚提醒时间</text>
+            <text class="setting-sub">晚上服药提醒时间</text>
+          </view>
+          <text class="value">{{settings.eveningReminderTime}} ></text>
+        </view>
+      </picker>
+    </view>
+
+    <text class="sec-label">图表设置</text>
+    <view class="settings-card">
+      <view class="setting-row" bindtap="onToggle" data-key="morningEveningLabel">
+        <view>
+          <text class="setting-title">晨/晚测标注</text>
+          <text class="setting-sub">录入时选择测量时段</text>
+        </view>
+        <view class="switch {{settings.morningEveningLabel ? 'on' : ''}}"><view class="knob"></view></view>
+      </view>
+      <view class="setting-row no-border" bindtap="onToggle" data-key="splitLines">
+        <view>
+          <text class="setting-title">早晚分线显示</text>
+          <text class="setting-sub">图表中晨/晚测分两条线</text>
+        </view>
+        <view class="switch {{settings.splitLines ? 'on' : ''}}"><view class="knob"></view></view>
+      </view>
+    </view>
+
+    <text class="sec-label">显示设置</text>
+    <view class="settings-card">
+      <view class="setting-row no-border">
+        <view>
+          <text class="setting-title">字体大小</text>
+          <text class="setting-sub">超大模式适合老人使用</text>
+        </view>
+        <view class="segmented">
+          <text class="{{settings.fontSize==='standard'?'active':''}}" bindtap="onFontSizeTap" data-value="standard">标准</text>
+          <text class="{{settings.fontSize==='large'?'active':''}}" bindtap="onFontSizeTap" data-value="large">大</text>
+          <text class="{{settings.fontSize==='xlarge'?'active':''}}" bindtap="onFontSizeTap" data-value="xlarge">超大</text>
+        </view>
+      </view>
+    </view>
+
+    <text class="note">当前仅保存配置，暂不接微信订阅消息或真实提醒服务。</text>
+  </block>
 </scroll-view>

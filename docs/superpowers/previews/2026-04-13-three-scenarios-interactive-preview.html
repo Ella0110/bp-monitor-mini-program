@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>血压心率记录 - 三场景交互式流程预览</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --blue: #2f7cf6;
+      --blue-dark: #1f5fd8;
+      --blue-soft: #e9f2ff;
+      --bg: #d8e4f2;
+      --panel: #eef4fb;
+      --card: #fff;
+      --line: #dfe8f5;
+      --text: #172033;
+      --muted: #64748b;
+      --red: #ef4444;
+      --green: #1fb765;
+      --orange: #fb8b0b;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .page { max-width: 1540px; margin: 0 auto; padding: 28px; }
+    .intro {
+      background: rgba(255,255,255,0.86);
+      border: 1px solid rgba(255,255,255,0.98);
+      border-radius: 8px;
+      padding: 22px 24px;
+      box-shadow: 0 14px 40px rgba(52, 74, 104, 0.12);
+      margin-bottom: 18px;
+    }
+    h1 { margin: 0 0 10px; font-size: 30px; line-height: 1.25; letter-spacing: 0; }
+    .intro p { margin: 7px 0; color: #536179; line-height: 1.7; font-size: 16px; }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 18px 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(216, 228, 242, 0.94);
+      padding: 12px 0;
+      backdrop-filter: blur(10px);
+    }
+    .tab-btn {
+      min-height: 56px;
+      border-radius: 8px;
+      border: 1px solid #c7d6e8;
+      background: rgba(255,255,255,0.82);
+      color: var(--text);
+      font-weight: 900;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+      box-shadow: 0 12px 26px rgba(47, 124, 246, 0.28);
+    }
+    .scenario { display: none; }
+    .scenario.active { display: block; }
+    .scenario-head {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(255,255,255,0.98);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+    }
+    .scenario-head strong { display: block; font-size: 18px; margin-bottom: 6px; }
+    .scenario-head span { color: var(--muted); line-height: 1.65; font-size: 14px; }
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(360px, 1fr));
+      gap: 26px;
+      align-items: start;
+    }
+    .unit { min-width: 0; }
+    .pm-note {
+      min-height: 190px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(255,255,255,0.98);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 10px 28px rgba(52, 74, 104, 0.11);
+    }
+    .pm-note h2 { margin: 0 0 8px; font-size: 17px; letter-spacing: 0; }
+    .pm-note p { margin: 6px 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .pm-note b { color: var(--text); }
+    .phone {
+      width: min(100%, 430px);
+      height: 884px;
+      margin: 0 auto;
+      background: var(--panel);
+      border-radius: 34px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 22px 60px rgba(41, 63, 96, 0.28);
+      position: relative;
+    }
+    .screen {
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      padding-bottom: 82px;
+      background: var(--panel);
+    }
+    .scroll { height: calc(100% - 82px); overflow: hidden; }
+    .topbar {
+      min-height: 92px;
+      padding: 48px 20px 14px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .switcher {
+      min-height: 42px;
+      max-width: 255px;
+      border-radius: 8px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .title { font-size: 30px; font-weight: 900; letter-spacing: 0; }
+    .icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #f1f6ff;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .hero {
+      background: linear-gradient(180deg, #5da9fb 0%, var(--blue-dark) 100%);
+      color: #fff;
+      padding: 64px 20px 28px;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+    }
+    .hero-title { text-align: center; font-size: 22px; font-weight: 900; margin-bottom: 20px; letter-spacing: 0; }
+    .record-card, .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(42, 65, 96, 0.08);
+    }
+    .record-card {
+      background: rgba(255,255,255,0.92);
+      color: var(--text);
+      padding: 18px;
+      margin: 0 10px 18px;
+    }
+    .card { padding: 18px; margin-bottom: 14px; }
+    .content { padding: 18px 20px 0; }
+    .input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .input-box {
+      min-height: 82px;
+      border-radius: 8px;
+      background: #f7faff;
+      border: 1px solid #dce6f3;
+      padding: 10px;
+    }
+    .input-box label { display: block; color: #66758c; font-size: 12px; font-weight: 900; margin-bottom: 8px; }
+    .input-box strong { display: block; color: var(--text); font-size: 30px; line-height: 1; letter-spacing: 0; }
+    .metric-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 16px; }
+    .metric-label { display: block; color: #607086; font-size: 14px; font-weight: 800; margin-bottom: 6px; }
+    .metric-big { display: block; font-size: 58px; line-height: 0.96; font-weight: 900; color: var(--orange); letter-spacing: 0; }
+    .metric-mid { display: block; font-size: 40px; line-height: 1; font-weight: 900; color: var(--orange); letter-spacing: 0; }
+    .green { color: var(--green); }
+    .red { color: var(--red); }
+    .btn { width: 100%; min-height: 54px; border: 0; border-radius: 8px; font-size: 17px; font-weight: 900; margin-top: 12px; }
+    .btn-white { background: #fff; color: var(--blue); }
+    .btn-blue { background: var(--blue); color: #fff; }
+    .btn-soft { background: var(--blue-soft); color: var(--blue); }
+    .btn-disabled { background: #e6edf6; color: #9aa8ba; }
+    .micro-link { display: block; margin-top: 14px; text-align: center; color: rgba(255,255,255,0.92); text-decoration: underline; text-underline-offset: 4px; font-size: 14px; font-weight: 800; }
+    .hint { color: var(--muted); line-height: 1.6; font-size: 13px; margin-top: 10px; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .section-title { font-size: 18px; font-weight: 900; letter-spacing: 0; }
+    .download { color: var(--blue); font-size: 14px; font-weight: 900; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+    .stat { min-height: 72px; border-radius: 8px; background: #f7faff; padding: 10px; text-align: center; }
+    .stat strong { display: block; font-size: 24px; line-height: 1.1; }
+    .stat span { color: #7e8ca2; font-size: 12px; display: block; margin-top: 5px; }
+    .chart {
+      height: 152px;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(47,124,246,0.06), rgba(47,124,246,0.01)),
+        repeating-linear-gradient(0deg, transparent, transparent 34px, #e7eef7 35px),
+        repeating-linear-gradient(90deg, transparent, transparent 62px, #e7eef7 63px);
+      position: relative;
+      overflow: hidden;
+    }
+    .chart::before { content: ""; position: absolute; left: 36px; right: 42px; top: 88px; height: 4px; background: var(--blue); transform: rotate(-4deg); border-radius: 10px; }
+    .chart::after { content: ""; position: absolute; left: 36px; right: 46px; top: 66px; height: 4px; background: var(--red); transform: rotate(8deg); border-radius: 10px; }
+    .empty-chart {
+      height: 142px;
+      border-radius: 8px;
+      background: #f8fbff;
+      border: 1px dashed #cbd8e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #8492a7;
+      line-height: 1.6;
+      font-size: 14px;
+      padding: 16px;
+    }
+    .family-header {
+      background: #fff;
+      padding: 68px 24px 26px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .family-title { font-size: 34px; font-weight: 900; letter-spacing: 0; }
+    .family-body { padding: 18px 18px 0; }
+    .profile-hero { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .avatar { width: 58px; height: 58px; border-radius: 50%; background: var(--blue); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; flex-shrink: 0; }
+    .profile-name { display: block; font-size: 20px; font-weight: 900; margin-bottom: 3px; }
+    .profile-sub { display: block; color: #8a98ad; font-size: 14px; font-weight: 700; }
+    .edit-pill { margin-left: auto; min-width: 72px; min-height: 42px; border-radius: 8px; background: #f1f6ff; color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; }
+    .profile-line { min-height: 48px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #edf2f8; gap: 16px; font-size: 16px; }
+    .profile-line span:first-child { color: #66758c; font-weight: 800; flex-shrink: 0; }
+    .profile-line span:last-child { color: var(--text); font-weight: 900; text-align: right; }
+    .label { color: #91a0b5; font-size: 15px; font-weight: 900; margin: 22px 2px 12px; }
+    .member-row { display: flex; gap: 16px; align-items: flex-start; overflow: hidden; }
+    .member { min-width: 56px; text-align: center; color: #6f7e94; font-size: 13px; line-height: 1.35; }
+    .member .avatar { width: 56px; height: 56px; margin: 0 auto 8px; font-size: 18px; }
+    .invite-avatar { background: #fff; color: #94a3b8; border: 2px dashed #cbd8e8; }
+    .function-row { display: flex; align-items: center; gap: 14px; min-height: 76px; }
+    .function-icon { width: 44px; height: 44px; border-radius: 8px; background: #f1f6ff; display: flex; align-items: center; justify-content: center; color: var(--blue); font-weight: 900; flex-shrink: 0; }
+    .function-text strong { display: block; font-size: 18px; margin-bottom: 4px; }
+    .function-text span { color: #8492a7; font-size: 14px; }
+    .chev { margin-left: auto; color: #b4c0d0; font-weight: 900; }
+    .switcher-menu {
+      position: absolute;
+      top: 100px;
+      left: 20px;
+      right: 20px;
+      background: #fff;
+      z-index: 4;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 18px 42px rgba(23, 32, 51, 0.18);
+      overflow: hidden;
+    }
+    .menu-row { min-height: 54px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #edf2f8; font-size: 15px; font-weight: 900; }
+    .menu-row:last-child { border-bottom: 0; }
+    .menu-row span { color: var(--muted); font-size: 13px; font-weight: 800; }
+    .pill { display: inline-flex; min-height: 28px; align-items: center; padding: 0 10px; border-radius: 8px; background: var(--blue-soft); color: var(--blue); font-size: 12px; font-weight: 900; margin-top: 10px; }
+    .pill-red { background: #fee2e2; color: #dc2626; }
+    .tooltip {
+      position: absolute;
+      left: 36px;
+      right: 36px;
+      top: 356px;
+      min-height: 50px;
+      border-radius: 8px;
+      background: rgba(22, 32, 51, 0.92);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 14px;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.45;
+      z-index: 8;
+      box-shadow: 0 18px 40px rgba(22, 32, 51, 0.28);
+    }
+    .invite-card {
+      background: linear-gradient(180deg, #fff, #f6faff);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    .code { font-size: 26px; letter-spacing: 4px; color: var(--blue); font-weight: 900; text-align: center; padding: 12px 0 4px; }
+    .tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 82px; background: #fff; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1fr; text-align: center; align-items: center; color: #9aa8ba; font-size: 13px; font-weight: 900; }
+    .tabbar .active { color: var(--blue); }
+    .tabicon { display: block; font-size: 22px; line-height: 1; margin-bottom: 4px; }
+    @media (max-width: 1220px) { .flow-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 820px) { .page { padding: 16px; } .tabs { grid-template-columns: 1fr; position: static; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="intro">
+      <h1>三场景并行流程预览</h1>
+      <p>目标：用 Zero-Friction UX 隐藏复杂协作逻辑。用户先记录和看图，再按需触发档案、邀请、权限、多记录本。</p>
+      <p>全局约束：顶部标题是 Switcher；场景 A/B 首次保存静默生成默认记录；场景 C 权限感知且可一键创建自己的记录。</p>
+    </section>
+
+    <nav class="tabs" aria-label="场景切换">
+      <button class="tab-btn active" data-target="scene-a">场景 A：自用先锋</button>
+      <button class="tab-btn" data-target="scene-b">场景 B：照护核心</button>
+      <button class="tab-btn" data-target="scene-c">场景 C：纯观察员</button>
+    </nav>
+
+    <section id="scene-a" class="scenario active">
+      <div class="scenario-head"><strong>场景 A：自用先锋（给自己记）</strong><span>首屏录入 -> 自动生成“我的记录” -> 档案选填 -> 家庭页可选邀请配偶。</span></div>
+      <div class="flow-grid">
+        <div class="unit">
+          <div class="pm-note"><h2>数据页</h2><p><b>Context:</b> 当前用户 Ella，无记录本，无档案。</p><p><b>Business Logic:</b> 首屏直接给输入框，保存时静默创建“我的记录”，让价值交换在 5 秒内完成。</p><p><b>Edge Case:</b> 没网时本地暂存，提示“网络恢复后同步”。保存失败不丢输入。</p></div>
+          <div class="phone"><div class="screen"><div class="scroll"><div class="hero"><div class="hero-title">我的记录 ▾</div><div class="record-card"><div class="input-grid"><div class="input-box"><label>高压</label><strong>128</strong></div><div class="input-box"><label>低压</label><strong>78</strong></div><div class="input-box"><label>心率</label><strong>72</strong></div></div><button class="btn btn-white">保存记录</button></div><a class="micro-link">查看家人的记录？输入邀请码</a></div><div class="content"><div class="section-head"><div class="section-title">血压数据</div><div class="download">下载图表</div></div><div class="card"><div class="empty-chart">保存第一条记录后，这里显示趋势。<br>档案信息可稍后补充。</div></div></div></div><div class="tabbar"><div class="active"><span class="tabicon">▮▮▮</span>数据</div><div><span class="tabicon">♟</span>家庭</div></div></div></div>
+        </div>
+        <div class="unit">
+          <div class="pm-note"><h2>家庭页</h2><p><b>Context:</b> 已自动生成“我的记录”，用户是 owner/admin。</p><p><b>Business Logic:</b> 档案卡显示“可完善”，邀请配偶是可选增强，不影响记录和图表。</p><p><b>Edge Case:</b> 未完善档案时，报告仍可匿名导出；家庭页不显示红色错误。</p></div>
+          <div class="phone"><div class="screen"><div class="scroll"><div class="family-header"><div class="family-title">家庭</div><div class="icon">设</div></div><div class="family-body"><div class="card"><div class="profile-hero"><div class="avatar">我</div><div><span class="profile-name">我的记录</span><span class="profile-sub">档案信息可稍后补充</span></div><div class="edit-pill">完善</div></div><div class="profile-line"><span>当前血压</span><span>128 / 78 mmHg</span></div><div class="profile-line"><span>当前心率</span><span>72 bpm</span></div><div class="profile-line"><span>当前用药</span><span>未填写</span></div></div><div class="label">照护成员</div><div class="card"><div class="member-row"><div class="member"><div class="avatar">我</div><div>我<br>管理员</div></div><div class="member"><div class="avatar invite-avatar">+</div><div>邀请<br>配偶</div></div></div><div class="hint">只有你授权的人才能查看这个记录本。</div></div><div class="label">功能</div><div class="card"><div class="function-row"><div class="function-icon">报</div><div class="function-text"><strong>生成就诊报告</strong><span>可匿名导出</span></div><div class="chev">&gt;</div></div></div></div></div><div class="tabbar"><div><span class="tabicon">▮▮▮</span>数据</div><div class="active"><span class="tabicon">♟</span>家庭</div></div></div></div>
+        </div>
+        <div class="unit">
+          <div class="pm-note"><h2>核心转换点</h2><p><b>Context:</b> 用户已建立自用数据价值，准备邀请配偶协助查看。</p><p><b>Business Logic:</b> 微信卡片是主路径，邀请码只做兜底。用户从自用自然变成邀请人。</p><p><b>Edge Case:</b> 分享失败时保留邀请码 48 小时；过期后可重新生成。</p></div>
+          <div class="phone"><div class="screen"><div class="scroll"><div class="topbar"><div class="switcher">我的记录 ▾</div><div class="icon">邀</div></div><div class="content"><div class="invite-card"><div class="avatar-row"><div class="avatar">我</div><div class="identity"><strong>邀请配偶查看</strong><span>我的血压心率记录</span></div></div><button class="btn btn-blue">发送微信邀请卡片</button><div class="hint">对方点击卡片后直接进入确认页。</div></div><div class="card"><div class="section-title">备用邀请码</div><div class="code">M8Q3LA</div><div class="profile-line"><span>有效期</span><span>48 小时</span></div><div class="profile-line"><span>默认权限</span><span>可查看</span></div><button class="btn btn-soft">复制邀请码</button></div></div></div><div class="tabbar"><div><span class="tabicon">▮▮▮</span>数据</div><div class="active"><span class="tabicon">♟</span>家庭</div></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="scene-b" class="scenario">
+      <div class="scenario-head"><strong>场景 B：照护核心（给长辈记）</strong><span>首屏录入 -> 保存后手动重命名为“爸爸” -> 深度完善用药档案 -> 导出报告。</span></div>
+      <div class="flow-grid">
+        <div class="unit">
+          <div class="pm-note"><h2>数据页</h2><p><b>Context:</b> 女儿第一次打开，刚给爸爸测完血压。</p><p><b>Business Logic:</b> 不要求先创建“爸爸档案”，先记录 161/116 这种焦虑场景下的关键数据。</p><p><b>Edge Case:</b> 异常值保存后立即展示就医提示，但不做诊断承诺。</p></div>
+          <div class="phone"><div class="screen"><div class="scroll"><div class="hero"><div class="hero-title">我的记录 ▾</div><div class="record-card"><div class="input-grid"><div class="input-box"><label>高压</label><strong class="red">161</strong></div><div class="input-box"><label>低压</label><strong class="red">116</strong></div><div class="input-box"><label>心率</label><strong>68</strong></div></div><button class="btn btn-white">保存记录</button></div><a class="micro-link">查看家人的记录？输入邀请码</a></div><div class="content"><div class="card"><span class="pill pill-red">血压异常，如有不适请立即就医</span><div class="hint">保存后可把“我的记录”重命名为“爸爸”。</div></div></div></div><div class="tabbar"><div class="active"><span class="tabicon">▮▮▮</span>数据</div><div><span class="tabicon">♟</span>家庭</div></div></div></div>
+        </div>
+        <div class="unit">
+          <div class="pm-note"><h2>家庭页</h2><p><b>Context:</b> 已有一条记录，用户进入家庭页完善长辈资料。</p><p><b>Business Logic:</b> 重命名和档案完善发生在价值之后；用药/紧急联系人是报告增强项。</p><p><b>Edge Case:</b> 用户不愿填真实姓名时，可填写“爸爸”等称呼；电话和用药可跳过。</p></div>
+          <div class="phone"><div class="screen"><div class="scroll"><div class="family-header"><div class="family-title">家庭</div><div class="icon">设</div></div><div class="family-body"><div class="card"><div class="profile-hero"><div class="avatar">爸</div><div><span class="profile-name">爸爸</span><span class="profile-sub">1952年生 · 74岁</span></div><div class="edit-pill">编辑</div></div><div class="profile-line"><span>当前血压</span><span>161 / 116 mmHg</span></div><div class="profile-line"><span>当前心率</span><span>68 bpm</span></div><div class="profile-line"><span>长期用药</span><span>苯磺酸氨氯地平</span></div><div class="profile-line"><span>紧急联系人</span><span>Ella · 138xxxx1234</span></div></div><div class="card"><div class="function-row"><div class="function-icon">报</div><div class="function-text"><strong>生成就诊报告</strong><span>包含血压趋势、用药、联系人</span></div><div class="chev">&gt;</div></div></div></div></div><div class="tabbar"><div><span class="tabicon">▮▮▮</span>数据</div><div class="active"><span class="tabicon">♟</span>家庭</div></div></div></div>
+        </div>
+        <div class="unit">
+          <div class="pm-note"><h2>核心转换点</h2><p><b>Context:</b> 用户从快速记录进入“医生沟通”场景。</p><p><b>Business Logic:</b> 导出报告时提示“隐藏真实姓名/电话”，降低分享报告的隐私顾虑。</p><p><b>Edge Case:</b> 档案缺失时仍可匿名导出；网络失败时保留报告生成参数。</p></div>
+          <div class="phone"><div class="screen"><div class="scroll"><div class="topbar"><div class="switcher">爸爸的记录 ▾</div><div class="icon">报</div></div><div class="content"><div class="card"><div class="section-title">生成就诊报告</div><div class="profile-line"><span>时间段</span><span>近 30 天</span></div><div class="profile-line"><span>档案信息</span><span>已完善</span></div><div class="profile-line"><span>异常记录</span><span>3 次</span></div><div class="hint">报告用于就医沟通，机判结果仅供参考，请以医生诊疗结果为准。</div><button class="btn btn-blue">导出报告图片</button></div><div class="card"><div class="profile-line"><span>隐藏真实姓名/电话</span><span>已开启</span></div><div class="chart"></div></div></div></div><div class="tabbar"><div class="active"><span class="tabicon">▮▮▮</span>数据</div><div><span class="tabicon">♟</span>家庭</div></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="scene-c" class="scenario">
+      <div class="scenario-head"><strong>场景 C：纯观察员（看别人记）</strong><span>卡片进入 -> 接受邀请 -> 只读权限数据页 -> 一键创建自己的记录，形成双重身份。</span></div>
+      <div class="flow-grid">
+        <div class="unit">
+          <div class="pm-note"><h2>数据页</h2><p><b>Context:</b> 大哥从微信卡片进入，接受 Ella 邀请，默认只读爸爸记录。</p><p><b>Business Logic:</b> 只读也要完整显示数据价值；添加按钮不可用但必须解释原因。</p><p><b>Edge Case:</b> 卡片 inviteToken 过期时，提示让邀请人重发，也可输入邀请码。</p></div>
+          <div class="phone"><div class="screen"><div class="scroll"><div class="topbar"><div class="switcher">爸爸的记录 ▾</div><div class="icon">只看</div></div><div class="content"><div class="card"><div class="hint">你正在查看爸爸的健康记录。</div><div class="stats"><div class="stat"><strong>132</strong><span>高压</span></div><div class="stat"><strong>82</strong><span>低压</span></div><div class="stat"><strong>76</strong><span>心率</span></div></div><span class="pill">仅可查看</span><button class="btn btn-disabled">添加记录</button><div class="hint">管理员开启协助录入后，你才可以添加记录。</div></div><div class="card"><div class="chart"></div></div><div class="card"><div class="function-row"><div class="function-icon">我</div><div class="function-text"><strong>我也想记录</strong><span>创建“我的记录”，不影响爸爸的数据</span></div></div><button class="btn btn-soft">为自己创建记录</button></div></div></div><div class="tooltip">当前为只读权限。可向管理员申请协助录入。</div><div class="tabbar"><div class="active"><span class="tabicon">▮▮▮</span>数据</div><div><span class="tabicon">♟</span>家庭</div></div></div></div>
+        </div>
+        <div class="unit">
+          <div class="pm-note"><h2>家庭页</h2><p><b>Context:</b> 大哥是爸爸记录的 observer，不是管理员。</p><p><b>Business Logic:</b> 家庭页成员和权限跟随全局 Switcher；切到“我的记录”后成员列表会变成自己为管理员。</p><p><b>Edge Case:</b> 非管理员看不到权限编辑入口，只看到自己的权限状态。</p></div>
+          <div class="phone"><div class="screen"><div class="scroll"><div class="family-header"><div class="family-title">家庭</div><div class="icon">设</div></div><div class="family-body"><div class="card"><div class="profile-hero"><div class="avatar">爸</div><div><span class="profile-name">爸爸的记录</span><span class="profile-sub">你是观察员</span></div><div class="edit-pill">只读</div></div><div class="profile-line"><span>查看</span><span>已开启</span></div><div class="profile-line"><span>录入</span><span>未开启</span></div><div class="profile-line"><span>编辑</span><span>未开启</span></div></div><div class="label">照护成员</div><div class="card"><div class="member-row"><div class="member"><div class="avatar">E</div><div>Ella<br>管理员</div></div><div class="member"><div class="avatar">哥</div><div>我<br>观察员</div></div></div></div><div class="card"><button class="btn btn-soft">申请协助录入权限</button></div></div></div><div class="tabbar"><div><span class="tabicon">▮▮▮</span>数据</div><div class="active"><span class="tabicon">♟</span>家庭</div></div></div></div>
+        </div>
+        <div class="unit">
+          <div class="pm-note"><h2>核心转换点</h2><p><b>Context:</b> 大哥被爸爸数据触发，想开始记录自己的血压。</p><p><b>Business Logic:</b> 一键创建“我的记录”，同一账号变成双重身份：爸爸记录的观察员 + 自己记录的管理员。</p><p><b>Edge Case:</b> 创建失败时保留当前爸爸记录上下文，不影响继续查看。</p></div>
+          <div class="phone"><div class="screen"><div class="topbar"><div class="switcher">爸爸的记录 ▾</div><div class="icon">切</div></div><div class="switcher-menu"><div class="menu-row">爸爸的记录 <span>观察员</span></div><div class="menu-row">我的记录 <span>新建</span></div><div class="menu-row">+ 新增记录本 <span>给家人/自己</span></div></div><div class="scroll"><div class="content" style="padding-top:126px;"><div class="card"><div class="avatar-row"><div class="avatar">我</div><div><span class="profile-name">创建我的记录</span><span class="profile-sub">不会影响爸爸的记录和权限</span></div></div><button class="btn btn-blue">一键创建并切换</button></div><div class="card"><div class="hint">创建后顶部 Switcher 显示“我的记录”，添加按钮恢复可用，你自动成为管理员。</div></div></div></div><div class="tabbar"><div class="active"><span class="tabicon">▮▮▮</span>数据</div><div><span class="tabicon">♟</span>家庭</div></div></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const buttons = document.querySelectorAll('.tab-btn')
+    const scenarios = document.querySelectorAll('.scenario')
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        buttons.forEach((item) => item.classList.remove('active'))
+        scenarios.forEach((item) => item.classList.remove('active'))
+        button.classList.add('active')
+        document.getElementById(button.dataset.target).classList.add('active')
+      })
+    })
+  </script>
+</body>
+</html>

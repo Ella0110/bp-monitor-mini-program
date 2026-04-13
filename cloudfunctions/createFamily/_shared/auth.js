@@ -35,24 +35,24 @@ function createDefaultProfile() {
   return {
     name: '',
     birthYear: null,
-    targetSystolic: 135,
-    targetDiastolic: 85,
-    targetHRMin: 60,
-    targetHRMax: 80,
-    medications: '',
-    emergencyContact: '',
+    medicationsText: '',
+    emergencyContactName: '',
+    emergencyContactPhone: '',
   }
 }
 
 function createDefaultSettings() {
   return {
+    abnormalBpNotifyEnabled: false,
+    notifyMemberIds: [],
     alertSystolic: 160,
     alertDiastolic: 100,
-    notifyAll: true,
-    notifyMemberIds: [],
+    medicationReminderEnabled: false,
+    morningReminderTime: '08:00',
+    eveningReminderTime: '20:00',
     morningEveningLabel: false,
     splitLines: false,
-    fontSize: 'large',
+    fontSize: 'standard',
   }
 }
 

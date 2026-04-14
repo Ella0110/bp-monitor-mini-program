@@ -1,13 +1,9 @@
-<view class="container fs-{{fontSizeClass}}" style="{{fontSizeStyle}}">
+<view class="container" style="{{fontSizeStyle}}">
   <view class="custom-nav" style="{{navStyle}}">
     <text class="nav-title" style="{{navTitleStyle}}">家庭</text>
   </view>
 
   <view class="fam-content" style="{{contentStyle}}">
-    <view wx:if="{{family}}" class="fam-header">
-      <view class="settings-entry" bindtap="onSettingsTap">⚙</view>
-    </view>
-
     <view wx:if="{{!family && !loading}}" class="empty">
       <text class="empty-title">还没有健康记录</text>
       <text class="empty-hint">先去记录一条血压心率，记录后可在这里补充档案、邀请家人查看。</text>
@@ -16,114 +12,132 @@
     </view>
 
     <scroll-view wx:if="{{family}}" scroll-y class="body">
-      <view class="card">
-        <view wx:if="{{hasProfileInfo}}" class="card-head">
-          <text class="section-title">{{family.profile.name || family.displayName || '我的记录'}}</text>
-          <text wx:if="{{canManage}}" class="link" bindtap="onEditProfileTap">编辑 ></text>
+
+      <!-- 被监护人档案 -->
+      <view class="flbl-row">
+        <text class="flbl">被监护人档案</text>
+        <view wx:if="{{canManage}}" class="settings-btn" bindtap="onSettingsTap">⚙</view>
+      </view>
+      <view class="prof-card">
+        <view class="prof-top">
+          <view class="prof-av">{{family.profile.name ? family.profile.name[0] : (family.displayName ? family.displayName[0] : '我')}}</view>
+          <view class="prof-info">
+            <text class="prof-name">{{family.profile.name || family.displayName || '我的记录'}}</text>
+            <text class="prof-sub">{{profileView.birthText}}</text>
+          </view>
+          <text wx:if="{{canManage}}" class="edit-lnk" bindtap="onEditProfileTap">编辑 ›</text>
         </view>
-        <view wx:if="{{hasProfileInfo}}" class="profile-grid">
-          <text>姓名：{{family.profile.name || '未设置'}}</text>
-          <text>出生年：{{family.profile.birthYear || '未设置'}}</text>
-          <text>年龄：{{profileView.age}}</text>
-          <text>当前血压：{{profileView.currentBpText}}</text>
-          <text>当前心率：{{profileView.currentHrText}}</text>
-          <text>当前用药：{{family.profile.medicationsText || '未设置'}}</text>
-          <text>紧急联系人：{{profileView.emergencyText}}</text>
-        </view>
-        <view wx:else class="profile-empty">
-          <text class="section-title">{{family.displayName || '我的记录'}}</text>
-          <text class="profile-empty-title">档案信息可稍后补充</text>
-          <text class="profile-empty-sub">当前血压：{{profileView.currentBpText}}</text>
-          <text class="profile-empty-sub">当前心率：{{profileView.currentHrText}}</text>
-          <button wx:if="{{canManage}}" class="secondary compact" bindtap="onEditProfileTap">完善档案</button>
-        </view>
-        <text class="trust-hint">仅用于报告展示，您可以填写昵称或简称。</text>
+        <view class="ir"><text class="il">当前血压</text><text class="iv">{{profileView.currentBpText}}</text></view>
+        <view class="ir"><text class="il">当前心率</text><text class="iv">{{profileView.currentHrText}}</text></view>
+        <view class="ir"><text class="il">长期用药</text><text class="iv">{{family.profile.medicationsText || '未设置'}}</text></view>
+        <view class="ir last"><text class="il">紧急联系人</text><text class="iv">{{profileView.emergencyText}}</text></view>
       </view>
 
-      <view class="card">
-        <view class="row-title">家庭成员</view>
-        <view class="member-row">
-          <view wx:for="{{family.members}}" wx:key="openid" class="member" bindtap="onMemberTap" data-openid="{{item.openid}}">
-            <view class="avatar">{{item.nickname ? item.nickname[0] : '家'}}</view>
-            <text>{{item.nickname || '家人'}}</text>
+      <!-- 家庭成员 -->
+      <view class="flbl">家庭成员</view>
+      <view class="mem-card">
+        <scroll-view scroll-x class="mem-row">
+          <view wx:for="{{family.members}}" wx:key="openid" class="mc" bindtap="onMemberTap" data-openid="{{item.openid}}">
+            <view class="mav {{item.role === 'admin' ? 'admin' : ''}}">{{item.nickname ? item.nickname[0] : '家'}}</view>
+            <text class="mn">{{item.role === 'admin' ? (item.nickname || '我') + '（管）' : (item.nickname || '家人')}}</text>
           </view>
-          <button class="invite-button" bindtap="onInviteTap">＋\n邀请</button>
+          <view class="mc" bindtap="onInviteTap">
+            <view class="mav invite">＋</view>
+            <text class="mn">邀请</text>
+          </view>
+        </scroll-view>
+        <text class="mem-hint">成员可查看全部记录 · 最多10人</text>
+      </view>
+
+      <!-- 功能 -->
+      <view class="flbl">功能</view>
+      <view class="ar" bindtap="onReportTap">
+        <view class="aico ai-b">📄</view>
+        <view>
+          <text class="at">生成就诊报告</text>
+          <text class="ats">选择时间段，导出图片</text>
+        </view>
+        <text class="aa">›</text>
+      </view>
+      <view class="ar off">
+        <view class="aico ai-o">💊</view>
+        <view>
+          <text class="at">药物管理</text>
+          <text class="ats">拍照 / 扫码录入药品</text>
+        </view>
+        <text class="soon-badge">即将上线</text>
+      </view>
+
+      <!-- 快捷设置 -->
+      <view wx:if="{{canManage && latestRecord}}">
+        <view class="flbl">快捷设置</view>
+        <view class="qs-card">
+          <view class="qs-row" bindtap="onToggleMedicationReminder">
+            <view>
+              <text class="qs-title">用药提醒</text>
+              <text class="qs-sub">按晨/晚时间提醒</text>
+            </view>
+            <view class="switch {{family.settings.medicationReminderEnabled ? 'on' : ''}}"><view class="knob"></view></view>
+          </view>
+          <view class="qs-row" bindtap="onToggleAbnormalNotify">
+            <view>
+              <text class="qs-title">异常血压通知家人</text>
+              <text class="qs-sub">超过阈值时通知已选择成员</text>
+            </view>
+            <view class="switch {{family.settings.abnormalBpNotifyEnabled ? 'on' : ''}}"><view class="knob"></view></view>
+          </view>
+          <view class="qs-row no-border">
+            <view>
+              <text class="qs-title">字体大小</text>
+              <text class="qs-sub">调整全局显示大小</text>
+            </view>
+            <view class="segmented">
+              <text class="{{family.settings.fontSize==='standard'?'active':''}}" bindtap="onFontSizeTap" data-value="standard">标准</text>
+              <text class="{{family.settings.fontSize==='large'?'active':''}}" bindtap="onFontSizeTap" data-value="large">大</text>
+              <text class="{{family.settings.fontSize==='xlarge'?'active':''}}" bindtap="onFontSizeTap" data-value="xlarge">超大</text>
+            </view>
+          </view>
         </view>
       </view>
 
-      <view class="action-card" bindtap="onReportTap">
-        <text class="action-title">📄 生成就诊报告</text>
-        <text class="muted">选择时间段，导出图片</text>
-      </view>
-
-      <view class="action-card disabled">
-        <text class="action-title">💊 药物管理</text>
-        <text class="muted">即将上线</text>
-      </view>
-
-      <view wx:if="{{canManage && latestRecord}}" class="card">
-        <text class="section-title">快捷设置</text>
-        <view class="setting-row" bindtap="onToggleMedicationReminder">
-          <view>
-            <text class="setting-title">用药提醒</text>
-            <text class="setting-sub">按晨/晚时间提醒</text>
-          </view>
-          <view class="switch {{family.settings.medicationReminderEnabled ? 'on' : ''}}"><view class="knob"></view></view>
-        </view>
-        <view class="setting-row" bindtap="onToggleAbnormalNotify">
-          <view>
-            <text class="setting-title">异常血压通知家人</text>
-            <text class="setting-sub">超过阈值时通知已选择成员</text>
-          </view>
-          <view class="switch {{family.settings.abnormalBpNotifyEnabled ? 'on' : ''}}"><view class="knob"></view></view>
-        </view>
-        <view class="setting-row no-border">
-          <view>
-            <text class="setting-title">字体大小</text>
-            <text class="setting-sub">调整全局显示大小</text>
-          </view>
-          <view class="segmented">
-            <text class="{{family.settings.fontSize==='standard'?'active':''}}" bindtap="onFontSizeTap" data-value="standard">标准</text>
-            <text class="{{family.settings.fontSize==='large'?'active':''}}" bindtap="onFontSizeTap" data-value="large">大</text>
-            <text class="{{family.settings.fontSize==='xlarge'?'active':''}}" bindtap="onFontSizeTap" data-value="xlarge">超大</text>
-          </view>
-        </view>
-      </view>
     </scroll-view>
   </view>
 
+  <!-- 档案编辑弹窗 -->
   <view wx:if="{{profileFormOpen}}" class="mask" bindtap="onCloseProfileForm"></view>
   <view wx:if="{{profileFormOpen}}" class="modal">
     <text class="modal-title">编辑档案</text>
     <input value="{{profileForm.name}}" data-field="name" bindinput="onProfileInput" placeholder="姓名" />
-    <input value="{{profileForm.birthYear}}" data-field="birthYear" bindinput="onProfileInput" type="number" placeholder="出生年" />
-    <input value="{{profileForm.medicationsText}}" data-field="medicationsText" bindinput="onProfileInput" placeholder="当前用药" />
+    <input value="{{profileForm.birthYear}}" data-field="birthYear" bindinput="onProfileInput" type="number" placeholder="出生年（如 1952）" />
+    <input value="{{profileForm.medicationsText}}" data-field="medicationsText" bindinput="onProfileInput" placeholder="长期用药" />
     <input value="{{profileForm.emergencyContactName}}" data-field="emergencyContactName" bindinput="onProfileInput" placeholder="紧急联系人姓名" />
     <input value="{{profileForm.emergencyContactPhone}}" data-field="emergencyContactPhone" bindinput="onProfileInput" type="number" placeholder="紧急联系人电话" />
     <button class="primary" bindtap="onSaveProfile">保存</button>
   </view>
 
+  <!-- 成员权限弹窗 -->
   <view wx:if="{{permissionPanelOpen}}" class="mask" bindtap="onClosePermissionPanel"></view>
   <view wx:if="{{permissionPanelOpen}}" class="modal">
     <text class="modal-title">成员权限</text>
     <text class="modal-sub">家人加入后默认可以查看家庭健康记录。</text>
     <text class="modal-sub">{{selectedMember.nickname || '家人'}}</text>
-    <view class="setting-row" bindtap="onMemberPermissionToggle" data-key="canWrite">
+    <view class="qs-row" bindtap="onMemberPermissionToggle" data-key="canWrite">
       <view>
-        <text class="setting-title">可录入</text>
-        <text class="setting-sub">允许新增记录</text>
+        <text class="qs-title">可录入</text>
+        <text class="qs-sub">允许新增记录</text>
       </view>
       <view class="switch {{selectedMember.canWrite ? 'on' : ''}}"><view class="knob"></view></view>
     </view>
-    <view class="setting-row no-border" bindtap="onMemberPermissionToggle" data-key="canEdit">
+    <view class="qs-row no-border" bindtap="onMemberPermissionToggle" data-key="canEdit">
       <view>
-        <text class="setting-title">可编辑</text>
-        <text class="setting-sub">允许修改或删除记录</text>
+        <text class="qs-title">可编辑</text>
+        <text class="qs-sub">允许修改或删除记录</text>
       </view>
       <view class="switch {{selectedMember.canEdit ? 'on' : ''}}"><view class="knob"></view></view>
     </view>
   </view>
 
+  <!-- 邀请面板 -->
   <view wx:if="{{sharePanelOpen}}" class="mask" bindtap="onCloseSharePanel"></view>
   <view wx:if="{{sharePanelOpen}}" class="share-panel">
     <button class="sheet-button primary-sheet" open-type="share">发送微信邀请</button>

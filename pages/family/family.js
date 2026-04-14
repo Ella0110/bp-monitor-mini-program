@@ -2,9 +2,9 @@ const { calcAge, normalizeProfile, normalizeSettings } = require('../../utils/fa
 const { formatDateTime } = require('../../utils/date')
 
 function makeFontSizeStyle(cls) {
-  if (cls === 'large') return '--fs-title:44rpx'
-  if (cls === 'xlarge') return '--fs-title:49rpx'
-  return '--fs-title:38rpx'
+  if (cls === 'large') return '--fs-title:44rpx;--fs-prof-name:39rpx;--fs-sub:30rpx;--fs-ir:32rpx;--fs-mn:25rpx;--fs-at:35rpx;--fs-ats:28rpx;--fs-st:35rpx;--fs-ss:28rpx;--fs-seg:30rpx'
+  if (cls === 'xlarge') return '--fs-title:49rpx;--fs-prof-name:44rpx;--fs-sub:34rpx;--fs-ir:36rpx;--fs-mn:29rpx;--fs-at:39rpx;--fs-ats:31rpx;--fs-st:39rpx;--fs-ss:31rpx;--fs-seg:34rpx'
+  return '--fs-title:38rpx;--fs-prof-name:34rpx;--fs-sub:26rpx;--fs-ir:28rpx;--fs-mn:22rpx;--fs-at:30rpx;--fs-ats:24rpx;--fs-st:30rpx;--fs-ss:24rpx;--fs-seg:26rpx'
 }
 
 function buildNavMetrics() {
@@ -23,10 +23,14 @@ function buildNavMetrics() {
 }
 
 function buildProfileView(profile, latestRecord) {
+  const age = calcAge(profile.birthYear)
   return {
-    age: calcAge(profile.birthYear),
+    age,
+    birthText: profile.birthYear ? `${profile.birthYear}年生 · ${age}岁` : '出生年未设置',
     currentBpText: latestRecord ? `${latestRecord.systolic} / ${latestRecord.diastolic} mmHg` : '暂无记录',
     currentHrText: latestRecord && latestRecord.heartRate ? `${latestRecord.heartRate} bpm` : '暂无记录',
+    targetBpText: (profile.targetSystolic && profile.targetDiastolic) ? `＜ ${profile.targetSystolic} / ${profile.targetDiastolic} mmHg` : '未设置',
+    targetHrText: (profile.targetHRMin && profile.targetHRMax) ? `${profile.targetHRMin} – ${profile.targetHRMax} bpm` : '未设置',
     emergencyText: profile.emergencyContactName || profile.emergencyContactPhone ? `${profile.emergencyContactName || '未设置'} · ${profile.emergencyContactPhone || '未设置'}` : '未设置',
   }
 }
@@ -47,6 +51,16 @@ function syncTabBar(selected, fontSizeClass) {
     selected,
     fontSizeClass: fontSizeClass || 'standard',
   })
+}
+
+function hideTabBar() {
+  if (typeof this.getTabBar !== 'function' || !this.getTabBar()) return
+  this.getTabBar().setData({ hidden: true })
+}
+
+function showTabBar() {
+  if (typeof this.getTabBar !== 'function' || !this.getTabBar()) return
+  this.getTabBar().setData({ hidden: false })
 }
 
 Page({
@@ -144,10 +158,12 @@ Page({
 
   onInviteTap() {
     this.setData({ sharePanelOpen: true })
+    hideTabBar.call(this)
   },
 
   onCloseSharePanel() {
     this.setData({ sharePanelOpen: false })
+    showTabBar.call(this)
   },
 
   onShareAppMessage() {
@@ -168,6 +184,7 @@ Page({
       profileFormOpen: true,
       profileForm: { ...this.data.family.profile },
     })
+    hideTabBar.call(this)
   },
 
   onProfileInput(e) {
@@ -177,6 +194,7 @@ Page({
 
   onCloseProfileForm() {
     this.setData({ profileFormOpen: false })
+    showTabBar.call(this)
   },
 
   async onSaveProfile() {
@@ -195,6 +213,7 @@ Page({
     }
     wx.showToast({ title: '已保存', icon: 'success' })
     this.setData({ profileFormOpen: false })
+    showTabBar.call(this)
     this.loadFamily()
   },
 
@@ -275,10 +294,12 @@ Page({
     const selectedMember = (this.data.family.members || []).find(member => member.openid === openid)
     if (!selectedMember || selectedMember.role === 'admin') return
     this.setData({ selectedMember, permissionPanelOpen: true })
+    hideTabBar.call(this)
   },
 
   onClosePermissionPanel() {
     this.setData({ permissionPanelOpen: false, selectedMember: null })
+    showTabBar.call(this)
   },
 
   async onMemberPermissionToggle(e) {

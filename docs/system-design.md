@@ -374,7 +374,63 @@ updatedAt    Date
 
 ---
 
-## 十二、设计取舍说明
+## 十二、健康判断规则（`utils/health-rules.js`）
+
+### 字段含义
+
+| 字段 | 英文全称 | 中文 | 单位 |
+|---|---|---|---|
+| `systolic` | systolic blood pressure | 高压（收缩压）—— 心脏收缩时血管压力，数值较大 | mmHg |
+| `diastolic` | diastolic blood pressure | 低压（舒张压）—— 心脏舒张时血管压力，数值较小 | mmHg |
+| `heartRate` | heart rate | 心率 | bpm |
+
+### 血压状态判断 `getBPStatus(systolic, diastolic, target?)`
+
+目标值默认：`targetSystolic = 135`，`targetDiastolic = 85`（来自 `family-settings.js`）
+
+| 条件 | level | 标签 | 颜色 |
+|---|---|---|---|
+| sys < 90 或 dia < 60 | `low` | 偏低 | 橙 #FF9500 |
+| sys ≥ 180 或 dia ≥ 110 | `critical` | 很高 | 深红 #C81E1E |
+| sys ≥ 160 或 dia ≥ 100 | `veryHigh` | 明显偏高 | 红 #FF3B30 |
+| sys ≥ 目标值 | `high` | 偏高 | 橙 #FF9500 |
+| 其余 | `inRange` | 参考范围内 | 绿 #34C759 |
+
+### 心率状态判断 `getHRStatus(heartRate, target?)`
+
+目标值默认：`targetHRMin = 60`，`targetHRMax = 80`
+
+| 条件 | level | 标签 | 颜色 |
+|---|---|---|---|
+| hr < 50 | `verySlow` | 明显偏慢 | 深红 |
+| hr < min（默认60） | `slow` | 偏慢 | 橙 |
+| hr > 100 | `veryFast` | 明显偏快 | 红 |
+| hr > max（默认80） | `fast` | 偏快 | 橙 |
+| 其余 | `inRange` | 参考范围内 | 绿 |
+
+### UI 颜色映射（`getStatusClass()`，`data.js`）
+
+level → CSS class → 颜色：
+
+```
+inRange                          → normal  → #22C55E（绿）
+critical / veryHigh / veryFast / verySlow → danger  → #FF3B30（红）
+其余（low / high / slow / fast） → warning → #FF9500（橙）
+```
+
+### 数据页 BP 状态条（右侧三段竖条）
+
+```
+顶段（红）→ danger  （0）
+中段（橙）→ warning （1）
+底段（绿）→ normal  （2）
+```
+
+与数字颜色由同一个 `getStatusClass()` 结果驱动，始终保持一致。
+
+---
+
+## 十三、设计取舍说明
 
 | 决策 | 选择 | 原因 |
 |---|---|---|

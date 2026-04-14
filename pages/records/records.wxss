@@ -1,4 +1,10 @@
-.container { min-height: 100vh; background: #EEF3FB; padding: 32rpx; box-sizing: border-box; }
+.page { min-height: 100vh; background: #EEF3FB; }
+.container { min-height: 100vh; height: 100vh; background: #EEF3FB; padding: 32rpx; box-sizing: border-box; }
+.custom-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 30; box-sizing: border-box; background: #FFFFFF; box-shadow: 0 2rpx 16rpx rgba(15, 23, 42, 0.08); }
+.nav-title { position: absolute; left: 156rpx; right: 156rpx; text-align: center; color: #0F172A; font-size: 36rpx; font-weight: 800; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.nav-back { position: absolute; left: 28rpx; color: #3182F7; font-size: 30rpx; font-weight: 800; display: flex; align-items: center; gap: 8rpx; line-height: 1; }
+.nav-back-icon { width: 16rpx; height: 16rpx; border-left: 4rpx solid currentColor; border-bottom: 4rpx solid currentColor; transform: rotate(45deg); box-sizing: border-box; flex-shrink: 0; }
+.nav-back-text { line-height: 1; }
 .empty { text-align: center; color: #64748B; font-size: 32rpx; margin-top: 160rpx; }
 .group { margin-bottom: 24rpx; }
 
@@ -25,11 +31,12 @@
 .hr { display: block; margin-top: 6rpx; color: #64748B; font-size: var(--fs-hr, 24rpx); }
 
 /* 右列：badge + 操作 */
-.right { display: flex; flex-direction: column; align-items: flex-end; gap: 12rpx; flex-shrink: 0; }
+.right { flex-shrink: 0; }
+.right-line { display: flex; align-items: center; justify-content: flex-end; gap: 18rpx; flex-wrap: nowrap; }
 .badge { font-size: var(--fs-badge, 20rpx); font-weight: 700; padding: 4rpx 16rpx; border-radius: 999rpx; }
 .badge.normal  { color: #16A34A; background: #DCFCE7; }
 .badge.warning { color: #D97706; background: #FEF3C7; }
 .badge.danger  { color: #DC2626; background: #FEE2E2; }
-.actions { display: flex; gap: 24rpx; font-size: 24rpx; }
+.actions { display: flex; align-items: center; gap: 18rpx; font-size: 24rpx; white-space: nowrap; }
 .edit { color: #3182F7; }
 .delete { color: #FF3B30; }

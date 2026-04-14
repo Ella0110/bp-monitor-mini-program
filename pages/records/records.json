@@ -1,3 +1,5 @@
 {
-  "navigationBarTitleText": "全部记录"
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "",
+  "navigationBarTextStyle": "black"
 }

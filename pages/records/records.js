@@ -14,12 +14,36 @@ function getBadge(bpStatus) {
   return { label: '注意', cls: 'warning' }
 }
 
+function buildNavMetrics() {
+  const windowInfo = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
+  const statusBarHeight = windowInfo.statusBarHeight || 0
+  const menuButton = wx.getMenuButtonBoundingClientRect ? wx.getMenuButtonBoundingClientRect() : null
+  const navHeight = menuButton ? menuButton.bottom + menuButton.top - statusBarHeight : statusBarHeight + 44
+  const titleTop = menuButton ? menuButton.top : statusBarHeight + 6
+  const titleHeight = menuButton ? menuButton.height : 32
+
+  return {
+    navStyle: `height:${navHeight}px;`,
+    navTitleStyle: `top:${titleTop}px;height:${titleHeight}px;line-height:${titleHeight}px;`,
+    navBackStyle: `top:${titleTop}px;height:${titleHeight}px;`,
+    contentStyle: `padding-top:${navHeight + 12}px;`,
+  }
+}
+
 Page({
   data: {
     groups: [],
     loading: true,
     fontSizeClass: 'standard',
     fontSizeStyle: makeFontSizeStyle('standard'),
+    navStyle: '',
+    navTitleStyle: '',
+    navBackStyle: '',
+    contentStyle: '',
+  },
+
+  onLoad() {
+    this.setData(buildNavMetrics())
   },
 
   onShow() {
@@ -88,6 +112,10 @@ Page({
         }
         this.loadRecords()
       },
-    })
+      })
+  },
+
+  onBackTap() {
+    wx.navigateBack({ delta: 1 })
   },
 })

@@ -41,7 +41,7 @@
 .bbs-ok { background: #22C55E; }
 
 /* ── 添加按钮 ── */
-.add { min-height: 96rpx; background: #fff; color: #3182F7; border-radius: 28rpx; font-size: var(--fs-add, 34rpx); font-weight: 800; }
+.add { height: 96rpx; line-height: 1; padding: 0; margin-top: 20rpx; background: #fff; color: #3182F7; border-radius: 28rpx; font-size: var(--fs-add, 28rpx); font-weight: 800; display: flex; align-items: center; justify-content: center; }
 .add-cancel { background: rgba(255,255,255,0.22); color: rgba(255,255,255,0.92); border: 2rpx solid rgba(255,255,255,0.40); }
 
 /* ── 工具栏 / 周期选择 ── */
@@ -54,10 +54,6 @@
 /* ── 图表区 ── */
 .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; padding: 10rpx 32rpx 18rpx; }
 .section-title-wrap { display: flex; align-items: center; gap: 12rpx; min-width: 0; }
-.section-icon { width: 18rpx; height: 42rpx; border-radius: 12rpx; background: #3182F7; position: relative; flex-shrink: 0; }
-.section-icon::after { content: ''; position: absolute; left: 50%; bottom: -8rpx; width: 26rpx; height: 26rpx; border-radius: 50%; transform: translateX(-50%); background: inherit; }
-.section-icon.bp-icon { background: #FF3B30; }
-.section-icon.hr-icon { background: #0EA5E9; }
 .section-title { font-size: var(--fs-section, 32rpx); color: #0F172A; font-weight: 800; }
 .notice { width: 36rpx; height: 36rpx; border-radius: 50%; background: #EAF2FF; color: #3182F7; display: flex; align-items: center; justify-content: center; font-size: 24rpx; font-weight: 800; }
 .download { color: #3182F7; font-size: 26rpx; font-weight: 800; flex-shrink: 0; }

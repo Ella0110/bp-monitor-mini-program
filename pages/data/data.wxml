@@ -59,7 +59,6 @@
 
   <view class="section-head">
     <view class="section-title-wrap">
-      <view class="section-icon bp-icon"></view>
       <text class="section-title">血压数据</text>
       <text class="notice" bindtap="onBPNotice">?</text>
     </view>
@@ -78,7 +77,6 @@
 
   <view class="section-head">
     <view class="section-title-wrap">
-      <view class="section-icon hr-icon"></view>
       <text class="section-title">心率数据</text>
       <text class="notice" bindtap="onHRNotice">?</text>
     </view>

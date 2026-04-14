@@ -430,7 +430,56 @@ critical / veryHigh / veryFast / verySlow → danger  → #FF3B30（红）
 
 ---
 
-## 十三、设计取舍说明
+## 十三、字体大小系统
+
+用户可在设置页选择**标准 / 大 / 超大**三档字体，通过 CSS 自定义属性（CSS Custom Properties）动态注入，无需刷新页面即时生效。
+
+### 缩放比例
+
+| 档位 | 相对标准 |
+|------|---------|
+| 标准 | × 1.00 |
+| 大   | × 1.14 |
+| 超大 | × 1.28 |
+
+### 字号对照表（rpx）
+
+| 角色 | CSS 变量 | 标准 | 大 | 超大 | 使用页面 |
+|------|---------|------|-----|------|---------|
+| 页面/导航标题 | `--fs-title` | 36 | 41 | 46 | 全部页面 |
+| 分区标题（section header） | `--fs-section` / `--fs-at` | 28 | 32 | 36 | data、family、settings |
+| 列表行主文字 | `--fs-title`（settings）/ `--fs-date`（records）| 28 | 32 | 36 | settings、records |
+| 正文/数值 | `--fs-val` / `--fs-ir` / `--fs-bp` | 26–30 | 30–34 | 34–38 | 全部页面 |
+| 次要说明 | `--fs-sub` / `--fs-ats` / `--fs-hr` | 22 | 25 | 28 | 全部页面 |
+| 极小（badge/tag/分区 caps） | `--fs-label` / `--fs-tag` / `--fs-badge` | 18–20 | 21–23 | 24–26 | settings、records |
+| CTA 按钮 | `--fs-add` | 28 | 32 | 36 | data 页 |
+| 统计数字 | `--fs-stat-num` | 44 | 50 | 57 | data 页 |
+| 统计数字（小） | `--fs-stat-num-sm` | 34 | 39 | 44 | data 页 |
+| 血压/心率指标 | `--fs-metric` | 72 | 84 | 96 | data 页 |
+| 收缩压指标（更大） | `--fs-metric-sys` | 84 | 96 | 108 | data 页 |
+
+> 血压指标每档刚好 +12rpx，且下一档的基础值 = 上一档的收缩压值，规律清晰。
+
+### 布局间距随字体同步缩放
+
+除字号外，以下布局变量也随档位变化，避免超大字体下空间显得拥挤：
+
+| 变量 | 用途 | 标准 | 大 | 超大 |
+|------|------|------|-----|------|
+| `--row-h` | settings 行高 | 96 | 108 | 120 |
+| `--qs-row-h` | family 快捷设置行高 | 96 | 108 | 120 |
+| `--gh-h` | records 分组头高度 | 80 | 90 | 100 |
+| `--rec-py` | records 记录行上下内边距 | 20 | 24 | 28 |
+| `--card-px` | settings 卡片左右内边距 | 28 | 30 | 32 |
+| `--hero-pb` | data 页 hero 区下内边距 | 46 | 52 | 58 |
+
+### 实现方式
+
+每个页面的 `makeFontSizeStyle(cls)` 函数根据 `cls`（`'standard'` / `'large'` / `'xlarge'`）返回完整 CSS 变量字符串，通过 `style="{{fontSizeStyle}}"` 注入到页面根节点，所有子元素通过 `font-size: var(--fs-xxx, 默认值)` 读取。
+
+---
+
+## 十四、设计取舍说明
 
 | 决策 | 选择 | 原因 |
 |---|---|---|

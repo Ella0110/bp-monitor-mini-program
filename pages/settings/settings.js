@@ -52,26 +52,15 @@ Page({
     if (this.savingSettings) return
     this.savingSettings = true
     const settings = normalizeSettings({ ...this.data.settings, ...patch })
+    const fontSizeClass = settings.fontSize || 'standard'
+    getApp().globalData.fontSizeClass = fontSizeClass
+    this.setData({ settings, fontSizeClass, notifyMemberText: notifyMemberText(settings.notifyMemberIds) })
     try {
       const res = await wx.cloud.callFunction({
         name: 'updateFamilySettings',
-        data: {
-          familyId: this.data.family._id,
-          profile: this.data.family.profile,
-          settings,
-        },
+        data: { familyId: this.data.family._id, profile: this.data.family.profile, settings },
       })
-      if (!res.result.success) {
-        wx.showToast({ title: '保存失败', icon: 'none' })
-        return
-      }
-      const fontSizeClass = settings.fontSize || 'standard'
-      getApp().globalData.fontSizeClass = fontSizeClass
-      this.setData({
-        settings,
-        fontSizeClass,
-        notifyMemberText: notifyMemberText(settings.notifyMemberIds),
-      })
+      if (!res.result.success) wx.showToast({ title: '保存失败', icon: 'none' })
     } finally {
       this.savingSettings = false
     }

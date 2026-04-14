@@ -44,6 +44,7 @@ Page({
   },
 
   onShow() {
+    this.setData({ fontSizeClass: getApp().globalData.fontSizeClass || 'standard' })
     this.loadFamily()
   },
 

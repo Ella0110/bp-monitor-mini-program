@@ -61,3 +61,11 @@ page {
 .danger-text {
   color: var(--red);
 }
+
+/* 全局字体放大 - 两页共用相同基准大小的类 */
+/* 大字 (1.15x) */
+.fs-large .setting-title { font-size: 35rpx; }
+.fs-large .setting-sub  { font-size: 28rpx; }
+/* 超大 (1.30x) */
+.fs-xlarge .setting-title { font-size: 39rpx; }
+.fs-xlarge .setting-sub  { font-size: 31rpx; }

@@ -95,16 +95,6 @@
     <input value="{{profileForm.medicationsText}}" data-field="medicationsText" bindinput="onProfileInput" placeholder="当前用药" />
     <input value="{{profileForm.emergencyContactName}}" data-field="emergencyContactName" bindinput="onProfileInput" placeholder="紧急联系人姓名" />
     <input value="{{profileForm.emergencyContactPhone}}" data-field="emergencyContactPhone" bindinput="onProfileInput" type="number" placeholder="紧急联系人电话" />
-    <text class="modal-section">目标血压（mmHg）</text>
-    <view class="modal-row">
-      <input class="modal-input-half" value="{{profileForm.targetSystolic}}" data-field="targetSystolic" bindinput="onProfileInput" type="number" placeholder="高压 如 135" />
-      <input class="modal-input-half" value="{{profileForm.targetDiastolic}}" data-field="targetDiastolic" bindinput="onProfileInput" type="number" placeholder="低压 如 85" />
-    </view>
-    <text class="modal-section">目标心率（bpm）</text>
-    <view class="modal-row">
-      <input class="modal-input-half" value="{{profileForm.targetHRMin}}" data-field="targetHRMin" bindinput="onProfileInput" type="number" placeholder="下限 如 60" />
-      <input class="modal-input-half" value="{{profileForm.targetHRMax}}" data-field="targetHRMax" bindinput="onProfileInput" type="number" placeholder="上限 如 80" />
-    </view>
     <button class="primary" bindtap="onSaveProfile">保存</button>
   </view>
 

@@ -15,3 +15,19 @@
 .actions { display: flex; flex-direction: column; gap: 14rpx; font-size: 24rpx; }
 .edit { color: #3182F7; }
 .delete { color: #FF3B30; }
+
+/* 字体大小：大字模式 (1.15x) */
+.fs-large .date  { font-size: 35rpx; }
+.fs-large .count { font-size: 28rpx; }
+.fs-large .time  { font-size: 30rpx; }
+.fs-large .tag   { font-size: 23rpx; }
+.fs-large .bp    { font-size: 37rpx; }
+.fs-large .hr    { font-size: 28rpx; }
+
+/* 字体大小：超大字模式 (1.30x) */
+.fs-xlarge .date  { font-size: 39rpx; }
+.fs-xlarge .count { font-size: 31rpx; }
+.fs-xlarge .time  { font-size: 34rpx; }
+.fs-xlarge .tag   { font-size: 26rpx; }
+.fs-xlarge .bp    { font-size: 42rpx; }
+.fs-xlarge .hr    { font-size: 31rpx; }

@@ -47,6 +47,37 @@
 .sheet-button { min-height: 96rpx; border-radius: 24rpx; font-size: 32rpx; font-weight: 700; margin-top: 16rpx; background: #fff; color: #0F172A; }
 .primary-sheet { background: #3182F7; color: #fff; }
 .cancel { color: #64748B; }
-.modal-section { display: block; font-size: 26rpx; color: #64748B; margin: 16rpx 0 8rpx; }
-.modal-row { display: flex; gap: 16rpx; margin-bottom: 16rpx; }
-.modal-input-half { flex: 1; min-height: 88rpx; border-radius: 20rpx; background: #F8FAFF; padding: 0 24rpx; font-size: 30rpx; box-sizing: border-box; }
+
+/* 字体大小：大字模式 (1.15x) */
+.fs-large .section-title { font-size: 41rpx; }
+.fs-large .link { font-size: 32rpx; }
+.fs-large .profile-grid { font-size: 35rpx; }
+.fs-large .profile-empty-title { font-size: 35rpx; }
+.fs-large .profile-empty-sub { font-size: 32rpx; }
+.fs-large .trust-hint { font-size: 28rpx; }
+.fs-large .row-title { font-size: 37rpx; }
+.fs-large .member { font-size: 28rpx; }
+.fs-large .action-title { font-size: 37rpx; }
+.fs-large .muted { font-size: 32rpx; }
+.fs-large .modal-title { font-size: 41rpx; }
+.fs-large .modal-sub { font-size: 30rpx; }
+.fs-large .modal input { font-size: 35rpx; }
+.fs-large .primary { font-size: 37rpx; }
+.fs-large .secondary { font-size: 37rpx; }
+
+/* 字体大小：超大字模式 (1.30x) */
+.fs-xlarge .section-title { font-size: 47rpx; }
+.fs-xlarge .link { font-size: 36rpx; }
+.fs-xlarge .profile-grid { font-size: 39rpx; }
+.fs-xlarge .profile-empty-title { font-size: 39rpx; }
+.fs-xlarge .profile-empty-sub { font-size: 36rpx; }
+.fs-xlarge .trust-hint { font-size: 31rpx; }
+.fs-xlarge .row-title { font-size: 42rpx; }
+.fs-xlarge .member { font-size: 31rpx; }
+.fs-xlarge .action-title { font-size: 42rpx; }
+.fs-xlarge .muted { font-size: 36rpx; }
+.fs-xlarge .modal-title { font-size: 47rpx; }
+.fs-xlarge .modal-sub { font-size: 34rpx; }
+.fs-xlarge .modal input { font-size: 39rpx; }
+.fs-xlarge .primary { font-size: 42rpx; }
+.fs-xlarge .secondary { font-size: 42rpx; }

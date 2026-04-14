@@ -16,3 +16,15 @@
 .segmented text { min-width: 68rpx; min-height: 56rpx; border-radius: 18rpx; padding: 0 16rpx; display: flex; align-items: center; justify-content: center; color: #64748B; background: #F1F6FF; font-size: 26rpx; font-weight: 700; }
 .segmented .active { background: #3182F7; color: #fff; }
 .note { display: block; color: #94A3B8; font-size: 24rpx; line-height: 1.5; padding: 12rpx 8rpx 48rpx; }
+
+/* 字体大小：大字模式 (1.15x) */
+.fs-large .sec-label      { font-size: 28rpx; }
+.fs-large .value          { font-size: 32rpx; }
+.fs-large .segmented text { font-size: 30rpx; }
+.fs-large .note           { font-size: 28rpx; }
+
+/* 字体大小：超大字模式 (1.30x) */
+.fs-xlarge .sec-label      { font-size: 31rpx; }
+.fs-xlarge .value          { font-size: 36rpx; }
+.fs-xlarge .segmented text { font-size: 34rpx; }
+.fs-xlarge .note           { font-size: 31rpx; }

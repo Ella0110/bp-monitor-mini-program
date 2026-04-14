@@ -5,51 +5,49 @@
 
 <scroll-view scroll-y class="container" style="{{contentStyle}}" bindscroll="onDataScroll">
   <view class="hero" style="{{heroStyle}}">
-    <view class="device-card">
-      <text wx:if="{{latestRecord}}" class="time">最近一次记录时间：{{latestTime}}</text>
-      <text wx:else class="time">本次记录时间：----</text>
-      <view class="device-screen">
-        <text class="wave">⌁</text>
-        <view class="traffic"><text></text><text></text><text></text></view>
-        <view class="metric systolic">
-          <text class="metric-label">高压值 (mmHg)</text>
-          <view class="metric-value {{quickEntryActive ? quickBpValueClass : bpValueClass}}">
-            <block wx:if="{{quickEntryActive}}">
-              <block wx:if="{{quickField==='systolic'}}"><text>{{quickForm.systolic}}</text><text class="blinking-cursor"></text></block>
-              <block wx:elif="{{quickForm.systolic}}"><text>{{quickForm.systolic}}</text></block>
+    <view class="rec-card">
+      <text class="rec-time">{{latestRecord ? '最近一次记录时间：' + latestTime : '本次记录时间：----'}}</text>
+      <view class="rec-body">
+        <view class="rec-inner">
+          <view class="rec-top {{quickEntryActive && quickField==='systolic' ? 'editing' : ''}}" bindtap="onQuickFieldTap" data-field="systolic">
+            <text class="rl">高压值 (mmHg)</text>
+            <view class="rv-lg {{quickEntryActive ? quickBpValueClass : bpValueClass}}">
+              <block wx:if="{{quickEntryActive && quickField==='systolic'}}"><text>{{quickForm.systolic || '--'}}</text><text class="blinking-cursor"></text></block>
+              <block wx:elif="{{quickEntryActive}}"><text>{{quickForm.systolic || '--'}}</text></block>
+              <block wx:elif="{{latestRecord}}"><text>{{latestRecord.systolic}}</text></block>
               <block wx:else><text>--</text></block>
-            </block>
-            <block wx:elif="{{latestRecord}}"><text>{{latestRecord.systolic}}</text></block>
-            <block wx:else><text>--</text></block>
+            </view>
+          </view>
+          <view class="rec-bottom">
+            <view class="rec-field {{quickEntryActive && quickField==='diastolic' ? 'editing' : ''}}" bindtap="onQuickFieldTap" data-field="diastolic">
+              <text class="rl">低压值 (mmHg)</text>
+              <view class="rv-md {{quickEntryActive ? quickBpValueClass : bpValueClass}}">
+                <block wx:if="{{quickEntryActive && quickField==='diastolic'}}"><text>{{quickForm.diastolic || '--'}}</text><text class="blinking-cursor"></text></block>
+                <block wx:elif="{{quickEntryActive}}"><text>{{quickForm.diastolic || '--'}}</text></block>
+                <block wx:elif="{{latestRecord}}"><text>{{latestRecord.diastolic}}</text></block>
+                <block wx:else><text>--</text></block>
+              </view>
+            </view>
+            <view class="rec-field {{quickEntryActive && quickField==='heartRate' ? 'editing' : ''}}" bindtap="onQuickFieldTap" data-field="heartRate">
+              <text class="rl">心率 (bpm)</text>
+              <view class="rv-md {{quickEntryActive ? quickHrValueClass : hrValueClass}}">
+                <block wx:if="{{quickEntryActive && quickField==='heartRate'}}"><text>{{quickForm.heartRate || '--'}}</text><text class="blinking-cursor"></text></block>
+                <block wx:elif="{{quickEntryActive}}"><text>{{quickForm.heartRate || '--'}}</text></block>
+                <block wx:elif="{{latestRecord}}"><text>{{latestRecord.heartRate}}</text></block>
+                <block wx:else><text>--</text></block>
+              </view>
+            </view>
           </view>
         </view>
-        <view class="metric diastolic">
-          <text class="metric-label">低压值 (mmHg)</text>
-          <view class="metric-value {{quickEntryActive ? quickBpValueClass : bpValueClass}}">
-            <block wx:if="{{quickEntryActive}}">
-              <block wx:if="{{quickField==='diastolic'}}"><text>{{quickForm.diastolic}}</text><text class="blinking-cursor"></text></block>
-              <block wx:elif="{{quickForm.diastolic}}"><text>{{quickForm.diastolic}}</text></block>
-              <block wx:else><text>--</text></block>
-            </block>
-            <block wx:elif="{{latestRecord}}"><text>{{latestRecord.diastolic}}</text></block>
-            <block wx:else><text>--</text></block>
-          </view>
-        </view>
-        <view class="metric heart">
-          <text class="metric-label">心率 (bpm)</text>
-          <view class="metric-value {{quickEntryActive ? quickHrValueClass : hrValueClass}}">
-            <block wx:if="{{quickEntryActive}}">
-              <block wx:if="{{quickField==='heartRate'}}"><text>{{quickForm.heartRate}}</text><text class="blinking-cursor"></text></block>
-              <block wx:elif="{{quickForm.heartRate}}"><text>{{quickForm.heartRate}}</text></block>
-              <block wx:else><text>--</text></block>
-            </block>
-            <block wx:elif="{{latestRecord}}"><text>{{latestRecord.heartRate}}</text></block>
-            <block wx:else><text>--</text></block>
-          </view>
+        <view class="bp-bar">
+          <view class="bbs bbs-danger {{bpBarActive === 0 ? 'active' : ''}}"></view>
+          <view class="bbs bbs-warn {{bpBarActive === 1 ? 'active' : ''}}"></view>
+          <view class="bbs bbs-ok {{bpBarActive === 2 ? 'active' : ''}}"></view>
         </view>
       </view>
     </view>
-    <button class="add" bindtap="onAddRecord">{{quickEntryActive ? '正在录入' : '＋ 添加记录'}}</button>
+    <button wx:if="{{!quickEntryActive}}" class="add" bindtap="onAddRecord">＋ 添加记录</button>
+    <button wx:if="{{quickEntryActive}}" class="add add-cancel" bindtap="onCancelQuickEntry">取消录入</button>
   </view>
 
   <view class="toolbar">
@@ -100,25 +98,5 @@
   <canvas id="exportChart" type="2d" class="export-canvas"></canvas>
 </scroll-view>
 
-<view wx:if="{{quickEntryActive}}" class="keypad-panel">
-  <view class="keypad-head">
-    <text>正在输入：{{quickFieldLabel}}</text>
-    <text class="keypad-cancel" bindtap="onCancelQuickEntry">取消</text>
-  </view>
-  <view class="keypad-grid">
-    <button class="key" data-value="1" bindtap="onKeypadDigit">1</button>
-    <button class="key" data-value="2" bindtap="onKeypadDigit">2</button>
-    <button class="key" data-value="3" bindtap="onKeypadDigit">3</button>
-    <button class="key" data-value="4" bindtap="onKeypadDigit">4</button>
-    <button class="key" data-value="5" bindtap="onKeypadDigit">5</button>
-    <button class="key" data-value="6" bindtap="onKeypadDigit">6</button>
-    <button class="key" data-value="7" bindtap="onKeypadDigit">7</button>
-    <button class="key" data-value="8" bindtap="onKeypadDigit">8</button>
-    <button class="key" data-value="9" bindtap="onKeypadDigit">9</button>
-    <button class="key action" bindtap="onKeypadDelete">删除</button>
-    <button class="key" data-value="0" bindtap="onKeypadDigit">0</button>
-    <button class="key action" bindtap="onKeypadNext">下一项</button>
-    <button class="key submit" loading="{{quickSaving}}" bindtap="onQuickSave">立即添加</button>
-  </view>
-</view>
+<input wx:if="{{quickEntryActive}}" class="quick-native-input" type="number" maxlength="3" value="{{quickInputValue}}" focus="{{quickInputFocus}}" adjust-position="{{false}}" confirm-type="done" bindinput="onQuickNativeInput" bindblur="onQuickNativeBlur" bindconfirm="onQuickNativeConfirm" />
 </view>

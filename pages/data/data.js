@@ -48,6 +48,13 @@ function syncTabBar(selected, fontSizeClass) {
   })
 }
 
+function statusClassToBarIndex(cls) {
+  if (cls === 'danger') return 0
+  if (cls === 'warning') return 1
+  if (cls === 'normal') return 2
+  return -1
+}
+
 const PERIODS = { '7天': 7, '30天': 30, '90天': 90 }
 const QUICK_FIELDS = ['systolic', 'diastolic', 'heartRate']
 const QUICK_LABELS = { systolic: '高压', diastolic: '低压', heartRate: '心率' }
@@ -88,9 +95,12 @@ Page({
     quickEntryActive: false,
     quickField: 'systolic',
     quickFieldLabel: '高压',
+    quickInputValue: '',
+    quickInputFocus: false,
     quickBpValueClass: EMPTY_VALUE_CLASS,
     quickHrValueClass: EMPTY_VALUE_CLASS,
     quickSaving: false,
+    bpBarActive: -1,
   },
 
   onLoad() {
@@ -176,6 +186,7 @@ Page({
         latestHRStatus,
         bpValueClass: this.getStatusClass(latestBPStatus),
         hrValueClass: this.getStatusClass(latestHRStatus),
+        bpBarActive: statusClassToBarIndex(this.getStatusClass(latestBPStatus)),
         stats: {
           ...countReferenceStats(records, profile),
           avg: calcAverage(records),
@@ -240,9 +251,11 @@ Page({
     const heartRate = Number(form.heartRate)
     const bpReady = systolic >= 60 && diastolic >= 40
     const hrReady = heartRate >= 30
+    const bpCls = bpReady ? this.getStatusClass(getBPStatus(systolic, diastolic)) : EMPTY_VALUE_CLASS
     return {
-      quickBpValueClass: bpReady ? this.getStatusClass(getBPStatus(systolic, diastolic)) : EMPTY_VALUE_CLASS,
+      quickBpValueClass: bpCls,
       quickHrValueClass: hrReady ? this.getStatusClass(getHRStatus(heartRate)) : EMPTY_VALUE_CLASS,
+      bpBarActive: statusClassToBarIndex(bpCls),
     }
   },
 
@@ -252,6 +265,8 @@ Page({
       quickEntryActive: true,
       quickField: 'systolic',
       quickFieldLabel: QUICK_LABELS.systolic,
+      quickInputValue: '',
+      quickInputFocus: true,
       quickForm: { systolic: '', diastolic: '', heartRate: '' },
       quickBpValueClass: EMPTY_VALUE_CLASS,
       quickHrValueClass: EMPTY_VALUE_CLASS,
@@ -259,9 +274,14 @@ Page({
   },
 
   setQuickField(field) {
+    if (!QUICK_FIELDS.includes(field)) return
     this.setData({
       quickField: field,
       quickFieldLabel: QUICK_LABELS[field],
+      quickInputValue: String(this.data.quickForm[field] || ''),
+      quickInputFocus: false,
+    }, () => {
+      this.setData({ quickInputFocus: true })
     })
   },
 
@@ -275,32 +295,48 @@ Page({
     if (index > 0) this.setQuickField(QUICK_FIELDS[index - 1])
   },
 
-  onKeypadDigit(e) {
-    const digit = String(e.currentTarget.dataset.value || '')
-    if (!digit) return
+  normalizeQuickInputValue(value) {
+    return String(value || '').replace(/\D/g, '').slice(0, 3)
+  },
+
+  shouldAdvanceQuickField(field, value) {
+    if (String(value).length < 2) return false
+    if (field === 'heartRate') return String(value).length >= 3 || Number(value) >= 30
+    return String(value).length >= 3 || Number(value) > 30
+  },
+
+  onQuickNativeInput(e) {
     const field = this.data.quickField
-    const current = String(this.data.quickForm[field] || '')
-    if (current.length >= 3) return
-    const next = `${current}${digit}`
+    const next = this.normalizeQuickInputValue(e.detail.value)
     const nextForm = { ...this.data.quickForm, [field]: next }
-    this.setData({ [`quickForm.${field}`]: next, ...this.getQuickValueClasses(nextForm) }, () => {
-      if (next.length >= 3) this.moveToNextField()
+    this.setData({ quickInputValue: next, [`quickForm.${field}`]: next, ...this.getQuickValueClasses(nextForm) }, () => {
+      if (!this.shouldAdvanceQuickField(field, next)) return
+      if (field === 'heartRate') {
+        this.finishQuickEntryInput()
+        return
+      }
+      this.moveToNextField()
     })
   },
 
-  onKeypadDelete() {
-    const field = this.data.quickField
-    const current = String(this.data.quickForm[field] || '')
-    if (current) {
-      const next = current.slice(0, -1)
-      const nextForm = { ...this.data.quickForm, [field]: next }
-      this.setData({ [`quickForm.${field}`]: next, ...this.getQuickValueClasses(nextForm) })
-      return
-    }
-    this.moveToPreviousField()
+  onQuickNativeBlur() {
+    this.setData({ quickInputFocus: false })
   },
 
-  onKeypadNext() {
+  onQuickNativeConfirm() {
+    if (this.data.quickField === 'heartRate') {
+      this.finishQuickEntryInput()
+      return
+    }
+    this.onQuickNextField()
+  },
+
+  onQuickFieldTap(e) {
+    if (!this.data.quickEntryActive) return
+    this.setQuickField(e.currentTarget.dataset.field)
+  },
+
+  onQuickNextField() {
     const current = String(this.data.quickForm[this.data.quickField] || '')
     if (!current) {
       wx.showToast({ title: '请先输入当前项', icon: 'none' })
@@ -314,32 +350,54 @@ Page({
       quickEntryActive: false,
       quickField: 'systolic',
       quickFieldLabel: QUICK_LABELS.systolic,
+      quickInputValue: '',
+      quickInputFocus: false,
       quickForm: { systolic: '', diastolic: '', heartRate: '' },
       quickBpValueClass: EMPTY_VALUE_CLASS,
       quickHrValueClass: EMPTY_VALUE_CLASS,
+      bpBarActive: statusClassToBarIndex(this.getStatusClass(this.data.latestBPStatus)),
     })
   },
 
-  validateQuickForm() {
+  getQuickFormError() {
     const sys = Number(this.data.quickForm.systolic)
     const dia = Number(this.data.quickForm.diastolic)
     const hr = Number(this.data.quickForm.heartRate)
     if (!sys || sys < 60 || sys > 300) {
-      wx.showToast({ title: '高压值不正确', icon: 'none' })
-      return false
+      return { field: 'systolic', title: '高压值不正确' }
     }
     if (!dia || dia < 40 || dia > 200) {
-      wx.showToast({ title: '低压值不正确', icon: 'none' })
-      return false
+      return { field: 'diastolic', title: '低压值不正确' }
     }
     if (!hr || hr < 30 || hr > 250) {
-      wx.showToast({ title: '心率不正确', icon: 'none' })
+      return { field: 'heartRate', title: '心率不正确' }
+    }
+    return null
+  },
+
+  finishQuickEntryInput() {
+    if (this.data.quickSaving) return
+    const error = this.getQuickFormError()
+    if (error) {
+      wx.showToast({ title: error.title, icon: 'none' })
+      this.setQuickField(error.field)
+      return
+    }
+    this.setData({ quickInputFocus: false })
+    this.onQuickSave()
+  },
+
+  validateQuickForm() {
+    const error = this.getQuickFormError()
+    if (error) {
+      wx.showToast({ title: error.title, icon: 'none' })
       return false
     }
     return true
   },
 
   async onQuickSave() {
+    if (this.data.quickSaving) return
     if (!this.validateQuickForm()) return
     const app = getApp()
     this.setData({ quickSaving: true })
@@ -365,6 +423,8 @@ Page({
         quickEntryActive: false,
         quickField: 'systolic',
         quickFieldLabel: QUICK_LABELS.systolic,
+        quickInputValue: '',
+        quickInputFocus: false,
         quickBpValueClass: EMPTY_VALUE_CLASS,
         quickHrValueClass: EMPTY_VALUE_CLASS,
       })

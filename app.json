@@ -9,6 +9,7 @@
     "pages/settings/settings"
   ],
   "tabBar": {
+    "custom": true,
     "color": "#94A3B8",
     "selectedColor": "#3182F7",
     "backgroundColor": "#FFFFFF",

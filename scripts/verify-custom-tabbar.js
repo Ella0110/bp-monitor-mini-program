@@ -49,6 +49,7 @@ assertIncludes('pages/data/data.wxml', 'class="tabbar-spacer"')
 assertIncludes('pages/data/data.wxss', '.bottom { margin-bottom: 34rpx; }')
 assertIncludes('pages/data/data.wxss', '.tabbar-spacer { height: calc(136rpx + env(safe-area-inset-bottom)); }')
 assertIncludes('pages/family/family.wxss', '.container { min-height: 100vh; background: #EEF3FB; box-sizing: border-box; overflow-x: hidden; }')
-assertIncludes('pages/family/family.wxss', '.body { width: 100%; box-sizing: border-box; padding: 32rpx 32rpx calc(136rpx + env(safe-area-inset-bottom)); }')
+assertIncludes('pages/family/family.wxss', '.body { position: fixed; left: 0; right: 0; bottom: calc(114rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }')
+assertIncludes('pages/family/family.wxss', '.body-inner { padding: 16rpx 32rpx 40rpx; box-sizing: border-box; }')
 
 console.log('custom tabbar checks passed')

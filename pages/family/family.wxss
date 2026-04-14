@@ -8,16 +8,19 @@
 .empty { padding: 120rpx 40rpx; text-align: center; }
 .empty-title { display: block; font-size: var(--fs-title, 38rpx); font-weight: 700; color: #0F172A; margin-bottom: 40rpx; }
 .empty-hint { display: block; color: #64748B; font-size: 26rpx; line-height: 1.6; margin-top: 28rpx; }
-.primary { min-height: 96rpx; border-radius: 28rpx; font-size: 32rpx; font-weight: 700; margin-top: 20rpx; background: #3182F7; color: #fff; }
+.primary { min-height: 96rpx; border-radius: 28rpx; font-size: 32rpx; font-weight: 700; margin-top: 20rpx; background: #3182F7; color: #fff; display: flex; align-items: center; justify-content: center; line-height: 1; }
 
 /* ── Scroll body ── */
-.body { width: 100%; box-sizing: border-box; padding: 16rpx 32rpx calc(170rpx + env(safe-area-inset-bottom)); }
+.body { position: fixed; left: 0; right: 0; bottom: calc(114rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
+.body-inner { padding: 16rpx 32rpx 40rpx; box-sizing: border-box; }
 
 /* ── Section label ── */
 .flbl-row { display: flex; align-items: center; justify-content: space-between; margin: 36rpx 0 14rpx; }
 .flbl { font-size: 22rpx; font-weight: 700; color: #94A3B8; letter-spacing: 1rpx; margin: 36rpx 0 14rpx; }
 .flbl-row .flbl { margin: 0; }
-.settings-btn { width: 52rpx; height: 52rpx; border-radius: 50%; background: #EAF2FF; display: flex; align-items: center; justify-content: center; font-size: 28rpx; color: #64748B; }
+.settings-btn { min-width: 96rpx; height: 52rpx; margin: 0; padding: 0 20rpx; border-radius: 8rpx; background: #DCEBFF; border: 2rpx solid rgba(49, 130, 247, 0.20); display: flex; align-items: center; justify-content: center; font-size: 26rpx; font-weight: 800; color: #1761D4; line-height: 1; box-shadow: 0 2rpx 8rpx rgba(49, 130, 247, 0.10); transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease; }
+.settings-btn::after { border: 0; }
+.settings-btn-active { background: #C9DFFF; transform: scale(0.97); box-shadow: 0 1rpx 4rpx rgba(49, 130, 247, 0.08); }
 
 /* ── Profile card ── */
 .prof-card { background: #fff; border-radius: 32rpx; padding: 32rpx; box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09); }
@@ -81,6 +84,6 @@
 
 /* ── Share panel ── */
 .share-panel { position: fixed; left: 0; right: 0; bottom: 0; z-index: 61; background: #fff; border-radius: 32rpx 32rpx 0 0; padding: 24rpx 24rpx calc(24rpx + env(safe-area-inset-bottom)); box-shadow: 0 -8rpx 40rpx rgba(15, 23, 42, 0.15); }
-.sheet-button { min-height: 96rpx; border-radius: 24rpx; font-size: 32rpx; font-weight: 700; margin-top: 16rpx; background: #F1F5F9; color: #0F172A; }
+.sheet-button { min-height: 96rpx; border-radius: 24rpx; font-size: 32rpx; font-weight: 700; margin-top: 16rpx; background: #F1F5F9; color: #0F172A; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .primary-sheet { background: #3182F7; color: #fff; }
 .cancel { color: #64748B; }

@@ -4,6 +4,6 @@
 .invite-text { display: block; font-size: 30rpx; color: #64748B; margin-bottom: 12rpx; }
 .family-name { display: block; font-size: 38rpx; font-weight: 800; color: #0F172A; margin-bottom: 20rpx; }
 .hint { display: block; font-size: 28rpx; color: #64748B; line-height: 1.6; margin-bottom: 40rpx; }
-.primary, .secondary { min-height: 96rpx; border-radius: 28rpx; font-size: 32rpx; font-weight: 700; margin-top: 20rpx; }
+.primary, .secondary { min-height: 96rpx; border-radius: 28rpx; font-size: 32rpx; font-weight: 700; margin-top: 20rpx; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .primary { background: #3182F7; color: #fff; }
 .secondary { background: #F8FAFF; color: #64748B; border: 2rpx solid #DDE6F5; }

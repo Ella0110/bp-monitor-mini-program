@@ -18,7 +18,8 @@ function buildNavMetrics() {
   return {
     navStyle: `height:${navHeight}px;`,
     navTitleStyle: `top:${titleTop}px;height:${titleHeight}px;line-height:${titleHeight}px;`,
-    contentStyle: `padding-top:${navHeight}px;`,
+    contentStyle: `top:${navHeight}px;`,
+    emptyStyle: `padding-top:${navHeight}px;`,
   }
 }
 
@@ -88,6 +89,7 @@ Page({
     navStyle: '',
     navTitleStyle: '',
     contentStyle: '',
+    emptyStyle: '',
   },
 
   onLoad() {

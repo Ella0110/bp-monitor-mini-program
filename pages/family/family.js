@@ -1,6 +1,27 @@
 const { calcAge, normalizeProfile, normalizeSettings } = require('../../utils/family-settings')
 const { formatDateTime } = require('../../utils/date')
 
+function makeFontSizeStyle(cls) {
+  if (cls === 'large') return '--fs-title:44rpx'
+  if (cls === 'xlarge') return '--fs-title:49rpx'
+  return '--fs-title:38rpx'
+}
+
+function buildNavMetrics() {
+  const windowInfo = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
+  const statusBarHeight = windowInfo.statusBarHeight || 0
+  const menuButton = wx.getMenuButtonBoundingClientRect ? wx.getMenuButtonBoundingClientRect() : null
+  const navHeight = menuButton ? menuButton.bottom + menuButton.top - statusBarHeight : statusBarHeight + 44
+  const titleTop = menuButton ? menuButton.top : statusBarHeight + 6
+  const titleHeight = menuButton ? menuButton.height : 32
+
+  return {
+    navStyle: `height:${navHeight}px;`,
+    navTitleStyle: `top:${titleTop}px;height:${titleHeight}px;line-height:${titleHeight}px;`,
+    contentStyle: `padding-top:${navHeight}px;`,
+  }
+}
+
 function buildProfileView(profile, latestRecord) {
   return {
     age: calcAge(profile.birthYear),
@@ -18,6 +39,14 @@ function hasProfileInfo(profile) {
     profile.emergencyContactName ||
     profile.emergencyContactPhone
   )
+}
+
+function syncTabBar(selected, fontSizeClass) {
+  if (typeof this.getTabBar !== 'function' || !this.getTabBar()) return
+  this.getTabBar().setData({
+    selected,
+    fontSizeClass: fontSizeClass || 'standard',
+  })
 }
 
 Page({
@@ -41,11 +70,25 @@ Page({
     selectedMember: null,
     sharePanelOpen: false,
     fontSizeClass: 'standard',
+    fontSizeStyle: makeFontSizeStyle('standard'),
+    navStyle: '',
+    navTitleStyle: '',
+    contentStyle: '',
+  },
+
+  onLoad() {
+    this.setNavMetrics()
   },
 
   onShow() {
-    this.setData({ fontSizeClass: getApp().globalData.fontSizeClass || 'standard' })
+    const fontSizeClass = getApp().globalData.fontSizeClass || 'standard'
+    this.setData({ fontSizeClass, fontSizeStyle: makeFontSizeStyle(fontSizeClass) })
+    syncTabBar.call(this, 1, fontSizeClass)
     this.loadFamily()
+  },
+
+  setNavMetrics() {
+    this.setData(buildNavMetrics())
   },
 
   async loadFamily() {
@@ -71,6 +114,7 @@ Page({
       const settings = normalizeSettings(family.settings || {})
       const fontSizeClass = settings.fontSize || 'standard'
       app.globalData.fontSizeClass = fontSizeClass
+      const fontSizeStyle = makeFontSizeStyle(fontSizeClass)
       this.setData({
         loading: false,
         family: { ...family, profile, settings },
@@ -81,7 +125,9 @@ Page({
         latestTime: latestRecord ? formatDateTime(latestRecord.measuredAt) : '',
         profileView: buildProfileView(profile, latestRecord),
         fontSizeClass,
+        fontSizeStyle,
       })
+      syncTabBar.call(this, 1, fontSizeClass)
     } catch (e) {
       wx.showToast({ title: '家庭信息加载失败', icon: 'none' })
       this.setData({ loading: false })
@@ -165,16 +211,20 @@ Page({
       if (hasFontSizePatch) {
         app.globalData.fontSizeClass = previousFontSizeClass
         data.fontSizeClass = previousFontSizeClass
+        data.fontSizeStyle = makeFontSizeStyle(previousFontSizeClass)
       }
       this.setData(data)
+      if (hasFontSizePatch) syncTabBar.call(this, 1, previousFontSizeClass)
     }
 
     const optimisticData = { 'family.settings': settings }
     if (hasFontSizePatch) {
       app.globalData.fontSizeClass = fontSizeClass
       optimisticData.fontSizeClass = fontSizeClass
+      optimisticData.fontSizeStyle = makeFontSizeStyle(fontSizeClass)
     }
     this.setData(optimisticData)
+    if (hasFontSizePatch) syncTabBar.call(this, 1, fontSizeClass)
 
     try {
       const res = await wx.cloud.callFunction({
@@ -196,8 +246,10 @@ Page({
       if (hasFontSizePatch) {
         app.globalData.fontSizeClass = savedFontSizeClass
         savedData.fontSizeClass = savedFontSizeClass
+        savedData.fontSizeStyle = makeFontSizeStyle(savedFontSizeClass)
       }
       this.setData(savedData)
+      if (hasFontSizePatch) syncTabBar.call(this, 1, savedFontSizeClass)
     } catch (e) {
       console.error('Update settings failed', e)
       rollback()

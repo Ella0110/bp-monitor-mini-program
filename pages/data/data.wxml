@@ -1,6 +1,10 @@
-<scroll-view scroll-y class="container fs-{{fontSizeClass}}">
-  <view class="hero">
-    <text class="title">血压心率记录</text>
+<view class="page fs-{{fontSizeClass}}" style="{{fontSizeStyle}}">
+  <view class="custom-nav {{navScrolled ? 'scrolled' : ''}}" style="{{navStyle}}">
+    <text class="nav-title" style="{{navTitleStyle}}">血压心率记录</text>
+  </view>
+
+<scroll-view scroll-y class="container" style="{{contentStyle}}" bindscroll="onDataScroll">
+  <view class="hero" style="{{heroStyle}}">
     <view class="device-card">
       <text wx:if="{{latestRecord}}" class="time">最近一次记录时间：{{latestTime}}</text>
       <text wx:else class="time">本次记录时间：----</text>
@@ -92,6 +96,7 @@
     <canvas wx:if="{{hasChartRecords}}" id="hrChart" type="2d" class="chart-canvas"></canvas>
     <view wx:else class="chart-empty">暂无信息</view>
   </view>
+  <view class="tabbar-spacer"></view>
   <canvas id="exportChart" type="2d" class="export-canvas"></canvas>
 </scroll-view>
 
@@ -115,4 +120,5 @@
     <button class="key action" bindtap="onKeypadNext">下一项</button>
     <button class="key submit" loading="{{quickSaving}}" bindtap="onQuickSave">立即添加</button>
   </view>
+</view>
 </view>

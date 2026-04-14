@@ -3,6 +3,51 @@ const { daysAgo, formatDateTime } = require('../../utils/date')
 const { buildBloodPressureChart, buildHeartRateChart } = require('../../utils/chart-data')
 const { drawBloodPressureChart, drawHeartRateChart } = require('../../utils/canvas-charts')
 
+function makeFontSizeStyle(cls) {
+  if (cls === 'large') return [
+    '--fs-title:44rpx', '--fs-time:30rpx', '--fs-metric:96rpx', '--fs-metric-sys:108rpx',
+    '--fs-stat-num:56rpx', '--fs-stat-num-sm:44rpx', '--fs-stat:28rpx',
+    '--fs-section:37rpx', '--fs-all:32rpx', '--fs-empty:37rpx',
+    '--fs-add:39rpx', '--fs-key:41rpx', '--fs-key-act:32rpx', '--fs-key-sub:37rpx',
+  ].join(';')
+  if (cls === 'xlarge') return [
+    '--fs-title:49rpx', '--fs-time:34rpx', '--fs-metric:110rpx', '--fs-metric-sys:124rpx',
+    '--fs-stat-num:64rpx', '--fs-stat-num-sm:52rpx', '--fs-stat:31rpx',
+    '--fs-section:42rpx', '--fs-all:36rpx', '--fs-empty:42rpx',
+    '--fs-add:44rpx', '--fs-key:47rpx', '--fs-key-act:36rpx', '--fs-key-sub:42rpx',
+  ].join(';')
+  return [
+    '--fs-title:38rpx', '--fs-time:26rpx', '--fs-metric:78rpx', '--fs-metric-sys:88rpx',
+    '--fs-stat-num:48rpx', '--fs-stat-num-sm:36rpx', '--fs-stat:24rpx',
+    '--fs-section:32rpx', '--fs-all:28rpx', '--fs-empty:32rpx',
+    '--fs-add:34rpx', '--fs-key:36rpx', '--fs-key-act:28rpx', '--fs-key-sub:32rpx',
+  ].join(';')
+}
+
+function buildNavMetrics() {
+  const windowInfo = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
+  const statusBarHeight = windowInfo.statusBarHeight || 0
+  const menuButton = wx.getMenuButtonBoundingClientRect ? wx.getMenuButtonBoundingClientRect() : null
+  const navHeight = menuButton ? menuButton.bottom + menuButton.top - statusBarHeight : statusBarHeight + 44
+  const titleTop = menuButton ? menuButton.top : statusBarHeight + 6
+  const titleHeight = menuButton ? menuButton.height : 32
+
+  return {
+    navStyle: `height:${navHeight}px;`,
+    navTitleStyle: `top:${titleTop}px;height:${titleHeight}px;line-height:${titleHeight}px;`,
+    contentStyle: '',
+    heroStyle: `padding-top:${navHeight + 18}px;`,
+  }
+}
+
+function syncTabBar(selected, fontSizeClass) {
+  if (typeof this.getTabBar !== 'function' || !this.getTabBar()) return
+  this.getTabBar().setData({
+    selected,
+    fontSizeClass: fontSizeClass || 'standard',
+  })
+}
+
 const PERIODS = { '7天': 7, '30天': 30, '90天': 90 }
 const QUICK_FIELDS = ['systolic', 'diastolic', 'heartRate']
 const QUICK_LABELS = { systolic: '高压', diastolic: '低压', heartRate: '心率' }
@@ -14,6 +59,12 @@ Page({
     records: [],
     profile: null,
     fontSizeClass: 'standard',
+    fontSizeStyle: makeFontSizeStyle('standard'),
+    navStyle: '',
+    navTitleStyle: '',
+    contentStyle: '',
+    heroStyle: '',
+    navScrolled: false,
     latestRecord: null,
     latestTime: '',
     latestBPStatus: null,
@@ -42,9 +93,33 @@ Page({
     quickSaving: false,
   },
 
+  onLoad() {
+    this.setNavMetrics()
+  },
+
   onShow() {
-    this.setData({ fontSizeClass: getApp().globalData.fontSizeClass || 'standard' })
+    const cls = getApp().globalData.fontSizeClass || 'standard'
+    this.setData({ fontSizeClass: cls, fontSizeStyle: makeFontSizeStyle(cls) })
+    syncTabBar.call(this, 0, cls)
     this.loadRecords()
+  },
+
+  setNavMetrics() {
+    this.setData(buildNavMetrics())
+  },
+
+  setNavScrolled(scrollTop) {
+    const navScrolled = scrollTop > 12
+    if (navScrolled !== this.data.navScrolled) this.setData({ navScrolled })
+  },
+
+  onDataScroll(e) {
+    const scrollTop = (e.detail && e.detail.scrollTop) || 0
+    this.setNavScrolled(scrollTop)
+  },
+
+  onPageScroll(e) {
+    this.setNavScrolled(e.scrollTop || 0)
   },
 
   async loadRecords() {
@@ -84,6 +159,7 @@ Page({
       const profile = family.profile || {}
       const fontSizeClass = (family.settings || {}).fontSize || 'standard'
       app.globalData.fontSizeClass = fontSizeClass
+      const fontSizeStyle = makeFontSizeStyle(fontSizeClass)
       const latestRecord = records[0] || null
       const latestBPStatus = latestRecord ? getBPStatus(latestRecord.systolic, latestRecord.diastolic) : null
       const latestHRStatus = latestRecord ? getHRStatus(latestRecord.heartRate) : null
@@ -93,6 +169,7 @@ Page({
         records,
         profile,
         fontSizeClass,
+        fontSizeStyle,
         latestRecord,
         latestTime: latestRecord ? formatDateTime(latestRecord.measuredAt) : '',
         latestBPStatus,
@@ -107,6 +184,7 @@ Page({
         hrChart,
         hasChartRecords: records.length > 0,
       })
+      syncTabBar.call(this, 0, fontSizeClass)
       this.drawCharts()
     } catch (err) {
       console.error('loadRecords failed', err)

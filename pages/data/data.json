@@ -1,3 +1,5 @@
 {
-  "navigationBarTitleText": ""
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "",
+  "navigationBarTextStyle": "white"
 }

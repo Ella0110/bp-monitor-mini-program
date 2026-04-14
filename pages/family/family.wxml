@@ -1,91 +1,96 @@
-<view class="container fs-{{fontSizeClass}}">
-  <view class="fam-header">
-    <text class="fam-title">家庭</text>
-    <view wx:if="{{family}}" class="settings-entry" bindtap="onSettingsTap">⚙</view>
+<view class="container fs-{{fontSizeClass}}" style="{{fontSizeStyle}}">
+  <view class="custom-nav" style="{{navStyle}}">
+    <text class="nav-title" style="{{navTitleStyle}}">家庭</text>
   </view>
 
-  <view wx:if="{{!family && !loading}}" class="empty">
-    <text class="empty-title">还没有健康记录</text>
-    <text class="empty-hint">先去记录一条血压心率，记录后可在这里补充档案、邀请家人查看。</text>
-    <button class="primary" bindtap="onGoRecordTap">去记录一条</button>
-    <text class="empty-hint">家人发来的邀请卡片，可直接点开查看。</text>
+  <view class="fam-content" style="{{contentStyle}}">
+    <view wx:if="{{family}}" class="fam-header">
+      <view class="settings-entry" bindtap="onSettingsTap">⚙</view>
+    </view>
+
+    <view wx:if="{{!family && !loading}}" class="empty">
+      <text class="empty-title">还没有健康记录</text>
+      <text class="empty-hint">先去记录一条血压心率，记录后可在这里补充档案、邀请家人查看。</text>
+      <button class="primary" bindtap="onGoRecordTap">去记录一条</button>
+      <text class="empty-hint">家人发来的邀请卡片，可直接点开查看。</text>
+    </view>
+
+    <scroll-view wx:if="{{family}}" scroll-y class="body">
+      <view class="card">
+        <view wx:if="{{hasProfileInfo}}" class="card-head">
+          <text class="section-title">{{family.profile.name || family.displayName || '我的记录'}}</text>
+          <text wx:if="{{canManage}}" class="link" bindtap="onEditProfileTap">编辑 ></text>
+        </view>
+        <view wx:if="{{hasProfileInfo}}" class="profile-grid">
+          <text>姓名：{{family.profile.name || '未设置'}}</text>
+          <text>出生年：{{family.profile.birthYear || '未设置'}}</text>
+          <text>年龄：{{profileView.age}}</text>
+          <text>当前血压：{{profileView.currentBpText}}</text>
+          <text>当前心率：{{profileView.currentHrText}}</text>
+          <text>当前用药：{{family.profile.medicationsText || '未设置'}}</text>
+          <text>紧急联系人：{{profileView.emergencyText}}</text>
+        </view>
+        <view wx:else class="profile-empty">
+          <text class="section-title">{{family.displayName || '我的记录'}}</text>
+          <text class="profile-empty-title">档案信息可稍后补充</text>
+          <text class="profile-empty-sub">当前血压：{{profileView.currentBpText}}</text>
+          <text class="profile-empty-sub">当前心率：{{profileView.currentHrText}}</text>
+          <button wx:if="{{canManage}}" class="secondary compact" bindtap="onEditProfileTap">完善档案</button>
+        </view>
+        <text class="trust-hint">仅用于报告展示，您可以填写昵称或简称。</text>
+      </view>
+
+      <view class="card">
+        <view class="row-title">家庭成员</view>
+        <view class="member-row">
+          <view wx:for="{{family.members}}" wx:key="openid" class="member" bindtap="onMemberTap" data-openid="{{item.openid}}">
+            <view class="avatar">{{item.nickname ? item.nickname[0] : '家'}}</view>
+            <text>{{item.nickname || '家人'}}</text>
+          </view>
+          <button class="invite-button" bindtap="onInviteTap">＋\n邀请</button>
+        </view>
+      </view>
+
+      <view class="action-card" bindtap="onReportTap">
+        <text class="action-title">📄 生成就诊报告</text>
+        <text class="muted">选择时间段，导出图片</text>
+      </view>
+
+      <view class="action-card disabled">
+        <text class="action-title">💊 药物管理</text>
+        <text class="muted">即将上线</text>
+      </view>
+
+      <view wx:if="{{canManage && latestRecord}}" class="card">
+        <text class="section-title">快捷设置</text>
+        <view class="setting-row" bindtap="onToggleMedicationReminder">
+          <view>
+            <text class="setting-title">用药提醒</text>
+            <text class="setting-sub">按晨/晚时间提醒</text>
+          </view>
+          <view class="switch {{family.settings.medicationReminderEnabled ? 'on' : ''}}"><view class="knob"></view></view>
+        </view>
+        <view class="setting-row" bindtap="onToggleAbnormalNotify">
+          <view>
+            <text class="setting-title">异常血压通知家人</text>
+            <text class="setting-sub">超过阈值时通知已选择成员</text>
+          </view>
+          <view class="switch {{family.settings.abnormalBpNotifyEnabled ? 'on' : ''}}"><view class="knob"></view></view>
+        </view>
+        <view class="setting-row no-border">
+          <view>
+            <text class="setting-title">字体大小</text>
+            <text class="setting-sub">调整全局显示大小</text>
+          </view>
+          <view class="segmented">
+            <text class="{{family.settings.fontSize==='standard'?'active':''}}" bindtap="onFontSizeTap" data-value="standard">标准</text>
+            <text class="{{family.settings.fontSize==='large'?'active':''}}" bindtap="onFontSizeTap" data-value="large">大</text>
+            <text class="{{family.settings.fontSize==='xlarge'?'active':''}}" bindtap="onFontSizeTap" data-value="xlarge">超大</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
   </view>
-
-  <scroll-view wx:if="{{family}}" scroll-y class="body">
-    <view class="card">
-      <view wx:if="{{hasProfileInfo}}" class="card-head">
-        <text class="section-title">{{family.profile.name || family.displayName || '我的记录'}}</text>
-        <text wx:if="{{canManage}}" class="link" bindtap="onEditProfileTap">编辑 ></text>
-      </view>
-      <view wx:if="{{hasProfileInfo}}" class="profile-grid">
-        <text>姓名：{{family.profile.name || '未设置'}}</text>
-        <text>出生年：{{family.profile.birthYear || '未设置'}}</text>
-        <text>年龄：{{profileView.age}}</text>
-        <text>当前血压：{{profileView.currentBpText}}</text>
-        <text>当前心率：{{profileView.currentHrText}}</text>
-        <text>当前用药：{{family.profile.medicationsText || '未设置'}}</text>
-        <text>紧急联系人：{{profileView.emergencyText}}</text>
-      </view>
-      <view wx:else class="profile-empty">
-        <text class="section-title">{{family.displayName || '我的记录'}}</text>
-        <text class="profile-empty-title">档案信息可稍后补充</text>
-        <text class="profile-empty-sub">当前血压：{{profileView.currentBpText}}</text>
-        <text class="profile-empty-sub">当前心率：{{profileView.currentHrText}}</text>
-        <button wx:if="{{canManage}}" class="secondary compact" bindtap="onEditProfileTap">完善档案</button>
-      </view>
-      <text class="trust-hint">仅用于报告展示，您可以填写昵称或简称。</text>
-    </view>
-
-    <view class="card">
-      <view class="row-title">家庭成员</view>
-      <view class="member-row">
-        <view wx:for="{{family.members}}" wx:key="openid" class="member" bindtap="onMemberTap" data-openid="{{item.openid}}">
-          <view class="avatar">{{item.nickname ? item.nickname[0] : '家'}}</view>
-          <text>{{item.nickname || '家人'}}</text>
-        </view>
-        <button class="invite-button" bindtap="onInviteTap">＋\n邀请</button>
-      </view>
-    </view>
-
-    <view class="action-card" bindtap="onReportTap">
-      <text class="action-title">📄 生成就诊报告</text>
-      <text class="muted">选择时间段，导出图片</text>
-    </view>
-
-    <view class="action-card disabled">
-      <text class="action-title">💊 药物管理</text>
-      <text class="muted">即将上线</text>
-    </view>
-
-    <view wx:if="{{canManage && latestRecord}}" class="card">
-      <text class="section-title">快捷设置</text>
-      <view class="setting-row" bindtap="onToggleMedicationReminder">
-        <view>
-          <text class="setting-title">用药提醒</text>
-          <text class="setting-sub">按晨/晚时间提醒</text>
-        </view>
-        <view class="switch {{family.settings.medicationReminderEnabled ? 'on' : ''}}"><view class="knob"></view></view>
-      </view>
-      <view class="setting-row" bindtap="onToggleAbnormalNotify">
-        <view>
-          <text class="setting-title">异常血压通知家人</text>
-          <text class="setting-sub">超过阈值时通知已选择成员</text>
-        </view>
-        <view class="switch {{family.settings.abnormalBpNotifyEnabled ? 'on' : ''}}"><view class="knob"></view></view>
-      </view>
-      <view class="setting-row no-border">
-        <view>
-          <text class="setting-title">字体大小</text>
-          <text class="setting-sub">调整全局显示大小</text>
-        </view>
-        <view class="segmented">
-          <text class="{{family.settings.fontSize==='standard'?'active':''}}" bindtap="onFontSizeTap" data-value="standard">标准</text>
-          <text class="{{family.settings.fontSize==='large'?'active':''}}" bindtap="onFontSizeTap" data-value="large">大</text>
-          <text class="{{family.settings.fontSize==='xlarge'?'active':''}}" bindtap="onFontSizeTap" data-value="xlarge">超大</text>
-        </view>
-      </view>
-    </view>
-  </scroll-view>
 
   <view wx:if="{{profileFormOpen}}" class="mask" bindtap="onCloseProfileForm"></view>
   <view wx:if="{{profileFormOpen}}" class="modal">

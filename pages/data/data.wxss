@@ -1,6 +1,9 @@
-.container { min-height: 100vh; background: #EEF3FB; }
-.hero { background: linear-gradient(170deg, #72BBFF 0%, #3182F7 48%, #1761D4 100%); padding: 62rpx 32rpx 50rpx; border-radius: 0 0 58rpx 58rpx; }
-.title { display: block; text-align: center; color: #fff; font-size: 38rpx; font-weight: 800; margin-bottom: 34rpx; letter-spacing: 0; }
+.page { min-height: 100vh; background: #EEF3FB; }
+.container { min-height: 100vh; height: 100vh; background: #EEF3FB; box-sizing: border-box; }
+.custom-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 30; box-sizing: border-box; background: transparent; transition: background 0.18s ease, box-shadow 0.18s ease; }
+.custom-nav.scrolled { background: #3182F7; box-shadow: 0 4rpx 18rpx rgba(23, 97, 212, 0.18); }
+.nav-title { position: absolute; left: 132rpx; right: 132rpx; text-align: center; color: #fff; font-size: var(--fs-title, 38rpx); font-weight: 800; letter-spacing: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.hero { background: linear-gradient(170deg, #72BBFF 0%, #3182F7 48%, #1761D4 100%); padding: 34rpx 32rpx 50rpx; border-radius: 0 0 58rpx 58rpx; }
 .device-card { border-radius: 34rpx; padding: 24rpx 30rpx 28rpx; background: rgba(255,255,255,0.22); border: 2rpx solid rgba(255,255,255,0.42); box-shadow: 0 12rpx 38rpx rgba(18, 88, 194, 0.20); }
 .time { display: block; color: rgba(255,255,255,0.94); font-size: 26rpx; text-align: center; margin-bottom: 22rpx; font-weight: 700; }
 .device-screen { position: relative; min-height: 308rpx; background: #EEF4FB; border-radius: 24rpx; padding: 34rpx 36rpx; margin-right: 50rpx; overflow: visible; }
@@ -48,14 +51,15 @@
 .chart-canvas { width: 100%; height: 336rpx; display: block; }
 .chart-empty { height: 280rpx; display: flex; align-items: center; justify-content: center; color: #8FA1B4; font-size: 32rpx; }
 .export-canvas { position: fixed; left: -9999px; top: -9999px; width: 750px; height: 900px; }
-.bottom { margin-bottom: 160rpx; }
+.bottom { margin-bottom: 34rpx; }
+.tabbar-spacer { height: calc(136rpx + env(safe-area-inset-bottom)); }
 
 /* 字体大小：大字模式 (1.15x) */
 .fs-large .metric-value { font-size: 96rpx; }
 .fs-large .metric.systolic .metric-value { font-size: 108rpx; }
 .fs-large .stat-num { font-size: 56rpx; }
 .fs-large .stat-num.small { font-size: 44rpx; }
-.fs-large .title { font-size: 44rpx; }
+.fs-large .nav-title { font-size: 44rpx; }
 .fs-large .time { font-size: 30rpx; }
 .fs-large .all { font-size: 32rpx; }
 .fs-large .section-title { font-size: 37rpx; }
@@ -71,7 +75,7 @@
 .fs-xlarge .metric.systolic .metric-value { font-size: 124rpx; }
 .fs-xlarge .stat-num { font-size: 64rpx; }
 .fs-xlarge .stat-num.small { font-size: 52rpx; }
-.fs-xlarge .title { font-size: 49rpx; }
+.fs-xlarge .nav-title { font-size: 49rpx; }
 .fs-xlarge .time { font-size: 34rpx; }
 .fs-xlarge .all { font-size: 36rpx; }
 .fs-xlarge .section-title { font-size: 42rpx; }

@@ -5,6 +5,12 @@ function notifyMemberText(memberIds) {
   return count ? `${count}人` : '未选择'
 }
 
+function makeFontSizeStyle(cls) {
+  if (cls === 'large')  return '--fs-label:28rpx;--fs-title:35rpx;--fs-sub:28rpx;--fs-val:32rpx;--fs-seg:30rpx;--fs-note:28rpx'
+  if (cls === 'xlarge') return '--fs-label:31rpx;--fs-title:39rpx;--fs-sub:31rpx;--fs-val:36rpx;--fs-seg:34rpx;--fs-note:31rpx'
+  return '--fs-label:24rpx;--fs-title:30rpx;--fs-sub:24rpx;--fs-val:28rpx;--fs-seg:26rpx;--fs-note:24rpx'
+}
+
 Page({
   data: {
     family: null,
@@ -13,10 +19,12 @@ Page({
     notifyMemberText: '未选择',
     loading: true,
     fontSizeClass: 'standard',
+    fontSizeStyle: makeFontSizeStyle('standard'),
   },
 
   onShow() {
-    this.setData({ fontSizeClass: getApp().globalData.fontSizeClass || 'standard' })
+    const cls = getApp().globalData.fontSizeClass || 'standard'
+    this.setData({ fontSizeClass: cls, fontSizeStyle: makeFontSizeStyle(cls) })
     this.loadFamily()
   },
 
@@ -35,12 +43,16 @@ Page({
       })
       const family = res.result.family
       const settings = normalizeSettings(family.settings || {})
+      const fontSizeClass = settings.fontSize || 'standard'
+      getApp().globalData.fontSizeClass = fontSizeClass
       this.setData({
         family,
         settings,
         members: family.members || [],
         notifyMemberText: notifyMemberText(settings.notifyMemberIds),
         loading: false,
+        fontSizeClass,
+        fontSizeStyle: makeFontSizeStyle(fontSizeClass),
       })
     } catch (e) {
       wx.showToast({ title: '设置加载失败', icon: 'none' })
@@ -49,12 +61,17 @@ Page({
   },
 
   async updateSettings(patch) {
-    if (this.savingSettings) return
+    if (this.savingSettings || !this.data.family) return
     this.savingSettings = true
     const settings = normalizeSettings({ ...this.data.settings, ...patch })
     const fontSizeClass = settings.fontSize || 'standard'
     getApp().globalData.fontSizeClass = fontSizeClass
-    this.setData({ settings, fontSizeClass, notifyMemberText: notifyMemberText(settings.notifyMemberIds) })
+    this.setData({
+      settings,
+      fontSizeClass,
+      fontSizeStyle: makeFontSizeStyle(fontSizeClass),
+      notifyMemberText: notifyMemberText(settings.notifyMemberIds),
+    })
     try {
       const res = await wx.cloud.callFunction({
         name: 'updateFamilySettings',
@@ -81,8 +98,9 @@ Page({
     this.updateSettings({ [key]: e.detail.value })
   },
 
-  onFontSizeTap(e) {
-    this.updateSettings({ fontSize: e.currentTarget.dataset.value })
+  async onFontSizeTap(e) {
+    await this.updateSettings({ fontSize: e.currentTarget.dataset.value })
+    this.loadFamily()
   },
 
   onNotifyMembersTap() {

@@ -1,15 +1,23 @@
 const { groupByDate, formatTime } = require('../../utils/date')
 const { getBPStatus } = require('../../utils/health-rules')
 
+function makeFontSizeStyle(cls) {
+  if (cls === 'large')  return '--fs-date:35rpx;--fs-count:28rpx;--fs-time:30rpx;--fs-tag:23rpx;--fs-bp:37rpx;--fs-hr:28rpx'
+  if (cls === 'xlarge') return '--fs-date:39rpx;--fs-count:31rpx;--fs-time:34rpx;--fs-tag:26rpx;--fs-bp:42rpx;--fs-hr:31rpx'
+  return '--fs-date:30rpx;--fs-count:24rpx;--fs-time:26rpx;--fs-tag:20rpx;--fs-bp:32rpx;--fs-hr:24rpx'
+}
+
 Page({
   data: {
     groups: [],
     loading: true,
     fontSizeClass: 'standard',
+    fontSizeStyle: makeFontSizeStyle('standard'),
   },
 
   onShow() {
-    this.setData({ fontSizeClass: getApp().globalData.fontSizeClass || 'standard' })
+    const cls = getApp().globalData.fontSizeClass || 'standard'
+    this.setData({ fontSizeClass: cls, fontSizeStyle: makeFontSizeStyle(cls) })
     this.loadRecords()
   },
 

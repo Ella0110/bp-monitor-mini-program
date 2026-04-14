@@ -88,9 +88,11 @@ Page({
     this.updateSettings({ [key]: !this.data.settings[key] })
   },
 
-  onThresholdChange(e) {
-    const key = e.currentTarget.dataset.key
-    this.updateSettings({ [key]: Number(e.detail.value) })
+  onStepperTap(e) {
+    const { key, delta, min, max } = e.currentTarget.dataset
+    const current = this.data.settings[key] || 0
+    const next = Math.min(max, Math.max(min, current + delta))
+    if (next !== current) this.updateSettings({ [key]: next })
   },
 
   onTimeChange(e) {
@@ -101,6 +103,10 @@ Page({
   async onFontSizeTap(e) {
     await this.updateSettings({ fontSize: e.currentTarget.dataset.value })
     this.loadFamily()
+  },
+
+  onFeedback() {
+    wx.setClipboardData({ data: 'bp-monitor-feedback@example.com' })
   },
 
   onNotifyMembersTap() {

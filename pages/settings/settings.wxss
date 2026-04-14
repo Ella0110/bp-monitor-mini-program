@@ -11,7 +11,9 @@
 .switch.on { background: #3182F7; }
 .knob { width: 40rpx; height: 40rpx; background: #fff; border-radius: 50%; position: absolute; top: 6rpx; left: 6rpx; transition: left 0.18s; box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.18); }
 .switch.on .knob { left: 42rpx; }
-.number-input { width: 170rpx; min-height: 68rpx; border-radius: 18rpx; background: #F1F6FF; color: #0F172A; font-size: 30rpx; font-weight: 700; text-align: center; flex-shrink: 0; }
+.stepper { display: flex; align-items: center; gap: 0; flex-shrink: 0; background: #F1F6FF; border-radius: 18rpx; overflow: hidden; }
+.stepper-btn { width: 72rpx; height: 72rpx; display: flex; align-items: center; justify-content: center; color: #3182F7; font-size: 40rpx; font-weight: 700; }
+.stepper-val { min-width: 80rpx; text-align: center; color: #0F172A; font-size: var(--fs-val, 28rpx); font-weight: 800; }
 .segmented { display: flex; gap: 10rpx; flex-shrink: 0; }
 .segmented text { min-width: 68rpx; min-height: 56rpx; border-radius: 18rpx; padding: 0 16rpx; display: flex; align-items: center; justify-content: center; color: #64748B; background: #F1F6FF; font-size: var(--fs-seg, 26rpx); font-weight: 700; }
 .segmented .active { background: #3182F7; color: #fff; }

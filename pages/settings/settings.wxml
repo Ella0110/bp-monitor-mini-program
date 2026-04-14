@@ -22,17 +22,25 @@
       </view>
       <view class="setting-row">
         <view>
-          <text class="setting-title">高压告警阈值</text>
+          <text class="setting-title">高压告警阈值 (mmHg)</text>
           <text class="setting-sub">收缩压超过此值时触发通知</text>
         </view>
-        <input class="number-input" type="number" value="{{settings.alertSystolic}}" bindblur="onThresholdChange" data-key="alertSystolic" />
+        <view class="stepper">
+          <view class="stepper-btn" bindtap="onStepperTap" data-key="alertSystolic" data-delta="{{-5}}" data-min="{{100}}" data-max="{{200}}">－</view>
+          <text class="stepper-val">{{settings.alertSystolic}}</text>
+          <view class="stepper-btn" bindtap="onStepperTap" data-key="alertSystolic" data-delta="{{5}}" data-min="{{100}}" data-max="{{200}}">＋</view>
+        </view>
       </view>
       <view class="setting-row no-border">
         <view>
-          <text class="setting-title">低压告警阈值</text>
+          <text class="setting-title">低压告警阈值 (mmHg)</text>
           <text class="setting-sub">舒张压超过此值时触发通知</text>
         </view>
-        <input class="number-input" type="number" value="{{settings.alertDiastolic}}" bindblur="onThresholdChange" data-key="alertDiastolic" />
+        <view class="stepper">
+          <view class="stepper-btn" bindtap="onStepperTap" data-key="alertDiastolic" data-delta="{{-5}}" data-min="{{60}}" data-max="{{130}}">－</view>
+          <text class="stepper-val">{{settings.alertDiastolic}}</text>
+          <view class="stepper-btn" bindtap="onStepperTap" data-key="alertDiastolic" data-delta="{{5}}" data-min="{{60}}" data-max="{{130}}">＋</view>
+        </view>
       </view>
     </view>
 
@@ -95,6 +103,21 @@
           <text class="{{settings.fontSize==='large'?'active':''}}" bindtap="onFontSizeTap" data-value="large">大</text>
           <text class="{{settings.fontSize==='xlarge'?'active':''}}" bindtap="onFontSizeTap" data-value="xlarge">超大</text>
         </view>
+      </view>
+    </view>
+
+    <text class="sec-label">关于</text>
+    <view class="settings-card">
+      <view class="setting-row">
+        <text class="setting-title">当前版本</text>
+        <text class="value">1.0.0</text>
+      </view>
+      <view class="setting-row no-border" bindtap="onFeedback">
+        <view>
+          <text class="setting-title">意见反馈</text>
+          <text class="setting-sub">复制反馈邮箱地址</text>
+        </view>
+        <text class="value">></text>
       </view>
     </view>
 

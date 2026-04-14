@@ -1,6 +1,22 @@
 const { getBPStatus, getHRStatus } = require('../../utils/health-rules')
 const { formatInputDateTime, parseInputDateTime } = require('../../utils/date')
 
+function buildNavMetrics() {
+  const windowInfo = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
+  const statusBarHeight = windowInfo.statusBarHeight || 0
+  const menuButton = wx.getMenuButtonBoundingClientRect ? wx.getMenuButtonBoundingClientRect() : null
+  const navHeight = menuButton ? menuButton.bottom + menuButton.top - statusBarHeight : statusBarHeight + 44
+  const titleTop = menuButton ? menuButton.top : statusBarHeight + 6
+  const titleHeight = menuButton ? menuButton.height : 32
+
+  return {
+    navStyle: `height:${navHeight}px;`,
+    navTitleStyle: `top:${titleTop}px;height:${titleHeight}px;line-height:${titleHeight}px;`,
+    navBackStyle: `top:${titleTop}px;height:${titleHeight}px;`,
+    contentStyle: `padding-top:${navHeight + 32}px;`,
+  }
+}
+
 Page({
   data: {
     id: '',
@@ -12,9 +28,14 @@ Page({
     statusText: '',
     statusColor: '#64748B',
     saving: false,
+    navStyle: '',
+    navTitleStyle: '',
+    navBackStyle: '',
+    contentStyle: '',
   },
 
   onLoad(options) {
+    this.setData(buildNavMetrics())
     if (options.record) {
       const record = JSON.parse(decodeURIComponent(options.record))
       this.setData({
@@ -91,5 +112,9 @@ Page({
     } finally {
       this.setData({ saving: false })
     }
+  },
+
+  onBackTap() {
+    wx.navigateBack({ delta: 1 })
   },
 })

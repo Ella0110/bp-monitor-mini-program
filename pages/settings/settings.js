@@ -11,6 +11,22 @@ function makeFontSizeStyle(cls) {
   return '--fs-label:20rpx;--fs-title:28rpx;--fs-sub:22rpx;--fs-val:26rpx;--fs-seg:24rpx;--fs-note:22rpx;--row-h:96rpx;--card-px:28rpx'
 }
 
+function buildNavMetrics() {
+  const windowInfo = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
+  const statusBarHeight = windowInfo.statusBarHeight || 0
+  const menuButton = wx.getMenuButtonBoundingClientRect ? wx.getMenuButtonBoundingClientRect() : null
+  const navHeight = menuButton ? menuButton.bottom + menuButton.top - statusBarHeight : statusBarHeight + 44
+  const titleTop = menuButton ? menuButton.top : statusBarHeight + 6
+  const titleHeight = menuButton ? menuButton.height : 32
+
+  return {
+    navStyle: `height:${navHeight}px;`,
+    navTitleStyle: `top:${titleTop}px;height:${titleHeight}px;line-height:${titleHeight}px;`,
+    navBackStyle: `top:${titleTop}px;height:${titleHeight}px;`,
+    contentStyle: `top:${navHeight}px;`,
+  }
+}
+
 Page({
   data: {
     family: null,
@@ -20,6 +36,14 @@ Page({
     loading: true,
     fontSizeClass: 'standard',
     fontSizeStyle: makeFontSizeStyle('standard'),
+    navStyle: '',
+    navTitleStyle: '',
+    navBackStyle: '',
+    contentStyle: '',
+  },
+
+  onLoad() {
+    this.setData(buildNavMetrics())
   },
 
   onShow() {
@@ -124,5 +148,9 @@ Page({
         this.updateSettings({ notifyMemberIds })
       },
     })
+  },
+
+  onBackTap() {
+    wx.navigateBack({ delta: 1 })
   },
 })

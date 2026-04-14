@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "设置",
-  "navigationBarBackgroundColor": "#3182F7",
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "",
   "navigationBarTextStyle": "white"
 }

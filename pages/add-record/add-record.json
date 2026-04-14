@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "添加记录",
-  "navigationBarBackgroundColor": "#3182F7",
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "",
   "navigationBarTextStyle": "white"
 }

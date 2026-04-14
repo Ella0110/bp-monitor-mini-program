@@ -1,4 +1,11 @@
-.container { min-height: 100vh; background: #EEF3FB; padding: 28rpx 32rpx 120rpx; box-sizing: border-box; }
+.page { min-height: 100vh; background: #EEF3FB; }
+.container { position: fixed; left: 0; right: 0; bottom: 0; background: #EEF3FB; box-sizing: border-box; }
+.report-content { padding: 28rpx 32rpx 120rpx; box-sizing: border-box; }
+.custom-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 30; box-sizing: border-box; background: #3182F7; box-shadow: 0 2rpx 16rpx rgba(23, 97, 212, 0.18); }
+.nav-title { position: absolute; left: 156rpx; right: 156rpx; text-align: center; color: #FFFFFF; font-size: 36rpx; font-weight: 800; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.nav-back { position: absolute; left: 28rpx; color: #FFFFFF; font-size: 30rpx; font-weight: 800; display: flex; align-items: center; gap: 8rpx; line-height: 1; }
+.nav-back-icon { width: 16rpx; height: 16rpx; border-left: 4rpx solid currentColor; border-bottom: 4rpx solid currentColor; transform: rotate(45deg); box-sizing: border-box; flex-shrink: 0; }
+.nav-back-text { line-height: 1; }
 .periods { display: flex; background: #EAF2FF; border-radius: 40rpx; padding: 6rpx; margin-bottom: 28rpx; }
 .period { flex: 1; text-align: center; padding: 14rpx 0; color: #3182F7; border-radius: 34rpx; font-size: 28rpx; font-weight: 800; }
 .period.active { background: #3182F7; color: #fff; }
@@ -21,5 +28,5 @@
 .record-main { display: block; color: #0F172A; font-size: 30rpx; font-weight: 800; margin-top: 6rpx; }
 .record-status { display: block; color: #64748B; font-size: 24rpx; margin-top: 6rpx; }
 .disclaimer { margin-top: 40rpx; color: #64748B; font-size: 24rpx; line-height: 1.7; }
-.save { min-height: 88rpx; margin-top: 28rpx; background: #3182F7; color: #fff; border-radius: 16rpx; font-size: 30rpx; font-weight: 900; }
+.save { min-height: 88rpx; margin-top: 28rpx; background: #3182F7; color: #fff; border-radius: 16rpx; font-size: 30rpx; font-weight: 900; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .export-canvas { position: fixed; left: -9999px; top: -9999px; width: 750px; height: 1400px; }

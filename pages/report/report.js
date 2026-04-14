@@ -5,6 +5,22 @@ const { drawReportImage, reportImageHeight } = require('../../utils/report-canva
 
 const PERIODS = { '7天': 7, '30天': 30, '90天': 90 }
 
+function buildNavMetrics() {
+  const windowInfo = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
+  const statusBarHeight = windowInfo.statusBarHeight || 0
+  const menuButton = wx.getMenuButtonBoundingClientRect ? wx.getMenuButtonBoundingClientRect() : null
+  const navHeight = menuButton ? menuButton.bottom + menuButton.top - statusBarHeight : statusBarHeight + 44
+  const titleTop = menuButton ? menuButton.top : statusBarHeight + 6
+  const titleHeight = menuButton ? menuButton.height : 32
+
+  return {
+    navStyle: `height:${navHeight}px;`,
+    navTitleStyle: `top:${titleTop}px;height:${titleHeight}px;line-height:${titleHeight}px;`,
+    navBackStyle: `top:${titleTop}px;height:${titleHeight}px;`,
+    contentStyle: `top:${navHeight}px;`,
+  }
+}
+
 Page({
   data: {
     period: '30天',
@@ -14,9 +30,14 @@ Page({
     report: null,
     loading: true,
     error: '',
+    navStyle: '',
+    navTitleStyle: '',
+    navBackStyle: '',
+    contentStyle: '',
   },
 
   onLoad() {
+    this.setData(buildNavMetrics())
     this.loadReport()
   },
 
@@ -139,5 +160,9 @@ Page({
         wx.showToast({ title: '保存失败', icon: 'none' })
       },
     })
+  },
+
+  onBackTap() {
+    wx.navigateBack({ delta: 1 })
   },
 })

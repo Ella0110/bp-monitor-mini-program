@@ -1,26 +1,33 @@
-<view class="container">
-  <view class="form-card">
-    <view class="form-row">
-      <text class="label">高压（mmHg）</text>
-      <input class="input" type="number" value="{{systolic}}" placeholder="如 130" bindinput="onInput" data-field="systolic" />
-    </view>
-    <view class="form-row">
-      <text class="label">低压（mmHg）</text>
-      <input class="input" type="number" value="{{diastolic}}" placeholder="如 80" bindinput="onInput" data-field="diastolic" />
-    </view>
-    <view class="form-row">
-      <text class="label">心率（bpm）</text>
-      <input class="input" type="number" value="{{heartRate}}" placeholder="如 72" bindinput="onInput" data-field="heartRate" />
-    </view>
-    <view class="form-row">
-      <text class="label">测量时间</text>
-      <input class="input time" value="{{measuredAt}}" placeholder="2026-04-12 08:30" bindinput="onInput" data-field="measuredAt" />
-    </view>
-    <view class="period-row">
-      <view class="period {{period==='morning'?'active':''}}" bindtap="onPeriodTap" data-period="morning">晨测</view>
-      <view class="period {{period==='evening'?'active':''}}" bindtap="onPeriodTap" data-period="evening">晚测</view>
-    </view>
-    <view wx:if="{{statusText}}" class="status" style="color:{{statusColor}}">{{statusText}}</view>
+<view class="page">
+  <view class="custom-nav" style="{{navStyle}}">
+    <view class="nav-back" style="{{navBackStyle}}" bindtap="onBackTap"><view class="nav-back-icon"></view><text class="nav-back-text">返回</text></view>
+    <text class="nav-title" style="{{navTitleStyle}}">添加记录</text>
   </view>
-  <button class="save" loading="{{saving}}" bindtap="onSave">保存记录</button>
+
+  <view class="container" style="{{contentStyle}}">
+    <view class="form-card">
+      <view class="form-row">
+        <text class="label">高压（mmHg）</text>
+        <input class="input" type="number" value="{{systolic}}" placeholder="如 130" bindinput="onInput" data-field="systolic" />
+      </view>
+      <view class="form-row">
+        <text class="label">低压（mmHg）</text>
+        <input class="input" type="number" value="{{diastolic}}" placeholder="如 80" bindinput="onInput" data-field="diastolic" />
+      </view>
+      <view class="form-row">
+        <text class="label">心率（bpm）</text>
+        <input class="input" type="number" value="{{heartRate}}" placeholder="如 72" bindinput="onInput" data-field="heartRate" />
+      </view>
+      <view class="form-row">
+        <text class="label">测量时间</text>
+        <input class="input time" value="{{measuredAt}}" placeholder="2026-04-12 08:30" bindinput="onInput" data-field="measuredAt" />
+      </view>
+      <view class="period-row">
+        <view class="period {{period==='morning'?'active':''}}" bindtap="onPeriodTap" data-period="morning">晨测</view>
+        <view class="period {{period==='evening'?'active':''}}" bindtap="onPeriodTap" data-period="evening">晚测</view>
+      </view>
+      <view wx:if="{{statusText}}" class="status" style="color:{{statusColor}}">{{statusText}}</view>
+    </view>
+    <button class="save" loading="{{saving}}" bindtap="onSave">保存记录</button>
+  </view>
 </view>

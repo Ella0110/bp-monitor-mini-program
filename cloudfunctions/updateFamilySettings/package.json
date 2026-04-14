@@ -1,5 +1,5 @@
 {
-  "name": "updateFamilySettings",
+  "name": "update-family-settings",
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {

@@ -2,9 +2,9 @@ const { groupByDate, formatTime } = require('../../utils/date')
 const { getBPStatus } = require('../../utils/health-rules')
 
 function makeFontSizeStyle(cls) {
-  if (cls === 'large')  return '--fs-date:35rpx;--fs-count:28rpx;--fs-time:30rpx;--fs-tag:23rpx;--fs-bp:37rpx;--fs-hr:28rpx;--fs-badge:23rpx'
-  if (cls === 'xlarge') return '--fs-date:39rpx;--fs-count:31rpx;--fs-time:34rpx;--fs-tag:26rpx;--fs-bp:42rpx;--fs-hr:31rpx;--fs-badge:26rpx'
-  return '--fs-date:30rpx;--fs-count:24rpx;--fs-time:26rpx;--fs-tag:20rpx;--fs-bp:32rpx;--fs-hr:24rpx;--fs-badge:20rpx'
+  if (cls === 'large')  return '--fs-date:32rpx;--fs-count:25rpx;--fs-time:28rpx;--fs-tag:21rpx;--fs-bp:34rpx;--fs-hr:25rpx;--fs-badge:21rpx;--gh-h:90rpx;--rec-py:24rpx'
+  if (cls === 'xlarge') return '--fs-date:36rpx;--fs-count:28rpx;--fs-time:32rpx;--fs-tag:24rpx;--fs-bp:38rpx;--fs-hr:28rpx;--fs-badge:24rpx;--gh-h:100rpx;--rec-py:28rpx'
+  return '--fs-date:28rpx;--fs-count:22rpx;--fs-time:24rpx;--fs-tag:18rpx;--fs-bp:30rpx;--fs-hr:22rpx;--fs-badge:18rpx;--gh-h:80rpx;--rec-py:20rpx'
 }
 
 function getBadge(bpStatus) {

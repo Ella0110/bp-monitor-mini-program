@@ -5,22 +5,22 @@ const { drawBloodPressureChart, drawHeartRateChart } = require('../../utils/canv
 
 function makeFontSizeStyle(cls) {
   if (cls === 'large') return [
-    '--fs-title:44rpx', '--fs-time:30rpx', '--fs-metric:96rpx', '--fs-metric-sys:108rpx',
-    '--fs-stat-num:56rpx', '--fs-stat-num-sm:44rpx', '--fs-stat:28rpx',
-    '--fs-section:37rpx', '--fs-all:32rpx', '--fs-empty:37rpx',
-    '--fs-add:39rpx', '--fs-key:41rpx', '--fs-key-act:32rpx', '--fs-key-sub:37rpx',
+    '--fs-title:41rpx', '--fs-time:28rpx', '--fs-metric:84rpx', '--fs-metric-sys:96rpx',
+    '--fs-stat-num:50rpx', '--fs-stat-num-sm:39rpx', '--fs-stat:25rpx',
+    '--fs-section:32rpx', '--fs-all:30rpx', '--fs-empty:32rpx',
+    '--fs-add:32rpx', '--hero-pb:52rpx',
   ].join(';')
   if (cls === 'xlarge') return [
-    '--fs-title:49rpx', '--fs-time:34rpx', '--fs-metric:110rpx', '--fs-metric-sys:124rpx',
-    '--fs-stat-num:64rpx', '--fs-stat-num-sm:52rpx', '--fs-stat:31rpx',
-    '--fs-section:42rpx', '--fs-all:36rpx', '--fs-empty:42rpx',
-    '--fs-add:44rpx', '--fs-key:47rpx', '--fs-key-act:36rpx', '--fs-key-sub:42rpx',
+    '--fs-title:46rpx', '--fs-time:32rpx', '--fs-metric:96rpx', '--fs-metric-sys:108rpx',
+    '--fs-stat-num:57rpx', '--fs-stat-num-sm:44rpx', '--fs-stat:28rpx',
+    '--fs-section:36rpx', '--fs-all:34rpx', '--fs-empty:36rpx',
+    '--fs-add:36rpx', '--hero-pb:58rpx',
   ].join(';')
   return [
-    '--fs-title:38rpx', '--fs-time:26rpx', '--fs-metric:78rpx', '--fs-metric-sys:88rpx',
-    '--fs-stat-num:48rpx', '--fs-stat-num-sm:36rpx', '--fs-stat:24rpx',
-    '--fs-section:32rpx', '--fs-all:28rpx', '--fs-empty:32rpx',
-    '--fs-add:34rpx', '--fs-key:36rpx', '--fs-key-act:28rpx', '--fs-key-sub:32rpx',
+    '--fs-title:36rpx', '--fs-time:24rpx', '--fs-metric:72rpx', '--fs-metric-sys:84rpx',
+    '--fs-stat-num:44rpx', '--fs-stat-num-sm:34rpx', '--fs-stat:22rpx',
+    '--fs-section:28rpx', '--fs-all:26rpx', '--fs-empty:28rpx',
+    '--fs-add:28rpx', '--hero-pb:46rpx',
   ].join(';')
 }
 

@@ -2,9 +2,9 @@ const { calcAge, normalizeProfile, normalizeSettings } = require('../../utils/fa
 const { formatDateTime } = require('../../utils/date')
 
 function makeFontSizeStyle(cls) {
-  if (cls === 'large') return '--fs-title:44rpx;--fs-prof-name:39rpx;--fs-sub:30rpx;--fs-ir:32rpx;--fs-mn:25rpx;--fs-at:35rpx;--fs-ats:28rpx;--fs-st:35rpx;--fs-ss:28rpx;--fs-seg:30rpx'
-  if (cls === 'xlarge') return '--fs-title:49rpx;--fs-prof-name:44rpx;--fs-sub:34rpx;--fs-ir:36rpx;--fs-mn:29rpx;--fs-at:39rpx;--fs-ats:31rpx;--fs-st:39rpx;--fs-ss:31rpx;--fs-seg:34rpx'
-  return '--fs-title:38rpx;--fs-prof-name:34rpx;--fs-sub:26rpx;--fs-ir:28rpx;--fs-mn:22rpx;--fs-at:30rpx;--fs-ats:24rpx;--fs-st:30rpx;--fs-ss:24rpx;--fs-seg:26rpx'
+  if (cls === 'large') return '--fs-title:41rpx;--fs-prof-name:36rpx;--fs-sub:27rpx;--fs-ir:30rpx;--fs-mn:23rpx;--fs-at:32rpx;--fs-ats:25rpx;--fs-st:32rpx;--fs-ss:25rpx;--fs-seg:28rpx;--qs-row-h:108rpx'
+  if (cls === 'xlarge') return '--fs-title:46rpx;--fs-prof-name:41rpx;--fs-sub:30rpx;--fs-ir:34rpx;--fs-mn:26rpx;--fs-at:36rpx;--fs-ats:28rpx;--fs-st:36rpx;--fs-ss:28rpx;--fs-seg:32rpx;--qs-row-h:120rpx'
+  return '--fs-title:36rpx;--fs-prof-name:32rpx;--fs-sub:24rpx;--fs-ir:26rpx;--fs-mn:20rpx;--fs-at:28rpx;--fs-ats:22rpx;--fs-st:28rpx;--fs-ss:22rpx;--fs-seg:24rpx;--qs-row-h:96rpx'
 }
 
 function buildNavMetrics() {

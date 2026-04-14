@@ -1,8 +1,8 @@
 .container { min-height: 100vh; background: #EEF3FB; padding: 32rpx; box-sizing: border-box; }
 .sec-label { display: block; font-size: var(--fs-label, 24rpx); font-weight: 700; color: #94A3B8; margin: 20rpx 0; }
-.empty-card, .settings-card { background: #fff; border-radius: 28rpx; padding: 0 28rpx; margin-bottom: 28rpx; box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09); }
+.empty-card, .settings-card { background: #fff; border-radius: 28rpx; padding: 0 var(--card-px, 28rpx); margin-bottom: 28rpx; box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09); }
 .empty-card { min-height: 160rpx; display: flex; align-items: center; justify-content: center; color: #64748B; font-size: 28rpx; }
-.setting-row { min-height: 112rpx; display: flex; align-items: center; justify-content: space-between; gap: 24rpx; border-bottom: 2rpx solid #EEF3FB; }
+.setting-row { min-height: var(--row-h, 96rpx); display: flex; align-items: center; justify-content: space-between; gap: 24rpx; border-bottom: 2rpx solid #EEF3FB; }
 .setting-row.no-border { border-bottom: 0; }
 .setting-title { display: block; font-size: var(--fs-title, 30rpx); font-weight: 800; color: #0F172A; }
 .setting-sub { display: block; font-size: var(--fs-sub, 24rpx); color: #94A3B8; margin-top: 8rpx; line-height: 1.35; }

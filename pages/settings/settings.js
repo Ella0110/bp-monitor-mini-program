@@ -6,9 +6,9 @@ function notifyMemberText(memberIds) {
 }
 
 function makeFontSizeStyle(cls) {
-  if (cls === 'large')  return '--fs-label:28rpx;--fs-title:35rpx;--fs-sub:28rpx;--fs-val:32rpx;--fs-seg:30rpx;--fs-note:28rpx'
-  if (cls === 'xlarge') return '--fs-label:31rpx;--fs-title:39rpx;--fs-sub:31rpx;--fs-val:36rpx;--fs-seg:34rpx;--fs-note:31rpx'
-  return '--fs-label:24rpx;--fs-title:30rpx;--fs-sub:24rpx;--fs-val:28rpx;--fs-seg:26rpx;--fs-note:24rpx'
+  if (cls === 'large')  return '--fs-label:23rpx;--fs-title:32rpx;--fs-sub:25rpx;--fs-val:30rpx;--fs-seg:28rpx;--fs-note:25rpx;--row-h:108rpx;--card-px:30rpx'
+  if (cls === 'xlarge') return '--fs-label:26rpx;--fs-title:36rpx;--fs-sub:28rpx;--fs-val:34rpx;--fs-seg:32rpx;--fs-note:28rpx;--row-h:120rpx;--card-px:32rpx'
+  return '--fs-label:20rpx;--fs-title:28rpx;--fs-sub:22rpx;--fs-val:26rpx;--fs-seg:24rpx;--fs-note:22rpx;--row-h:96rpx;--card-px:28rpx'
 }
 
 Page({

@@ -56,7 +56,7 @@
 
 /* ── Quick settings card ── */
 .qs-card { background: #fff; border-radius: 32rpx; padding: 0 32rpx; box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09); }
-.qs-row { min-height: 112rpx; display: flex; align-items: center; justify-content: space-between; gap: 24rpx; border-bottom: 2rpx solid #EEF3FB; }
+.qs-row { min-height: var(--qs-row-h, 96rpx); display: flex; align-items: center; justify-content: space-between; gap: 24rpx; border-bottom: 2rpx solid #EEF3FB; }
 .qs-row.no-border { border-bottom: 0; }
 .qs-title { display: block; font-size: var(--fs-st, 30rpx); font-weight: 700; color: #0F172A; }
 .qs-sub { display: block; font-size: var(--fs-ss, 24rpx); color: #94A3B8; margin-top: 6rpx; }

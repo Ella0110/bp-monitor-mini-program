@@ -22,6 +22,7 @@ Page({
 
   async loadReport() {
     const app = getApp()
+    await app.loginReady
     if (!app.globalData.familyId) {
       this.setData({ loading: false, error: '请先保存一条记录，或查看家人的记录' })
       return

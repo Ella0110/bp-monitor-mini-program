@@ -48,6 +48,7 @@ Page({
 
   async loadFamily() {
     const app = getApp()
+    await app.loginReady
     if (!app.globalData.familyId) {
       this.setData({ loading: false, family: null, currentMember: null, canManage: false })
       return

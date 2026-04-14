@@ -4,7 +4,7 @@ App({
       env: wx.cloud.DYNAMIC_CURRENT_ENV,
       traceUser: true,
     })
-    this.doLogin()
+    this.loginReady = this.doLogin()
   },
 
   async doLogin() {

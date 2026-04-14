@@ -20,6 +20,7 @@ Page({
 
   async loadFamily() {
     const app = getApp()
+    await app.loginReady
     if (!app.globalData.familyId) {
       this.setData({ loading: false, family: null, settings: null, members: [], notifyMemberText: '未选择' })
       return
@@ -46,23 +47,29 @@ Page({
   },
 
   async updateSettings(patch) {
+    if (this.savingSettings) return
+    this.savingSettings = true
     const settings = normalizeSettings({ ...this.data.settings, ...patch })
-    const res = await wx.cloud.callFunction({
-      name: 'updateFamilySettings',
-      data: {
-        familyId: this.data.family._id,
-        profile: this.data.family.profile,
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'updateFamilySettings',
+        data: {
+          familyId: this.data.family._id,
+          profile: this.data.family.profile,
+          settings,
+        },
+      })
+      if (!res.result.success) {
+        wx.showToast({ title: '保存失败', icon: 'none' })
+        return
+      }
+      this.setData({
         settings,
-      },
-    })
-    if (!res.result.success) {
-      wx.showToast({ title: '保存失败', icon: 'none' })
-      return
+        notifyMemberText: notifyMemberText(settings.notifyMemberIds),
+      })
+    } finally {
+      this.savingSettings = false
     }
-    this.setData({
-      settings,
-      notifyMemberText: notifyMemberText(settings.notifyMemberIds),
-    })
   },
 
   onToggle(e) {

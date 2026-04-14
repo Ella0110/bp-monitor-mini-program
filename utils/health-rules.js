@@ -34,7 +34,7 @@ function getBPStatus(systolic, diastolic, target) {
 function getHRStatus(heartRate, target) {
   const hr = Number(heartRate)
   const min = Number(target && target.min) || 60
-  const max = Number(target && target.max) || 80
+  const max = Number(target && target.max) || 100
 
   if (hr < 50) return cloneStatus(HR_STATUS.VERY_SLOW)
   if (hr < min) return cloneStatus(HR_STATUS.SLOW)

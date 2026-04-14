@@ -46,6 +46,7 @@ Page({
 
   async loadRecords() {
     const app = getApp()
+    await app.loginReady
     if (!app.globalData.familyId) {
       this.setData({
         records: [],
@@ -63,35 +64,41 @@ Page({
       return
     }
     this.setData({ loading: true })
-    const days = PERIODS[this.data.period] || 7
-    const res = await wx.cloud.callFunction({
-      name: 'getRecords',
-      data: { familyId: app.globalData.familyId, since: daysAgo(days).toISOString() },
-    })
-    const records = res.result.records || []
-    const latestRecord = records[0] || null
-    const latestBPStatus = latestRecord ? getBPStatus(latestRecord.systolic, latestRecord.diastolic) : null
-    const latestHRStatus = latestRecord ? getHRStatus(latestRecord.heartRate) : null
-    const bpChart = buildBloodPressureChart(records)
-    const hrChart = buildHeartRateChart(records)
-    this.setData({
-      records,
-      latestRecord,
-      latestTime: latestRecord ? formatDateTime(latestRecord.measuredAt) : '',
-      latestBPStatus,
-      latestHRStatus,
-      bpValueClass: this.getStatusClass(latestBPStatus),
-      hrValueClass: this.getStatusClass(latestHRStatus),
-      stats: {
-        ...countReferenceStats(records, {}),
-        avg: calcAverage(records),
-      },
-      bpChart,
-      hrChart,
-      hasChartRecords: records.length > 0,
-      loading: false,
-    })
-    this.drawCharts()
+    try {
+      const days = PERIODS[this.data.period] || 7
+      const res = await wx.cloud.callFunction({
+        name: 'getRecords',
+        data: { familyId: app.globalData.familyId, since: daysAgo(days).toISOString() },
+      })
+      const records = res.result.records || []
+      const latestRecord = records[0] || null
+      const latestBPStatus = latestRecord ? getBPStatus(latestRecord.systolic, latestRecord.diastolic) : null
+      const latestHRStatus = latestRecord ? getHRStatus(latestRecord.heartRate) : null
+      const bpChart = buildBloodPressureChart(records)
+      const hrChart = buildHeartRateChart(records)
+      this.setData({
+        records,
+        latestRecord,
+        latestTime: latestRecord ? formatDateTime(latestRecord.measuredAt) : '',
+        latestBPStatus,
+        latestHRStatus,
+        bpValueClass: this.getStatusClass(latestBPStatus),
+        hrValueClass: this.getStatusClass(latestHRStatus),
+        stats: {
+          ...countReferenceStats(records, {}),
+          avg: calcAverage(records),
+        },
+        bpChart,
+        hrChart,
+        hasChartRecords: records.length > 0,
+      })
+      this.drawCharts()
+    } catch (err) {
+      console.error('loadRecords failed', err)
+      wx.showToast({ title: '数据加载失败，请重试', icon: 'none' })
+    } finally {
+      this.setData({ loading: false })
+    }
   },
 
   drawCharts() {

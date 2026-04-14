@@ -13,6 +13,7 @@ Page({
 
   async loadRecords() {
     const app = getApp()
+    await app.loginReady
     if (!app.globalData.familyId) {
       this.setData({ groups: [], loading: false })
       return

@@ -153,21 +153,56 @@ Page({
   },
 
   async updateSettingsPatch(patch) {
-    if (!this.data.canManage) return
-    const settings = normalizeSettings({ ...this.data.family.settings, ...patch })
-    const res = await wx.cloud.callFunction({
-      name: 'updateFamilySettings',
-      data: {
-        familyId: this.data.family._id,
-        profile: this.data.family.profile,
-        settings,
-      },
-    })
-    if (!res.result.success) {
-      wx.showToast({ title: '保存失败', icon: 'none' })
-      return
+    if (!this.data.canManage || !this.data.family) return
+    const app = getApp()
+    const previousSettings = this.data.family.settings || {}
+    const previousFontSizeClass = this.data.fontSizeClass || 'standard'
+    const settings = normalizeSettings({ ...previousSettings, ...patch })
+    const hasFontSizePatch = Object.prototype.hasOwnProperty.call(patch, 'fontSize')
+    const fontSizeClass = settings.fontSize || 'standard'
+    const rollback = () => {
+      const data = { 'family.settings': previousSettings }
+      if (hasFontSizePatch) {
+        app.globalData.fontSizeClass = previousFontSizeClass
+        data.fontSizeClass = previousFontSizeClass
+      }
+      this.setData(data)
     }
-    this.setData({ 'family.settings': settings })
+
+    const optimisticData = { 'family.settings': settings }
+    if (hasFontSizePatch) {
+      app.globalData.fontSizeClass = fontSizeClass
+      optimisticData.fontSizeClass = fontSizeClass
+    }
+    this.setData(optimisticData)
+
+    try {
+      const res = await wx.cloud.callFunction({
+        name: 'updateFamilySettings',
+        data: {
+          familyId: this.data.family._id,
+          profile: this.data.family.profile,
+          settings,
+        },
+      })
+      if (!res.result.success) {
+        rollback()
+        wx.showToast({ title: '保存失败', icon: 'none' })
+        return
+      }
+      const savedSettings = normalizeSettings(res.result.settings || settings)
+      const savedFontSizeClass = savedSettings.fontSize || 'standard'
+      const savedData = { 'family.settings': savedSettings }
+      if (hasFontSizePatch) {
+        app.globalData.fontSizeClass = savedFontSizeClass
+        savedData.fontSizeClass = savedFontSizeClass
+      }
+      this.setData(savedData)
+    } catch (e) {
+      console.error('Update settings failed', e)
+      rollback()
+      wx.showToast({ title: '保存失败', icon: 'none' })
+    }
   },
 
   onToggleMedicationReminder() {
@@ -179,7 +214,7 @@ Page({
   },
 
   onFontSizeTap(e) {
-    this.updateSettingsPatch({ fontSize: e.currentTarget.dataset.value })
+    return this.updateSettingsPatch({ fontSize: e.currentTarget.dataset.value })
   },
 
   onMemberTap(e) {

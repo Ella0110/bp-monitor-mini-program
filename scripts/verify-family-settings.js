@@ -13,6 +13,10 @@ assert.strictEqual(calcAge('', new Date('2026-04-13T00:00:00+08:00')), '--')
 assert.deepStrictEqual(createDefaultProfile(), {
   name: '',
   birthYear: null,
+  targetSystolic: 135,
+  targetDiastolic: 85,
+  targetHRMin: 60,
+  targetHRMax: 80,
   medicationsText: '',
   emergencyContactName: '',
   emergencyContactPhone: '',
@@ -42,6 +46,10 @@ assert.deepStrictEqual(normalizeProfile({
 }), {
   name: '妈妈',
   birthYear: 1960,
+  targetSystolic: 135,
+  targetDiastolic: 85,
+  targetHRMin: 60,
+  targetHRMax: 80,
   medicationsText: '氨氯地平',
   emergencyContactName: 'Ella',
   emergencyContactPhone: '13812341223',

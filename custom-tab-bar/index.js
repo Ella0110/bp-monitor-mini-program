@@ -4,6 +4,7 @@ Component({
     color: '#94A3B8',
     selectedColor: '#3182F7',
     fontSizeClass: 'standard',
+    hidden: false,
     list: [
       {
         pagePath: '/pages/data/data',

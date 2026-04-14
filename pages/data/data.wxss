@@ -49,6 +49,19 @@
 .chart-empty { height: 280rpx; display: flex; align-items: center; justify-content: center; color: #8FA1B4; font-size: 32rpx; }
 .export-canvas { position: fixed; left: -9999px; top: -9999px; width: 750px; height: 900px; }
 .bottom { margin-bottom: 160rpx; }
+
+/* 字体大小：大字模式 */
+.fs-large .metric-value { font-size: 96rpx; }
+.fs-large .metric.systolic .metric-value { font-size: 108rpx; }
+.fs-large .stat-num { font-size: 56rpx; }
+.fs-large .stat-num.small { font-size: 44rpx; }
+
+/* 字体大小：超大字模式 */
+.fs-xlarge .metric-value { font-size: 110rpx; }
+.fs-xlarge .metric.systolic .metric-value { font-size: 124rpx; }
+.fs-xlarge .stat-num { font-size: 64rpx; }
+.fs-xlarge .stat-num.small { font-size: 52rpx; }
+
 .keypad-panel { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: rgba(255,255,255,0.98); border-radius: 28rpx 28rpx 0 0; padding: 22rpx 28rpx calc(28rpx + env(safe-area-inset-bottom)); box-shadow: 0 -8rpx 40rpx rgba(15, 23, 42, 0.18); }
 .keypad-head { display: flex; align-items: center; justify-content: space-between; color: #64748B; font-size: 26rpx; font-weight: 700; margin-bottom: 18rpx; }
 .keypad-cancel { color: #3182F7; font-weight: 800; }

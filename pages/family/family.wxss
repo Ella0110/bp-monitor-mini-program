@@ -47,3 +47,6 @@
 .sheet-button { min-height: 96rpx; border-radius: 24rpx; font-size: 32rpx; font-weight: 700; margin-top: 16rpx; background: #fff; color: #0F172A; }
 .primary-sheet { background: #3182F7; color: #fff; }
 .cancel { color: #64748B; }
+.modal-section { display: block; font-size: 26rpx; color: #64748B; margin: 16rpx 0 8rpx; }
+.modal-row { display: flex; gap: 16rpx; margin-bottom: 16rpx; }
+.modal-input-half { flex: 1; min-height: 88rpx; border-radius: 20rpx; background: #F8FAFF; padding: 0 24rpx; font-size: 30rpx; box-sizing: border-box; }

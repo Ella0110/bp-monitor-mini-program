@@ -1,4 +1,4 @@
-<scroll-view scroll-y class="container">
+<scroll-view scroll-y class="container fs-{{fontSizeClass}}">
   <view class="hero">
     <text class="title">血压心率记录</text>
     <view class="device-card">

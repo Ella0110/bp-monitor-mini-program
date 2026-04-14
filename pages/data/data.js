@@ -12,6 +12,8 @@ Page({
   data: {
     period: '7天',
     records: [],
+    profile: null,
+    fontSizeClass: 'standard',
     latestRecord: null,
     latestTime: '',
     latestBPStatus: null,
@@ -66,11 +68,21 @@ Page({
     this.setData({ loading: true })
     try {
       const days = PERIODS[this.data.period] || 7
-      const res = await wx.cloud.callFunction({
-        name: 'getRecords',
-        data: { familyId: app.globalData.familyId, since: daysAgo(days).toISOString() },
-      })
-      const records = res.result.records || []
+      const [recordsRes, familyRes] = await Promise.all([
+        wx.cloud.callFunction({
+          name: 'getRecords',
+          data: { familyId: app.globalData.familyId, since: daysAgo(days).toISOString() },
+        }),
+        wx.cloud.callFunction({
+          name: 'getFamily',
+          data: { familyId: app.globalData.familyId },
+        }),
+      ])
+      const records = recordsRes.result.records || []
+      const family = familyRes.result.family || {}
+      const profile = family.profile || {}
+      const fontSizeClass = (family.settings || {}).fontSize || 'standard'
+      app.globalData.fontSizeClass = fontSizeClass
       const latestRecord = records[0] || null
       const latestBPStatus = latestRecord ? getBPStatus(latestRecord.systolic, latestRecord.diastolic) : null
       const latestHRStatus = latestRecord ? getHRStatus(latestRecord.heartRate) : null
@@ -78,6 +90,8 @@ Page({
       const hrChart = buildHeartRateChart(records)
       this.setData({
         records,
+        profile,
+        fontSizeClass,
         latestRecord,
         latestTime: latestRecord ? formatDateTime(latestRecord.measuredAt) : '',
         latestBPStatus,
@@ -85,7 +99,7 @@ Page({
         bpValueClass: this.getStatusClass(latestBPStatus),
         hrValueClass: this.getStatusClass(latestHRStatus),
         stats: {
-          ...countReferenceStats(records, {}),
+          ...countReferenceStats(records, profile),
           avg: calcAverage(records),
         },
         bpChart,

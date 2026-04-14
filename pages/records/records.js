@@ -5,9 +5,11 @@ Page({
   data: {
     groups: [],
     loading: true,
+    fontSizeClass: 'standard',
   },
 
   onShow() {
+    this.setData({ fontSizeClass: getApp().globalData.fontSizeClass || 'standard' })
     this.loadRecords()
   },
 

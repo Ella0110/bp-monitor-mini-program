@@ -16,6 +16,10 @@ function createDefaultProfile() {
   return {
     name: '',
     birthYear: null,
+    targetSystolic: 135,
+    targetDiastolic: 85,
+    targetHRMin: 60,
+    targetHRMax: 80,
     medicationsText: '',
     emergencyContactName: '',
     emergencyContactPhone: '',

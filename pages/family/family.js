@@ -40,6 +40,7 @@ Page({
     permissionPanelOpen: false,
     selectedMember: null,
     sharePanelOpen: false,
+    fontSizeClass: 'standard',
   },
 
   onShow() {
@@ -67,6 +68,8 @@ Page({
       const latestRecord = (recordRes.result.records || [])[0] || null
       const profile = normalizeProfile(family.profile || {})
       const settings = normalizeSettings(family.settings || {})
+      const fontSizeClass = settings.fontSize || 'standard'
+      app.globalData.fontSizeClass = fontSizeClass
       this.setData({
         loading: false,
         family: { ...family, profile, settings },
@@ -76,6 +79,7 @@ Page({
         latestRecord,
         latestTime: latestRecord ? formatDateTime(latestRecord.measuredAt) : '',
         profileView: buildProfileView(profile, latestRecord),
+        fontSizeClass,
       })
     } catch (e) {
       wx.showToast({ title: '家庭信息加载失败', icon: 'none' })

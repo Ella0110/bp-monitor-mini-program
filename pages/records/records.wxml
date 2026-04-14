@@ -1,4 +1,4 @@
-<scroll-view scroll-y class="container">
+<scroll-view scroll-y class="container fs-{{fontSizeClass}}">
   <view wx:if="{{!groups.length && !loading}}" class="empty">暂无记录</view>
   <view wx:for="{{groups}}" wx:for-index="groupIndex" wx:key="date" class="group">
     <view class="group-head" bindtap="toggleGroup" data-index="{{groupIndex}}">

@@ -12,9 +12,11 @@ Page({
     members: [],
     notifyMemberText: '未选择',
     loading: true,
+    fontSizeClass: 'standard',
   },
 
   onShow() {
+    this.setData({ fontSizeClass: getApp().globalData.fontSizeClass || 'standard' })
     this.loadFamily()
   },
 
@@ -63,8 +65,11 @@ Page({
         wx.showToast({ title: '保存失败', icon: 'none' })
         return
       }
+      const fontSizeClass = settings.fontSize || 'standard'
+      getApp().globalData.fontSizeClass = fontSizeClass
       this.setData({
         settings,
+        fontSizeClass,
         notifyMemberText: notifyMemberText(settings.notifyMemberIds),
       })
     } finally {

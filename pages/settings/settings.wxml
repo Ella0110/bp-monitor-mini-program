@@ -1,4 +1,4 @@
-<scroll-view scroll-y class="container">
+<scroll-view scroll-y class="container fs-{{fontSizeClass}}">
   <view wx:if="{{!settings && !loading}}" class="empty-card">
     <text>请先保存一条记录，或查看家人的记录</text>
   </view>

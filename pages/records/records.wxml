@@ -4,6 +4,7 @@
     <view class="group-head" bindtap="toggleGroup" data-index="{{groupIndex}}">
       <text class="date">{{item.date}}</text>
       <text class="count">{{item.items.length}}条</text>
+      <text class="arrow {{item.open ? 'open' : ''}}">›</text>
     </view>
     <view wx:if="{{item.open}}">
       <view wx:for="{{item.items}}" wx:for-item="record" wx:for-index="recordIndex" wx:key="_id" class="record">
@@ -13,11 +14,14 @@
         </view>
         <view class="main">
           <text class="bp" style="color:{{record.bpStatus.color}}">{{record.systolic}} / {{record.diastolic}} mmHg</text>
-          <text class="hr">心率 {{record.heartRate}} bpm · {{record.bpStatus.label}}</text>
+          <text class="hr">心率 {{record.heartRate}} bpm</text>
         </view>
-        <view class="actions">
-          <text class="edit" bindtap="onEdit" data-group-index="{{groupIndex}}" data-record-index="{{recordIndex}}">修改</text>
-          <text class="delete" bindtap="onDelete" data-id="{{record._id}}">删除</text>
+        <view class="right">
+          <view class="badge {{record.badge.cls}}">{{record.badge.label}}</view>
+          <view class="actions">
+            <text class="edit" bindtap="onEdit" data-group-index="{{groupIndex}}" data-record-index="{{recordIndex}}">修改</text>
+            <text class="delete" bindtap="onDelete" data-id="{{record._id}}">删除</text>
+          </view>
         </view>
       </view>
     </view>

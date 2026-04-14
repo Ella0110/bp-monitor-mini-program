@@ -2,9 +2,16 @@ const { groupByDate, formatTime } = require('../../utils/date')
 const { getBPStatus } = require('../../utils/health-rules')
 
 function makeFontSizeStyle(cls) {
-  if (cls === 'large')  return '--fs-date:35rpx;--fs-count:28rpx;--fs-time:30rpx;--fs-tag:23rpx;--fs-bp:37rpx;--fs-hr:28rpx'
-  if (cls === 'xlarge') return '--fs-date:39rpx;--fs-count:31rpx;--fs-time:34rpx;--fs-tag:26rpx;--fs-bp:42rpx;--fs-hr:31rpx'
-  return '--fs-date:30rpx;--fs-count:24rpx;--fs-time:26rpx;--fs-tag:20rpx;--fs-bp:32rpx;--fs-hr:24rpx'
+  if (cls === 'large')  return '--fs-date:35rpx;--fs-count:28rpx;--fs-time:30rpx;--fs-tag:23rpx;--fs-bp:37rpx;--fs-hr:28rpx;--fs-badge:23rpx'
+  if (cls === 'xlarge') return '--fs-date:39rpx;--fs-count:31rpx;--fs-time:34rpx;--fs-tag:26rpx;--fs-bp:42rpx;--fs-hr:31rpx;--fs-badge:26rpx'
+  return '--fs-date:30rpx;--fs-count:24rpx;--fs-time:26rpx;--fs-tag:20rpx;--fs-bp:32rpx;--fs-hr:24rpx;--fs-badge:20rpx'
+}
+
+function getBadge(bpStatus) {
+  const level = bpStatus && bpStatus.level
+  if (level === 'inRange') return { label: '正常', cls: 'normal' }
+  if (level === 'veryHigh' || level === 'critical') return { label: '危险', cls: 'danger' }
+  return { label: '注意', cls: 'warning' }
 }
 
 Page({
@@ -34,11 +41,15 @@ Page({
         name: 'getRecords',
         data: { familyId: app.globalData.familyId },
       })
-      const records = (res.result.records || []).map(record => ({
-        ...record,
-        timeStr: formatTime(record.measuredAt),
-        bpStatus: getBPStatus(record.systolic, record.diastolic),
-      }))
+      const records = (res.result.records || []).map(record => {
+        const bpStatus = getBPStatus(record.systolic, record.diastolic)
+        return {
+          ...record,
+          timeStr: formatTime(record.measuredAt),
+          bpStatus,
+          badge: getBadge(bpStatus),
+        }
+      })
       const groups = groupByDate(records).map((group, index) => ({ ...group, open: index === 0 }))
       this.setData({ groups })
     } catch (err) {

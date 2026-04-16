@@ -126,10 +126,7 @@
     </view>
     <view class="qs-row">
       <text class="perm-label">备注名</text>
-      <view class="member-name-wrap">
-        <input class="member-name-input" value="{{selectedMember.nickname || ''}}" placeholder="输入备注名" bindblur="onMemberNicknameBlur" />
-        <text class="member-name-edit-btn">编辑</text>
-      </view>
+      <input class="member-name-input" value="{{selectedMember.nickname || ''}}" placeholder="输入备注名" bindblur="onMemberNicknameBlur" />
     </view>
     <view class="qs-row" bindtap="onMemberPermissionToggle" data-key="canWrite">
       <view>

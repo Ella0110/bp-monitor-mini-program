@@ -126,7 +126,7 @@
     </view>
     <view class="qs-row">
       <text class="perm-label">备注名</text>
-      <input class="member-name-input" value="{{selectedMember.nickname || ''}}" placeholder="输入备注名" bindblur="onMemberNicknameBlur" />
+      <input class="member-name-input" value="{{selectedMember.nickname || ''}}" placeholder="点击设置备注名" bindblur="onMemberNicknameBlur" />
     </view>
     <view class="qs-row" bindtap="onMemberPermissionToggle" data-key="canWrite">
       <view>

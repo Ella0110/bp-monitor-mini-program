@@ -38,7 +38,7 @@ Page({
       }
       getApp().globalData.familyId = res.result.familyId
       wx.showToast({ title: '加入成功', icon: 'success' })
-      wx.switchTab({ url: '/pages/family/family' })
+      wx.switchTab({ url: '/pages/data/data' })
     } finally {
       this.setData({ joining: false })
     }

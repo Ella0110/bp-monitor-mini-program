@@ -56,11 +56,9 @@
 .ats { display: block; font-size: var(--fs-ats, 24rpx); color: #94A3B8; margin-top: 4rpx; }
 .aa { margin-left: auto; color: #CBD5E1; font-size: 36rpx; flex-shrink: 0; }
 .soon-badge { margin-left: auto; background: #F1F5F9; color: #94A3B8; font-size: 22rpx; padding: 6rpx 16rpx; border-radius: 99rpx; flex-shrink: 0; }
-.member-name-row { display: flex; align-items: center; gap: 16rpx; margin-bottom: 24rpx; }
-.member-name-label { font-size: 26rpx; color: #64748B; flex-shrink: 0; width: 88rpx; }
-.member-name-input { flex: 1; min-height: 72rpx; background: #F8FAFF; border-radius: 16rpx; padding: 0 20rpx; font-size: 28rpx; color: #0F172A; border: 2rpx solid #DDE6F5; box-sizing: border-box; }
-.remove-member-divider { height: 1rpx; background: #F1F5F9; margin: 24rpx 0 0; }
-.btn-remove-member { margin-top: 20rpx; width: 100%; min-height: 88rpx; border-radius: 20rpx; background: none; color: #EF4444; font-size: 30rpx; font-weight: 600; border: 2rpx solid #FECACA; display: flex; align-items: center; justify-content: center; line-height: 1; }
+.modal-permission-status { display: block; font-size: 24rpx; color: #94A3B8; margin-bottom: 16rpx; }
+.member-name-input { flex: 1; text-align: right; font-size: var(--fs-st, 30rpx); color: #0F172A; background: none; border: none; padding: 0; min-height: 0; }
+.link-remove-member { display: block; margin-top: 32rpx; text-align: center; font-size: 26rpx; color: #94A3B8; padding: 8rpx 0; }
 
 /* ── Quick settings card ── */
 .qs-card { background: #fff; border-radius: 32rpx; padding: 0 32rpx; box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09); }

@@ -121,9 +121,9 @@
   <view wx:if="{{permissionPanelOpen}}" class="mask" bindtap="onClosePermissionPanel"></view>
   <view wx:if="{{permissionPanelOpen}}" class="modal">
     <text class="modal-title">成员权限</text>
-    <text class="modal-sub">家人加入后默认可以查看家庭健康记录。</text>
-    <view class="member-name-row">
-      <text class="member-name-label">备注名</text>
+    <text class="modal-permission-status">{{selectedMemberStatus}}</text>
+    <view class="qs-row">
+      <text class="qs-title">备注名</text>
       <input class="member-name-input" value="{{selectedMember.nickname || ''}}" placeholder="输入备注名" bindblur="onMemberNicknameBlur" />
     </view>
     <view class="qs-row" bindtap="onMemberPermissionToggle" data-key="canWrite">
@@ -140,8 +140,7 @@
       </view>
       <view class="switch {{selectedMember.canEdit ? 'on' : ''}}"><view class="knob"></view></view>
     </view>
-    <view class="remove-member-divider"></view>
-    <button class="btn-remove-member" bindtap="onRemoveMember">移除该成员</button>
+    <text class="link-remove-member" bindtap="onRemoveMember">移除成员</text>
   </view>
 
   <!-- 邀请面板 -->

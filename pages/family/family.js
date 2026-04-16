@@ -46,6 +46,12 @@ function hasProfileInfo(profile) {
   )
 }
 
+function getMemberStatusText(member) {
+  if (member.canWrite && member.canEdit) return '当前：可录入 · 可编辑'
+  if (member.canWrite) return '当前：可录入 · 不可编辑'
+  return '当前：仅可查看'
+}
+
 function syncTabBar(selected, fontSizeClass) {
   if (typeof this.getTabBar !== 'function' || !this.getTabBar()) return
   this.getTabBar().setData({
@@ -83,6 +89,7 @@ Page({
     profileForm: {},
     permissionPanelOpen: false,
     selectedMember: null,
+    selectedMemberStatus: '',
     sharePanelOpen: false,
     fontSizeClass: 'standard',
     fontSizeStyle: makeFontSizeStyle('standard'),
@@ -295,7 +302,7 @@ Page({
     const openid = e.currentTarget.dataset.openid
     const selectedMember = (this.data.family.members || []).find(member => member.openid === openid)
     if (!selectedMember || selectedMember.role === 'admin') return
-    this.setData({ selectedMember, permissionPanelOpen: true })
+    this.setData({ selectedMember, selectedMemberStatus: getMemberStatusText(selectedMember), permissionPanelOpen: true })
     hideTabBar.call(this)
   },
 
@@ -321,7 +328,7 @@ Page({
       return
     }
     wx.showToast({ title: '已保存', icon: 'success' })
-    this.setData({ selectedMember })
+    this.setData({ selectedMember, selectedMemberStatus: getMemberStatusText(selectedMember) })
     this.loadFamily()
   },
 

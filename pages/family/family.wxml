@@ -39,7 +39,7 @@
       <view class="mem-card">
         <scroll-view scroll-x class="mem-row">
           <view wx:for="{{family.members}}" wx:key="openid" class="mc" bindtap="onMemberTap" data-openid="{{item.openid}}">
-            <view class="mav {{item.role === 'admin' ? 'admin' : ''}}">{{item.nickname ? item.nickname[0] : '家'}}</view>
+            <view class="mav {{item.role === 'admin' ? 'admin' : ''}} {{permissionPanelOpen && selectedMember && selectedMember.openid === item.openid ? 'mav-selected' : ''}}">{{item.nickname ? item.nickname[0] : '家'}}</view>
             <text class="mn">{{item.role === 'admin' ? (item.nickname || '我') + '（管）' : (item.nickname || '家人')}}</text>
           </view>
           <view class="mc" bindtap="onInviteTap">
@@ -123,8 +123,11 @@
     <text class="modal-title">成员权限</text>
     <text class="modal-permission-status">{{selectedMemberStatus}}</text>
     <view class="qs-row">
-      <text class="qs-title">备注名</text>
-      <input class="member-name-input" value="{{selectedMember.nickname || ''}}" placeholder="输入备注名" bindblur="onMemberNicknameBlur" />
+      <text class="perm-label">备注名</text>
+      <view class="member-name-wrap">
+        <input class="member-name-input" value="{{selectedMember.nickname || ''}}" placeholder="输入备注名" bindblur="onMemberNicknameBlur" />
+        <text class="member-name-edit-icon">✎</text>
+      </view>
     </view>
     <view class="qs-row" bindtap="onMemberPermissionToggle" data-key="canWrite">
       <view>

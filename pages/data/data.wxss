@@ -43,6 +43,9 @@
 /* ── 添加按钮 ── */
 .add { height: 96rpx; line-height: 1; padding: 0; margin-top: 20rpx; background: #fff; color: #3182F7; border-radius: 28rpx; font-size: var(--fs-add, 28rpx); font-weight: 800; display: flex; align-items: center; justify-content: center; }
 .add-cancel { background: rgba(255,255,255,0.22); color: rgba(255,255,255,0.92); border: 2rpx solid rgba(255,255,255,0.40); }
+.no-write-tip { margin-top: 20rpx; display: flex; flex-direction: column; align-items: center; gap: 10rpx; padding: 24rpx 0; }
+.no-write-tip__text { font-size: var(--fs-add, 28rpx); color: rgba(255,255,255,0.90); font-weight: 600; }
+.no-write-tip__sub { font-size: var(--fs-time, 24rpx); color: rgba(255,255,255,0.65); }
 
 /* ── 工具栏 / 周期选择 ── */
 .toolbar { display: flex; align-items: center; justify-content: space-between; padding: 32rpx 32rpx 26rpx; }

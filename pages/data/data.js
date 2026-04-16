@@ -101,6 +101,7 @@ Page({
     quickHrValueClass: EMPTY_VALUE_CLASS,
     quickSaving: false,
     bpBarActive: -1,
+    canWrite: true,
   },
 
   onLoad() {
@@ -135,6 +136,10 @@ Page({
   async loadRecords() {
     const app = getApp()
     await app.loginReady
+    const role = app.globalData.role
+    const perms = app.globalData.memberPermissions || {}
+    const canWrite = role === 'admin' || role === '' || perms.canWrite === true
+    this.setData({ canWrite })
     if (!app.globalData.familyId) {
       this.setData({
         records: [],

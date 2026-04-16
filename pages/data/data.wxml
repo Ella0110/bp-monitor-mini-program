@@ -46,8 +46,14 @@
         </view>
       </view>
     </view>
-    <button wx:if="{{!quickEntryActive}}" class="add" bindtap="onAddRecord">＋ 添加记录</button>
-    <button wx:if="{{quickEntryActive}}" class="add add-cancel" bindtap="onCancelQuickEntry">取消录入</button>
+    <block wx:if="{{canWrite}}">
+      <button wx:if="{{!quickEntryActive}}" class="add" bindtap="onAddRecord">＋ 添加记录</button>
+      <button wx:if="{{quickEntryActive}}" class="add add-cancel" bindtap="onCancelQuickEntry">取消录入</button>
+    </block>
+    <view wx:else class="no-write-tip">
+      <text class="no-write-tip__text">你目前没有录入权限</text>
+      <text class="no-write-tip__sub">可联系管理员在「家庭」页开启</text>
+    </view>
   </view>
 
   <view class="toolbar">
@@ -96,5 +102,5 @@
   <canvas id="exportChart" type="2d" class="export-canvas"></canvas>
 </scroll-view>
 
-<input wx:if="{{quickEntryActive}}" class="quick-native-input" type="number" maxlength="3" value="{{quickInputValue}}" focus="{{quickInputFocus}}" adjust-position="{{false}}" confirm-type="done" bindinput="onQuickNativeInput" bindblur="onQuickNativeBlur" bindconfirm="onQuickNativeConfirm" />
+<input wx:if="{{quickEntryActive && canWrite}}" class="quick-native-input" type="number" maxlength="3" value="{{quickInputValue}}" focus="{{quickInputFocus}}" adjust-position="{{false}}" confirm-type="done" bindinput="onQuickNativeInput" bindblur="onQuickNativeBlur" bindconfirm="onQuickNativeConfirm" />
 </view>

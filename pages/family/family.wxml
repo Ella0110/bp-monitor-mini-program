@@ -137,6 +137,8 @@
       </view>
       <view class="switch {{selectedMember.canEdit ? 'on' : ''}}"><view class="knob"></view></view>
     </view>
+    <view class="remove-member-divider"></view>
+    <button class="btn-remove-member" bindtap="onRemoveMember">移除该成员</button>
   </view>
 
   <!-- 邀请面板 -->

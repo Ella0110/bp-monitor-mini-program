@@ -324,4 +324,42 @@ Page({
     this.setData({ selectedMember })
     this.loadFamily()
   },
+
+  onRemoveMember() {
+    const member = this.data.selectedMember
+    if (!member) return
+    const name = member.nickname || '该成员'
+    wx.showModal({
+      title: '移除成员',
+      content: `确定要将「${name}」从家庭记录本中移除吗？移除后他将无法查看和录入数据。`,
+      confirmText: '确认移除',
+      confirmColor: '#EF4444',
+      cancelText: '取消',
+      success: async (res) => {
+        if (!res.confirm) return
+        try {
+          wx.showLoading({ title: '处理中' })
+          const result = await wx.cloud.callFunction({
+            name: 'removeMember',
+            data: {
+              familyId: this.data.family._id,
+              targetOpenid: member.openid,
+            },
+          })
+          wx.hideLoading()
+          if (!result.result.success) {
+            wx.showToast({ title: '移除失败', icon: 'none' })
+            return
+          }
+          wx.showToast({ title: '已移除', icon: 'success' })
+          this.setData({ permissionPanelOpen: false, selectedMember: null })
+          showTabBar.call(this)
+          this.loadFamily()
+        } catch (err) {
+          wx.hideLoading()
+          wx.showToast({ title: err.message || '移除失败', icon: 'none' })
+        }
+      },
+    })
+  },
 })

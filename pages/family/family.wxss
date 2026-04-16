@@ -56,6 +56,8 @@
 .ats { display: block; font-size: var(--fs-ats, 24rpx); color: #94A3B8; margin-top: 4rpx; }
 .aa { margin-left: auto; color: #CBD5E1; font-size: 36rpx; flex-shrink: 0; }
 .soon-badge { margin-left: auto; background: #F1F5F9; color: #94A3B8; font-size: 22rpx; padding: 6rpx 16rpx; border-radius: 99rpx; flex-shrink: 0; }
+.remove-member-divider { height: 1rpx; background: #F1F5F9; margin: 24rpx 0 0; }
+.btn-remove-member { margin-top: 20rpx; width: 100%; min-height: 88rpx; border-radius: 20rpx; background: none; color: #EF4444; font-size: 30rpx; font-weight: 600; border: 2rpx solid #FECACA; display: flex; align-items: center; justify-content: center; line-height: 1; }
 
 /* ── Quick settings card ── */
 .qs-card { background: #fff; border-radius: 32rpx; padding: 0 32rpx; box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09); }

@@ -25,7 +25,7 @@
           <view class="right">
             <view class="right-line">
               <view class="badge {{record.badge.cls}}">{{record.badge.label}}</view>
-              <view class="actions">
+              <view wx:if="{{canEdit}}" class="actions">
                 <text class="edit" bindtap="onEdit" data-group-index="{{groupIndex}}" data-record-index="{{recordIndex}}">修改</text>
                 <text class="delete" bindtap="onDelete" data-id="{{record._id}}">删除</text>
               </view>

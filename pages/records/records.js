@@ -40,6 +40,7 @@ Page({
     navTitleStyle: '',
     navBackStyle: '',
     contentStyle: '',
+    canEdit: true,
   },
 
   onLoad() {
@@ -55,6 +56,10 @@ Page({
   async loadRecords() {
     const app = getApp()
     await app.loginReady
+    const role = app.globalData.role
+    const perms = app.globalData.memberPermissions || {}
+    const canEdit = role === 'admin' || perms.canEdit === true
+    this.setData({ canEdit })
     if (!app.globalData.familyId) {
       this.setData({ groups: [], loading: false })
       return

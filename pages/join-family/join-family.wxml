@@ -4,6 +4,10 @@
     <text class="invite-text">家人邀请你查看</text>
     <text class="family-name">{{displayName}}</text>
     <text class="hint">接受后可以查看这份健康记录和就诊报告。</text>
+    <view class="name-section">
+      <text class="name-label">你的名字</text>
+      <input class="name-input" type="nickname" value="{{nickname}}" placeholder="输入你的名字（家人可见）" bindinput="onNicknameInput" />
+    </view>
     <button class="primary" bindtap="onJoin" loading="{{joining}}">同意查看</button>
     <button class="secondary" bindtap="onCancel">暂不查看</button>
   </view>

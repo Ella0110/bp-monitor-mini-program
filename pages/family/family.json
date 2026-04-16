@@ -1,5 +1,6 @@
 {
   "navigationStyle": "custom",
   "navigationBarTitleText": "",
-  "navigationBarTextStyle": "black"
+  "navigationBarTextStyle": "black",
+  "usingComponents": {}
 }

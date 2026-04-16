@@ -3,6 +3,7 @@ Page({
     inviteToken: '',
     joining: false,
     displayName: '健康记录',
+    nickname: '',
   },
 
   onLoad(options) {
@@ -21,16 +22,21 @@ Page({
     }
   },
 
+  onNicknameInput(e) {
+    this.setData({ nickname: e.detail.value })
+  },
+
   async onJoin() {
     if (!this.data.inviteToken) {
       wx.showToast({ title: '邀请无效', icon: 'none' })
       return
     }
+    const nickname = this.data.nickname.trim() || '家人'
     this.setData({ joining: true })
     try {
       const res = await wx.cloud.callFunction({
         name: 'joinFamily',
-        data: { inviteToken: this.data.inviteToken, nickname: '家人' },
+        data: { inviteToken: this.data.inviteToken, nickname },
       })
       if (!res.result.success) {
         wx.showToast({ title: res.result.error || '加入失败', icon: 'none' })

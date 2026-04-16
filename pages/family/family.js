@@ -325,6 +325,28 @@ Page({
     this.loadFamily()
   },
 
+  async onMemberNicknameBlur(e) {
+    const nickname = e.detail.value.trim()
+    if (!nickname || nickname === this.data.selectedMember.nickname) return
+    const res = await wx.cloud.callFunction({
+      name: 'updateMemberPermission',
+      data: {
+        familyId: this.data.family._id,
+        targetOpenid: this.data.selectedMember.openid,
+        canWrite: this.data.selectedMember.canWrite === true,
+        canEdit: this.data.selectedMember.canEdit === true,
+        nickname,
+      },
+    })
+    if (!res.result.success) {
+      wx.showToast({ title: '保存失败', icon: 'none' })
+      return
+    }
+    wx.showToast({ title: '备注已保存', icon: 'success' })
+    this.setData({ 'selectedMember.nickname': nickname })
+    this.loadFamily()
+  },
+
   onRemoveMember() {
     const member = this.data.selectedMember
     if (!member) return

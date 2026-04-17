@@ -27,6 +27,8 @@
 .record-time { display: block; color: #64748B; font-size: 24rpx; }
 .record-main { display: block; color: #0F172A; font-size: 30rpx; font-weight: 800; margin-top: 6rpx; }
 .record-status { display: block; color: #64748B; font-size: 24rpx; margin-top: 6rpx; }
+.ref-line-note { margin-top: 32rpx; background: #F8FAFC; border-radius: 16rpx; padding: 18rpx 24rpx; }
+.ref-line-note-text { color: #64748B; font-size: 24rpx; line-height: 1.5; }
 .disclaimer { margin-top: 40rpx; color: #64748B; font-size: 24rpx; line-height: 1.7; }
 .save { min-height: 88rpx; margin-top: 28rpx; background: #3182F7; color: #fff; border-radius: 16rpx; font-size: 30rpx; font-weight: 900; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .export-canvas { position: fixed; left: -9999px; top: -9999px; width: 750px; height: 1400px; }

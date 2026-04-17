@@ -63,7 +63,7 @@ function drawEmptyChart(ctx, label, x, y, width, height) {
 
 function reportImageHeight(report) {
   const recordHeight = report.recentRecords.length ? report.recentRecords.length * 58 : 58
-  return 1500 + recordHeight
+  return 1560 + recordHeight
 }
 
 function drawSummary(ctx, report, x, y) {
@@ -115,6 +115,13 @@ function drawReportImage(ctx, report, width, height) {
   if (report.hrChart.records.length) drawHeartRateChart(ctx, report.hrChart, width - 64, 260, { title: '', x: 32, y })
   else drawEmptyChart(ctx, '当前周期暂无记录', 32, y, width - 64, 220)
   y += 288
+
+  if (report.refLineText) {
+    setFill(ctx, '#F8FAFC')
+    ctx.fillRect(32, y, width - 64, 42)
+    text(ctx, report.refLineText, 44, y + 28, 20, COLORS.muted)
+    y += 58
+  }
 
   text(ctx, '最近记录', 32, y, 28, COLORS.title, '700')
   y += 42

@@ -40,6 +40,10 @@
           <view wx:else class="chart-empty">当前周期暂无记录</view>
         </view>
 
+        <view wx:if="{{report.refLineText}}" class="ref-line-note">
+          <text class="ref-line-note-text">{{report.refLineText}}</text>
+        </view>
+
         <view class="section">
           <text class="section-title">最近记录</text>
           <view wx:if="{{!report.recentRecords.length}}" class="record-empty">当前周期暂无记录</view>

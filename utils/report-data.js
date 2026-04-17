@@ -17,10 +17,27 @@ function sortDesc(records) {
   return [...records].sort((a, b) => toDate(b.measuredAt) - toDate(a.measuredAt))
 }
 
-function buildRecentRecords(records) {
+function buildRefLines(profile) {
+  return {
+    systolic: profile.targetSystolic || 135,
+    diastolic: profile.targetDiastolic || 85,
+    hrMin: profile.targetHRMin || 60,
+    hrMax: profile.targetHRMax || 80,
+  }
+}
+
+function buildRefLineText(profile) {
+  const r = buildRefLines(profile)
+  const isDefault = r.systolic === 135 && r.diastolic === 85 && r.hrMin === 60 && r.hrMax === 80
+  return `参考线：血压 ${r.systolic}/${r.diastolic} mmHg，心率 ${r.hrMin}–${r.hrMax} 次/分（${isDefault ? '默认' : '自定义'}）`
+}
+
+function buildRecentRecords(records, profile) {
+  const bpTarget = { systolic: profile && profile.targetSystolic, diastolic: profile && profile.targetDiastolic }
+  const hrTarget = { min: profile && profile.targetHRMin, max: profile && profile.targetHRMax }
   return sortDesc(records).slice(0, 10).map(record => {
-    const bpStatus = getBPStatus(record.systolic, record.diastolic)
-    const hrStatus = getHRStatus(record.heartRate)
+    const bpStatus = getBPStatus(record.systolic, record.diastolic, bpTarget)
+    const hrStatus = getHRStatus(record.heartRate, hrTarget)
     return {
       id: record._id,
       time: formatDateTime(record.measuredAt),
@@ -35,6 +52,7 @@ function buildRecentRecords(records) {
 function buildReportData({ family = {}, records = [], period = '30天', generatedAt = new Date() }) {
   const safeRecords = records || []
   const profile = family.profile || {}
+  const refLines = buildRefLines(profile)
   return {
     title: REPORT_TITLE,
     familyName: family.displayName || '家庭健康记录',
@@ -43,11 +61,12 @@ function buildReportData({ family = {}, records = [], period = '30天', generate
     periodTitle: periodTitle(period),
     generatedAt: formatDateTime(generatedAt),
     totalCount: safeRecords.length,
-    stats: countReferenceStats(safeRecords, {}),
+    stats: countReferenceStats(safeRecords, profile),
     avg: calcAverage(safeRecords),
-    bpChart: buildBloodPressureChart(safeRecords),
-    hrChart: buildHeartRateChart(safeRecords),
-    recentRecords: buildRecentRecords(safeRecords),
+    bpChart: buildBloodPressureChart(safeRecords, refLines),
+    hrChart: buildHeartRateChart(safeRecords, refLines),
+    recentRecords: buildRecentRecords(safeRecords, profile),
+    refLineText: buildRefLineText(profile),
     disclaimer: DISCLAIMER,
   }
 }

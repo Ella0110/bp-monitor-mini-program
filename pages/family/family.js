@@ -78,6 +78,7 @@ Page({
     canManage: false,
     hasProfileInfo: false,
     latestRecord: null,
+    hasRecords: false,
     latestTime: '',
     profileView: {
       age: '--',
@@ -145,6 +146,7 @@ Page({
         canManage: res.result.member && res.result.member.role === 'admin',
         hasProfileInfo: hasProfileInfo(profile),
         latestRecord,
+        hasRecords: latestRecord !== null,
         latestTime: latestRecord ? formatDateTime(latestRecord.measuredAt) : '',
         profileView: buildProfileView(profile, latestRecord),
         fontSizeClass,

@@ -30,5 +30,8 @@
 .ref-line-note { margin-top: 32rpx; background: #F8FAFC; border-radius: 16rpx; padding: 18rpx 24rpx; }
 .ref-line-note-text { color: #64748B; font-size: 24rpx; line-height: 1.5; }
 .disclaimer { margin-top: 40rpx; color: #64748B; font-size: 24rpx; line-height: 1.7; }
+.privacy-row { background: #fff; border-radius: 20rpx; padding: 24rpx 28rpx; margin-top: 20rpx; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09); }
+.privacy-label { display: block; font-size: 28rpx; font-weight: 700; color: #0F172A; }
+.privacy-sub { display: block; font-size: 22rpx; color: #94A3B8; margin-top: 6rpx; }
 .save { min-height: 88rpx; margin-top: 28rpx; background: #3182F7; color: #fff; border-radius: 16rpx; font-size: 30rpx; font-weight: 900; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .export-canvas { position: fixed; left: -9999px; top: -9999px; width: 750px; height: 1400px; }

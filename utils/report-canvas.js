@@ -85,14 +85,16 @@ function drawSummary(ctx, report, x, y) {
   })
 }
 
-function drawReportImage(ctx, report, width, height) {
+function drawReportImage(ctx, report, width, height, options = {}) {
+  const hidePrivacy = options.hidePrivacy === true
   setFill(ctx, COLORS.background)
   ctx.fillRect(0, 0, width, height)
 
   let y = 48
   text(ctx, report.title, 32, y, 36, COLORS.title, '700')
   y += 46
-  text(ctx, `${report.familyName} · ${report.profileName}`, 32, y, 24, COLORS.text)
+  const displayName = hidePrivacy ? '***' : report.profileName
+  text(ctx, `${report.familyName} · ${displayName}`, 32, y, 24, COLORS.text)
   y += 34
   text(ctx, `${report.periodTitle} · 生成时间 ${report.generatedAt}`, 32, y, 22, COLORS.muted)
   y += 38

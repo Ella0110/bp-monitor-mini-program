@@ -19,6 +19,7 @@
             <view>
               <text class="setting-title">异常血压通知</text>
               <text class="setting-sub">超过阈值时通知已选择成员</text>
+              <text class="setting-hint">配置已保存，微信通知功能即将上线</text>
             </view>
             <view class="switch {{settings.abnormalBpNotifyEnabled ? 'on' : ''}}"><view class="knob"></view></view>
           </view>
@@ -40,7 +41,7 @@
               <view class="stepper-btn" bindtap="onStepperTap" data-key="alertSystolic" data-delta="{{5}}" data-min="{{100}}" data-max="{{200}}">＋</view>
             </view>
           </view>
-          <view class="setting-row">
+          <view class="setting-row no-border">
             <view>
               <text class="setting-title">低压超过多少提醒</text>
               <text class="setting-sub">舒张压（mmHg）</text>
@@ -51,11 +52,13 @@
               <view class="stepper-btn" bindtap="onStepperTap" data-key="alertDiastolic" data-delta="{{5}}" data-min="{{60}}" data-max="{{130}}">＋</view>
             </view>
           </view>
-          <view class="card-divider"></view>
+        </view>
+        <view class="settings-card">
           <view class="setting-row" bindtap="onToggle" data-key="medicationReminderEnabled">
             <view>
               <text class="setting-title">用药提醒</text>
               <text class="setting-sub">每日定时提醒服药</text>
+              <text class="setting-hint">配置已保存，提醒推送功能即将上线</text>
             </view>
             <view class="switch {{settings.medicationReminderEnabled ? 'on' : ''}}"><view class="knob"></view></view>
           </view>
@@ -86,6 +89,7 @@
             <view>
               <text class="setting-title">晨/晚测标注</text>
               <text class="setting-sub">录入时选择测量时段</text>
+              <text class="setting-hint">配置已保存，录入页标注控制即将支持</text>
             </view>
             <view class="switch {{settings.morningEveningLabel ? 'on' : ''}}"><view class="knob"></view></view>
           </view>
@@ -93,6 +97,7 @@
             <view>
               <text class="setting-title">早晚分线显示</text>
               <text class="setting-sub">图表中晨/晚测分两条线</text>
+              <text class="setting-hint">配置已保存，图表分线显示即将支持</text>
             </view>
             <view class="switch {{settings.splitLines ? 'on' : ''}}"><view class="knob"></view></view>
           </view>
@@ -141,7 +146,7 @@
             </view>
           </view>
 
-          <view wx:if="{{!refLinesIsDefault}}" class="setting-row no-border" bindtap="onResetRefLines">
+          <view wx:if="{{!refLinesIsDefault}}" class="reset-row" bindtap="onResetRefLines">
             <text class="setting-title" style="color:#3182F7">恢复默认参考线</text>
           </view>
         </view>

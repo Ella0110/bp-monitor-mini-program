@@ -30,6 +30,7 @@ Page({
     report: null,
     loading: true,
     error: '',
+    hidePrivacy: false,
     navStyle: '',
     navTitleStyle: '',
     navBackStyle: '',
@@ -129,7 +130,7 @@ Page({
         canvas.height = height * dpr
         const ctx = canvas.getContext('2d')
         ctx.scale(dpr, dpr)
-        drawReportImage(ctx, this.data.report, width, height)
+        drawReportImage(ctx, this.data.report, width, height, { hidePrivacy: this.data.hidePrivacy })
 
         wx.canvasToTempFilePath({
           canvas,
@@ -160,6 +161,10 @@ Page({
         wx.showToast({ title: '保存失败', icon: 'none' })
       },
     })
+  },
+
+  onTogglePrivacy(e) {
+    this.setData({ hidePrivacy: e.detail.value })
   },
 
   onBackTap() {

@@ -28,10 +28,16 @@
           </view>
           <text wx:if="{{canManage}}" class="edit-lnk" bindtap="onEditProfileTap">编辑 ›</text>
         </view>
-        <view class="ir"><text class="il">当前血压</text><text class="iv">{{profileView.currentBpText}}</text></view>
-        <view class="ir"><text class="il">当前心率</text><text class="iv">{{profileView.currentHrText}}</text></view>
+        <block wx:if="{{hasRecords}}">
+          <view class="ir"><text class="il">当前血压</text><text class="iv">{{profileView.currentBpText}}</text></view>
+          <view class="ir"><text class="il">当前心率</text><text class="iv">{{profileView.currentHrText}}</text></view>
+        </block>
         <view class="ir"><text class="il">长期用药</text><text class="iv">{{family.profile.medicationsText || '未设置'}}</text></view>
         <view class="ir last"><text class="il">紧急联系人</text><text class="iv">{{profileView.emergencyText}}</text></view>
+        <view wx:if="{{!hasRecords}}" class="no-records-tip">
+          <text class="no-records-tip__text">还没有记录</text>
+          <navigator url="/pages/data/data" open-type="switchTab" class="no-records-tip__link">去「数据」页录入第一条 →</navigator>
+        </view>
       </view>
 
       <!-- 家庭成员 -->

@@ -57,6 +57,13 @@
         <view class="disclaimer">{{report.disclaimer}}</view>
       </view>
 
+      <view wx:if="{{report}}" class="privacy-row">
+        <view>
+          <text class="privacy-label">隐藏姓名和联系人</text>
+          <text class="privacy-sub">导出图片中显示为 ***</text>
+        </view>
+        <switch checked="{{hidePrivacy}}" bindchange="onTogglePrivacy" color="#3182F7" />
+      </view>
       <button wx:if="{{report}}" class="save" bindtap="onSaveReport">保存报告图片</button>
       <canvas id="reportExportCanvas" type="2d" class="export-canvas"></canvas>
     </view>

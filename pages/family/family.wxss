@@ -35,6 +35,9 @@
 .ir { display: flex; justify-content: space-between; align-items: center; padding: 20rpx 0; border-top: 2rpx solid #EEF3FB; }
 .il { color: #64748B; font-size: var(--fs-ir, 28rpx); flex-shrink: 0; }
 .iv { color: #0F172A; font-size: var(--fs-ir, 28rpx); font-weight: 600; max-width: 60%; text-align: right; }
+.no-records-tip { padding: 20rpx 0 4rpx; border-top: 2rpx solid #EEF3FB; display: flex; align-items: center; justify-content: space-between; }
+.no-records-tip__text { color: #94A3B8; font-size: 26rpx; }
+.no-records-tip__link { color: #3182F7; font-size: 26rpx; }
 
 /* ── Members card ── */
 .mem-card { background: #fff; border-radius: 32rpx; padding: 28rpx 32rpx; box-shadow: 0 4rpx 32rpx rgba(49,130,247,0.09); }

@@ -13,6 +13,7 @@
 .setting-row.no-border { border-bottom: 0; }
 .setting-title { display: block; font-size: var(--fs-title, 30rpx); font-weight: 800; color: #0F172A; }
 .setting-sub { display: block; font-size: var(--fs-sub, 24rpx); color: #94A3B8; margin-top: 8rpx; line-height: 1.35; }
+.setting-hint { display: block; font-size: 20rpx; color: #C0CADB; margin-top: 6rpx; }
 .value { color: #64748B; font-size: var(--fs-val, 28rpx); white-space: nowrap; }
 .switch { width: 88rpx; height: 52rpx; border-radius: 26rpx; background: #CBD5E1; position: relative; flex-shrink: 0; }
 .switch.on { background: #3182F7; }
@@ -23,9 +24,10 @@
 .stepper-val { min-width: 80rpx; text-align: center; color: #0F172A; font-size: var(--fs-val, 28rpx); font-weight: 800; }
 .card-divider { height: 2rpx; background: #EEF3FB; margin: 8rpx 0; }
 .sub-group-label { display: block; font-size: 22rpx; font-weight: 700; color: #94A3B8; padding: 16rpx 0 12rpx; letter-spacing: 0.5px; }
-.refline-grid { display: flex; gap: 16rpx; padding-bottom: 20rpx; }
-.refline-cell { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 14rpx; padding: 20rpx 8rpx; background: #F8FAFF; border-radius: 18rpx; }
+.refline-grid { display: flex; gap: 16rpx; padding-bottom: 16rpx; }
+.refline-cell { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10rpx; padding: 16rpx 8rpx; background: #fff; border-radius: 18rpx; border: 2rpx solid #EEF3FB; }
 .refline-cell-label { font-size: 24rpx; font-weight: 700; color: #64748B; }
+.reset-row { text-align: center; padding: 16rpx 0; }
 .segmented { display: flex; gap: 10rpx; flex-shrink: 0; }
 .segmented text { min-width: 68rpx; min-height: 56rpx; border-radius: 18rpx; padding: 0 16rpx; display: flex; align-items: center; justify-content: center; color: #64748B; background: #F1F6FF; font-size: var(--fs-seg, 26rpx); font-weight: 700; }
 .segmented .active { background: #3182F7; color: #fff; }

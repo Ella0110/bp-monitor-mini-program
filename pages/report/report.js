@@ -2,6 +2,7 @@ const { daysAgo } = require('../../utils/date')
 const { buildReportData } = require('../../utils/report-data')
 const { drawBloodPressureChart, drawHeartRateChart } = require('../../utils/canvas-charts')
 const { drawReportImage, reportImageHeight } = require('../../utils/report-canvas')
+const { getBPStatus, getHRStatus } = require('../../utils/health-rules')
 
 const PERIODS = { '7天': 7, '30天': 30, '90天': 90 }
 
@@ -31,6 +32,9 @@ Page({
     loading: true,
     error: '',
     hidePrivacy: false,
+    statusLevel: 'normal',
+    statusTitle: '',
+    statusDesc: '',
     navStyle: '',
     navTitleStyle: '',
     navBackStyle: '',
@@ -64,13 +68,39 @@ Page({
       const family = familyRes.result.family || {}
       const records = recordsRes.result.records || []
       const report = buildReportData({ family, records, period: this.data.period })
-      this.setData({ family, records, report, loading: false })
+      const statusInfo = this._calcStatusInfo(report)
+      this.setData({ family, records, report, loading: false, ...statusInfo })
       this.drawPreviewCharts()
     } catch (err) {
       console.error('Load report failed', err)
       wx.showToast({ title: '报告加载失败', icon: 'none' })
       this.setData({ loading: false, error: '报告加载失败' })
     }
+  },
+
+  _calcStatusInfo(report) {
+    const records = report.rawRecords || []
+    const refLines = report.refLines || {}
+    const bpT = { systolic: refLines.systolic, diastolic: refLines.diastolic }
+    const hrT = { min: refLines.hrMin, max: refLines.hrMax }
+    if (!records.length) {
+      return { statusLevel: 'empty', statusTitle: '暂无数据', statusDesc: '当前周期尚无记录' }
+    }
+    let worst = 0
+    records.forEach(r => {
+      const bp = getBPStatus(r.systolic, r.diastolic, bpT)
+      const hr = getHRStatus(r.heartRate, hrT)
+      const bn = bp.level === 'critical' ? 3 : bp.level === 'veryHigh' ? 2 : bp.attention ? 1 : 0
+      const hn = (hr.level === 'veryFast' || hr.level === 'verySlow') ? 2 : hr.attention ? 1 : 0
+      worst = Math.max(worst, bn, hn)
+    })
+    const LEVELS = [
+      { statusLevel: 'normal',    statusTitle: '整体正常', statusDesc: '所有测量均在参考范围内' },
+      { statusLevel: 'attention', statusTitle: '轻微偏高', statusDesc: '部分测量超出参考值，请继续观察' },
+      { statusLevel: 'warning',   statusTitle: '明显偏高', statusDesc: '存在明显偏高测量，建议近期就医' },
+      { statusLevel: 'danger',    statusTitle: '血压过高', statusDesc: '存在极高血压测量，请尽快就医' },
+    ]
+    return LEVELS[Math.min(worst, 3)]
   },
 
   onPeriodChange(e) {

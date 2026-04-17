@@ -1,6 +1,7 @@
 const { calcAverage, countReferenceStats, getBPStatus, getHRStatus } = require('./health-rules')
 const { formatDateTime } = require('./date')
 const { buildBloodPressureChart, buildHeartRateChart } = require('./chart-data')
+const { calcAge } = require('./family-settings')
 
 const REPORT_TITLE = '血压心率就诊报告'
 const DISCLAIMER = '本报告仅供健康记录与就诊沟通参考，不作为诊断、治疗或用药依据。个体情况存在差异，请以医生诊疗结果及医嘱为准。'
@@ -53,10 +54,17 @@ function buildReportData({ family = {}, records = [], period = '30天', generate
   const safeRecords = records || []
   const profile = family.profile || {}
   const refLines = buildRefLines(profile)
+  // rawRecords: chronological order (oldest first) for trend charts
+  const rawRecords = [...safeRecords].sort((a, b) => new Date(a.measuredAt) - new Date(b.measuredAt))
+  const age = profile.birthYear ? calcAge(profile.birthYear) : null
   return {
     title: REPORT_TITLE,
     familyName: family.displayName || '家庭健康记录',
     profileName: profile.name || '未设置',
+    profileAge: age && age !== '--' ? `${age}岁` : '',
+    profileMedications: profile.medicationsText || '',
+    profileEmergencyName: profile.emergencyContactName || '',
+    profileEmergencyPhone: profile.emergencyContactPhone || '',
     period,
     periodTitle: periodTitle(period),
     generatedAt: formatDateTime(generatedAt),
@@ -66,6 +74,8 @@ function buildReportData({ family = {}, records = [], period = '30天', generate
     bpChart: buildBloodPressureChart(safeRecords, refLines),
     hrChart: buildHeartRateChart(safeRecords, refLines),
     recentRecords: buildRecentRecords(safeRecords, profile),
+    rawRecords,
+    refLines,
     refLineText: buildRefLineText(profile),
     disclaimer: DISCLAIMER,
   }

@@ -14,8 +14,32 @@
 
       <view wx:if="{{report}}" class="report-card">
         <text class="title">{{report.title}}</text>
-        <text class="meta">{{report.familyName}} · {{report.profileName}}</text>
+        <text class="meta">{{report.familyName}}</text>
         <text class="meta">{{report.periodTitle}} · 生成时间 {{report.generatedAt}}</text>
+
+        <view class="section">
+          <text class="section-title">患者档案</text>
+          <view class="profile-row">
+            <text class="profile-label">姓名</text>
+            <text class="profile-value {{report.profileName === '未设置' ? 'profile-value--empty' : ''}}">{{report.profileName}}{{report.profileAge ? '（' + report.profileAge + '）' : ''}}</text>
+          </view>
+          <view class="profile-row">
+            <text class="profile-label">用药</text>
+            <text class="profile-value {{report.profileMedications ? '' : 'profile-value--empty'}}">{{report.profileMedications || '未填写'}}</text>
+          </view>
+          <view class="profile-row" wx:if="{{report.profileEmergencyName || report.profileEmergencyPhone}}">
+            <text class="profile-label">联系人</text>
+            <text class="profile-value">{{report.profileEmergencyName}}{{report.profileEmergencyPhone ? '  ' + report.profileEmergencyPhone : ''}}</text>
+          </view>
+        </view>
+
+        <view class="status-card status-card--{{statusLevel}}">
+          <view class="status-dot"></view>
+          <view class="status-body">
+            <text class="status-title">{{statusTitle}}</text>
+            <text class="status-desc">{{statusDesc}}</text>
+          </view>
+        </view>
 
         <view class="section">
           <text class="section-title">摘要</text>

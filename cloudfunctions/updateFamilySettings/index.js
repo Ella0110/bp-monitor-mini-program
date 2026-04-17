@@ -32,6 +32,10 @@ function normalizeProfile(profile = {}) {
     medicationsText: trim(profile.medicationsText || profile.medications),
     emergencyContactName: trim(profile.emergencyContactName || profile.emergencyContact),
     emergencyContactPhone: trim(profile.emergencyContactPhone),
+    targetSystolic: toNumberOrDefault(profile.targetSystolic, defaults.targetSystolic),
+    targetDiastolic: toNumberOrDefault(profile.targetDiastolic, defaults.targetDiastolic),
+    targetHRMin: toNumberOrDefault(profile.targetHRMin, defaults.targetHRMin),
+    targetHRMax: toNumberOrDefault(profile.targetHRMax, defaults.targetHRMax),
   }
 }
 

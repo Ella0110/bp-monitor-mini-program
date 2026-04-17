@@ -11,7 +11,9 @@
       </view>
 
       <block wx:if="{{settings}}">
-        <text class="sec-label">通知设置</text>
+
+        <!-- ── 提醒与通知 ── -->
+        <text class="sec-label">提醒与通知</text>
         <view class="settings-card">
           <view class="setting-row" bindtap="onToggle" data-key="abnormalBpNotifyEnabled">
             <view>
@@ -29,8 +31,8 @@
           </view>
           <view class="setting-row">
             <view>
-              <text class="setting-title">高压告警阈值 (mmHg)</text>
-              <text class="setting-sub">收缩压超过此值时触发通知</text>
+              <text class="setting-title">高压超过多少提醒</text>
+              <text class="setting-sub">收缩压（mmHg）</text>
             </view>
             <view class="stepper">
               <view class="stepper-btn" bindtap="onStepperTap" data-key="alertSystolic" data-delta="{{-5}}" data-min="{{100}}" data-max="{{200}}">－</view>
@@ -38,10 +40,10 @@
               <view class="stepper-btn" bindtap="onStepperTap" data-key="alertSystolic" data-delta="{{5}}" data-min="{{100}}" data-max="{{200}}">＋</view>
             </view>
           </view>
-          <view class="setting-row no-border">
+          <view class="setting-row">
             <view>
-              <text class="setting-title">低压告警阈值 (mmHg)</text>
-              <text class="setting-sub">舒张压超过此值时触发通知</text>
+              <text class="setting-title">低压超过多少提醒</text>
+              <text class="setting-sub">舒张压（mmHg）</text>
             </view>
             <view class="stepper">
               <view class="stepper-btn" bindtap="onStepperTap" data-key="alertDiastolic" data-delta="{{-5}}" data-min="{{60}}" data-max="{{130}}">－</view>
@@ -49,10 +51,7 @@
               <view class="stepper-btn" bindtap="onStepperTap" data-key="alertDiastolic" data-delta="{{5}}" data-min="{{60}}" data-max="{{130}}">＋</view>
             </view>
           </view>
-        </view>
-
-        <text class="sec-label">提醒设置</text>
-        <view class="settings-card">
+          <view class="card-divider"></view>
           <view class="setting-row" bindtap="onToggle" data-key="medicationReminderEnabled">
             <view>
               <text class="setting-title">用药提醒</text>
@@ -63,7 +62,7 @@
           <picker mode="time" value="{{settings.morningReminderTime}}" bindchange="onTimeChange" data-key="morningReminderTime">
             <view class="setting-row">
               <view>
-                <text class="setting-title">晨提醒时间</text>
+                <text class="setting-title">晨间提醒时间</text>
                 <text class="setting-sub">早晨服药提醒时间</text>
               </view>
               <text class="value">{{settings.morningReminderTime}} ></text>
@@ -72,7 +71,7 @@
           <picker mode="time" value="{{settings.eveningReminderTime}}" bindchange="onTimeChange" data-key="eveningReminderTime">
             <view class="setting-row no-border">
               <view>
-                <text class="setting-title">晚提醒时间</text>
+                <text class="setting-title">晚间提醒时间</text>
                 <text class="setting-sub">晚上服药提醒时间</text>
               </view>
               <text class="value">{{settings.eveningReminderTime}} ></text>
@@ -80,7 +79,8 @@
           </picker>
         </view>
 
-        <text class="sec-label">图表设置</text>
+        <!-- ── 图表 ── -->
+        <text class="sec-label">图表</text>
         <view class="settings-card">
           <view class="setting-row" bindtap="onToggle" data-key="morningEveningLabel">
             <view>
@@ -89,16 +89,65 @@
             </view>
             <view class="switch {{settings.morningEveningLabel ? 'on' : ''}}"><view class="knob"></view></view>
           </view>
-          <view class="setting-row no-border" bindtap="onToggle" data-key="splitLines">
+          <view class="setting-row" bindtap="onToggle" data-key="splitLines">
             <view>
               <text class="setting-title">早晚分线显示</text>
               <text class="setting-sub">图表中晨/晚测分两条线</text>
             </view>
             <view class="switch {{settings.splitLines ? 'on' : ''}}"><view class="knob"></view></view>
           </view>
+
+          <view class="card-divider"></view>
+
+          <!-- 血压参考线 2列 -->
+          <text class="sub-group-label">血压参考线（mmHg）</text>
+          <view class="refline-grid">
+            <view class="refline-cell">
+              <text class="refline-cell-label">高压</text>
+              <view class="stepper">
+                <view class="stepper-btn" bindtap="onRefLineStep" data-field="systolic" data-delta="{{-5}}">－</view>
+                <text class="stepper-val">{{refLines.systolic}}</text>
+                <view class="stepper-btn" bindtap="onRefLineStep" data-field="systolic" data-delta="{{5}}">＋</view>
+              </view>
+            </view>
+            <view class="refline-cell">
+              <text class="refline-cell-label">低压</text>
+              <view class="stepper">
+                <view class="stepper-btn" bindtap="onRefLineStep" data-field="diastolic" data-delta="{{-5}}">－</view>
+                <text class="stepper-val">{{refLines.diastolic}}</text>
+                <view class="stepper-btn" bindtap="onRefLineStep" data-field="diastolic" data-delta="{{5}}">＋</view>
+              </view>
+            </view>
+          </view>
+
+          <!-- 心率参考线 2列 -->
+          <text class="sub-group-label" style="margin-top:16rpx">心率参考线（次/分）</text>
+          <view class="refline-grid" style="{{refLinesIsDefault ? 'margin-bottom:4rpx' : ''}}">
+            <view class="refline-cell">
+              <text class="refline-cell-label">下限</text>
+              <view class="stepper">
+                <view class="stepper-btn" bindtap="onRefLineStep" data-field="hrMin" data-delta="{{-1}}">－</view>
+                <text class="stepper-val">{{refLines.hrMin}}</text>
+                <view class="stepper-btn" bindtap="onRefLineStep" data-field="hrMin" data-delta="{{1}}">＋</view>
+              </view>
+            </view>
+            <view class="refline-cell">
+              <text class="refline-cell-label">上限</text>
+              <view class="stepper">
+                <view class="stepper-btn" bindtap="onRefLineStep" data-field="hrMax" data-delta="{{-1}}">－</view>
+                <text class="stepper-val">{{refLines.hrMax}}</text>
+                <view class="stepper-btn" bindtap="onRefLineStep" data-field="hrMax" data-delta="{{1}}">＋</view>
+              </view>
+            </view>
+          </view>
+
+          <view wx:if="{{!refLinesIsDefault}}" class="setting-row no-border" bindtap="onResetRefLines">
+            <text class="setting-title" style="color:#3182F7">恢复默认参考线</text>
+          </view>
         </view>
 
-        <text class="sec-label">显示设置</text>
+        <!-- ── 显示设置 ── -->
+        <text class="sec-label">显示</text>
         <view class="settings-card">
           <view class="setting-row no-border">
             <view>
@@ -113,6 +162,7 @@
           </view>
         </view>
 
+        <!-- ── 关于 ── -->
         <text class="sec-label">关于</text>
         <view class="settings-card">
           <view class="setting-row">

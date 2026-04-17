@@ -18,9 +18,14 @@
 .switch.on { background: #3182F7; }
 .knob { width: 40rpx; height: 40rpx; background: #fff; border-radius: 50%; position: absolute; top: 6rpx; left: 6rpx; transition: left 0.18s; box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.18); }
 .switch.on .knob { left: 42rpx; }
-.stepper { display: flex; align-items: center; gap: 0; flex-shrink: 0; background: #F1F6FF; border-radius: 18rpx; overflow: hidden; }
-.stepper-btn { width: 72rpx; height: 72rpx; display: flex; align-items: center; justify-content: center; color: #3182F7; font-size: 40rpx; font-weight: 700; }
+.stepper { display: flex; align-items: center; gap: 0; flex-shrink: 0; background: #F1F6FF; border-radius: 20rpx; overflow: hidden; }
+.stepper-btn { width: 88rpx; height: 88rpx; display: flex; align-items: center; justify-content: center; color: #3182F7; font-size: 40rpx; font-weight: 700; }
 .stepper-val { min-width: 80rpx; text-align: center; color: #0F172A; font-size: var(--fs-val, 28rpx); font-weight: 800; }
+.card-divider { height: 2rpx; background: #EEF3FB; margin: 8rpx 0; }
+.sub-group-label { display: block; font-size: 22rpx; font-weight: 700; color: #94A3B8; padding: 16rpx 0 12rpx; letter-spacing: 0.5px; }
+.refline-grid { display: flex; gap: 16rpx; padding-bottom: 20rpx; }
+.refline-cell { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 14rpx; padding: 20rpx 8rpx; background: #F8FAFF; border-radius: 18rpx; }
+.refline-cell-label { font-size: 24rpx; font-weight: 700; color: #64748B; }
 .segmented { display: flex; gap: 10rpx; flex-shrink: 0; }
 .segmented text { min-width: 68rpx; min-height: 56rpx; border-radius: 18rpx; padding: 0 16rpx; display: flex; align-items: center; justify-content: center; color: #64748B; background: #F1F6FF; font-size: var(--fs-seg, 26rpx); font-weight: 700; }
 .segmented .active { background: #3182F7; color: #fff; }

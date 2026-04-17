@@ -176,10 +176,22 @@ Page({
       app.globalData.fontSizeClass = fontSizeClass
       const fontSizeStyle = makeFontSizeStyle(fontSizeClass)
       const latestRecord = records[0] || null
-      const latestBPStatus = latestRecord ? getBPStatus(latestRecord.systolic, latestRecord.diastolic) : null
-      const latestHRStatus = latestRecord ? getHRStatus(latestRecord.heartRate) : null
-      const bpChart = buildBloodPressureChart(records)
-      const hrChart = buildHeartRateChart(records)
+      const refLines = {
+        systolic: profile.targetSystolic || 135,
+        diastolic: profile.targetDiastolic || 85,
+        hrMin: profile.targetHRMin || 60,
+        hrMax: profile.targetHRMax || 80,
+      }
+      const latestBPStatus = latestRecord ? getBPStatus(latestRecord.systolic, latestRecord.diastolic, {
+        systolic: refLines.systolic,
+        diastolic: refLines.diastolic,
+      }) : null
+      const latestHRStatus = latestRecord ? getHRStatus(latestRecord.heartRate, {
+        min: refLines.hrMin,
+        max: refLines.hrMax,
+      }) : null
+      const bpChart = buildBloodPressureChart(records, refLines)
+      const hrChart = buildHeartRateChart(records, refLines)
       this.setData({
         records,
         profile,

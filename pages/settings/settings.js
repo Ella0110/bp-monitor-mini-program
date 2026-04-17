@@ -11,6 +11,27 @@ function makeFontSizeStyle(cls) {
   return '--fs-label:20rpx;--fs-title:28rpx;--fs-sub:22rpx;--fs-val:26rpx;--fs-seg:24rpx;--fs-note:22rpx;--row-h:96rpx;--card-px:28rpx'
 }
 
+function buildRefLines(profile = {}) {
+  return {
+    systolic: profile.targetSystolic || 135,
+    diastolic: profile.targetDiastolic || 85,
+    hrMin: profile.targetHRMin || 60,
+    hrMax: profile.targetHRMax || 80,
+  }
+}
+
+function isDefaultRefLines(refLines) {
+  return refLines.systolic === 135 && refLines.diastolic === 85
+    && refLines.hrMin === 60 && refLines.hrMax === 80
+}
+
+function profileMatchesRefLines(profile, refLines) {
+  return Number(profile && profile.targetSystolic) === refLines.systolic
+    && Number(profile && profile.targetDiastolic) === refLines.diastolic
+    && Number(profile && profile.targetHRMin) === refLines.hrMin
+    && Number(profile && profile.targetHRMax) === refLines.hrMax
+}
+
 function buildNavMetrics() {
   const windowInfo = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
   const statusBarHeight = windowInfo.statusBarHeight || 0
@@ -40,6 +61,8 @@ Page({
     navTitleStyle: '',
     navBackStyle: '',
     contentStyle: '',
+    refLines: { systolic: 135, diastolic: 85, hrMin: 60, hrMax: 80 },
+    refLinesIsDefault: true,
   },
 
   onLoad() {
@@ -69,6 +92,9 @@ Page({
       const settings = normalizeSettings(family.settings || {})
       const fontSizeClass = settings.fontSize || 'standard'
       getApp().globalData.fontSizeClass = fontSizeClass
+      const profile = family.profile || {}
+      const refLines = buildRefLines(profile)
+      const refLinesIsDefault = isDefaultRefLines(refLines)
       this.setData({
         family,
         settings,
@@ -77,6 +103,8 @@ Page({
         loading: false,
         fontSizeClass,
         fontSizeStyle: makeFontSizeStyle(fontSizeClass),
+        refLines,
+        refLinesIsDefault,
       })
     } catch (e) {
       wx.showToast({ title: '设置加载失败', icon: 'none' })
@@ -150,7 +178,88 @@ Page({
     })
   },
 
-  onBackTap() {
+  onRefLineStep(e) {
+    const { field, delta } = e.currentTarget.dataset
+    const limits = {
+      systolic:  { min: 100, max: 180 },
+      diastolic: { min: 60,  max: 120 },
+      hrMin:     { min: 40,  max: 80  },
+      hrMax:     { min: 60,  max: 120 },
+    }
+    const current = this.data.refLines[field]
+    const next = Math.min(limits[field].max, Math.max(limits[field].min, current + delta))
+    if (next === current) return
+    const refLines = { ...this.data.refLines, [field]: next }
+    const refLinesIsDefault = isDefaultRefLines(refLines)
+    this.setData({ refLines, refLinesIsDefault })
+    this.queueRefLinesSave(refLines)
+  },
+
+  onResetRefLines() {
+    const refLines = { systolic: 135, diastolic: 85, hrMin: 60, hrMax: 80 }
+    this.setData({ refLines, refLinesIsDefault: true })
+    this.queueRefLinesSave(refLines)
+  },
+
+  queueRefLinesSave(refLines) {
+    this.pendingRefLines = { ...refLines }
+    if (this.refLinesSaveTimer) clearTimeout(this.refLinesSaveTimer)
+    this.refLinesSaveTimer = setTimeout(() => {
+      this.refLinesSaveTimer = null
+      this.flushRefLinesSave()
+    }, 350)
+  },
+
+  async saveRefLines(refLines) {
+    if (!this.data.family) return false
+    this.savingRefLines = true
+    try {
+      const profile = {
+        ...(this.data.family.profile || {}),
+        targetSystolic: refLines.systolic,
+        targetDiastolic: refLines.diastolic,
+        targetHRMin: refLines.hrMin,
+        targetHRMax: refLines.hrMax,
+      }
+      const res = await wx.cloud.callFunction({
+        name: 'updateFamilySettings',
+        data: { familyId: this.data.family._id, profile },
+      })
+      if (!res.result.success || !profileMatchesRefLines(res.result.profile, refLines)) {
+        wx.showToast({ title: '保存失败', icon: 'none' })
+        return false
+      }
+      this.setData({ 'family.profile': res.result.profile })
+      const app = getApp()
+      app.globalData.familyProfile = { ...(app.globalData.familyProfile || {}), ...res.result.profile }
+      return true
+    } catch (e) {
+      console.error('saveRefLines failed', e)
+      wx.showToast({ title: '参考线保存失败', icon: 'none' })
+      return false
+    } finally {
+      this.savingRefLines = false
+    }
+  },
+
+  async flushRefLinesSave() {
+    if (this.savingRefLines || !this.pendingRefLines) return
+    let saved = false
+    while (this.pendingRefLines) {
+      const refLines = this.pendingRefLines
+      this.pendingRefLines = null
+      saved = await this.saveRefLines(refLines)
+      if (!saved) return
+    }
+    if (saved) wx.showToast({ title: '已保存', icon: 'success' })
+  },
+
+  async onBackTap() {
+    if (this.refLinesSaveTimer) {
+      clearTimeout(this.refLinesSaveTimer)
+      this.refLinesSaveTimer = null
+      await this.flushRefLinesSave()
+    }
     wx.navigateBack({ delta: 1 })
   },
 })

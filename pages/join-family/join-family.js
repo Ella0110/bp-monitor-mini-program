@@ -13,6 +13,7 @@ Page({
 
   async loadInviteInfo() {
     if (!this.data.inviteToken) return
+    await getApp().loginReady
     const res = await wx.cloud.callFunction({
       name: 'getInviteInfo',
       data: { inviteToken: this.data.inviteToken },
@@ -42,7 +43,14 @@ Page({
         wx.showToast({ title: res.result.error || '加入失败', icon: 'none' })
         return
       }
-      getApp().globalData.familyId = res.result.familyId
+      const app = getApp()
+      if (typeof app.refreshSession === 'function') {
+        await app.refreshSession()
+      } else {
+        app.globalData.familyId = res.result.familyId
+        app.globalData.role = 'member'
+        app.globalData.memberPermissions = { canWrite: false, canEdit: false }
+      }
       wx.showToast({ title: '加入成功', icon: 'success' })
       wx.switchTab({ url: '/pages/data/data' })
     } finally {

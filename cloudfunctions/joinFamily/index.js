@@ -6,7 +6,9 @@ const _ = db.command
 
 exports.main = async (event) => {
   const { OPENID } = cloud.getWXContext()
-  const { inviteToken, inviteCode, nickname, avatarUrl } = event
+  const { inviteToken, inviteCode } = event
+  const nickname = String(event.nickname || '').trim().slice(0, 20) || '家人'
+  const avatarUrl = typeof event.avatarUrl === 'string' && event.avatarUrl.startsWith('https://') ? event.avatarUrl.slice(0, 500) : ''
   const where = inviteToken ? { inviteToken } : { inviteCode }
 
   const res = await db.collection('families').where(where).limit(1).get()
@@ -25,8 +27,8 @@ exports.main = async (event) => {
       members: _.push({
         openid: OPENID,
         role: 'member',
-        nickname: nickname || '家人',
-        avatarUrl: avatarUrl || '',
+        nickname,
+        avatarUrl,
         canWrite: false,
         canEdit: false,
         joinedAt: db.serverDate(),
@@ -39,8 +41,8 @@ exports.main = async (event) => {
     data: { familyId: family._id, role: 'member' },
   }).catch(() => userRef.set({
     data: {
-      nickname: nickname || '',
-      avatarUrl: avatarUrl || '',
+      nickname,
+      avatarUrl,
       familyId: family._id,
       role: 'member',
       preferences: {},

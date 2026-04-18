@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>邀请家人查看</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+
+            :root {
+                --brand-blue: #3182f7;
+                --bg-slate: #eef3fb;
+            }
+
+            body {
+                font-family: "Inter", sans-serif;
+                background:
+                    radial-gradient(
+                        circle at top right,
+                        rgba(49, 130, 247, 0.1),
+                        transparent 30%
+                    ),
+                    linear-gradient(180deg, #f8fbff 0%, #eef3fb 100%);
+            }
+
+            .active-scale {
+                transition: transform 0.15s ease;
+            }
+
+            .active-scale:active {
+                transform: scale(0.97);
+            }
+
+            .glass-card {
+                background: rgba(255, 255, 255, 0.85);
+                border: 1px solid rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(20px);
+                box-shadow: 0 16px 40px rgba(49, 130, 247, 0.08);
+            }
+
+            .wechat-bg {
+                background: #ededed;
+                border-radius: 28px;
+                padding: 18px;
+                position: relative;
+            }
+
+            .wechat-bubble {
+                background: #ffffff;
+                border-radius: 10px 20px 20px 20px;
+                padding: 12px;
+                max-width: 250px;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+                position: relative;
+            }
+
+            .wechat-bubble::before {
+                content: "";
+                position: absolute;
+                left: -8px;
+                top: 10px;
+                border-width: 0 8px 8px 0;
+                border-style: solid;
+                border-color: transparent #ffffff transparent transparent;
+            }
+
+            .mini-card {
+                background: #f8fafc;
+                border: 1px solid #f1f5f9;
+            }
+        </style>
+    </head>
+    <body class="min-h-screen px-6 pt-16 pb-8 text-slate-900">
+        <main class="max-w-md mx-auto">
+            <!-- 顶部主视觉 -->
+            <header class="text-center mb-10">
+                <div
+                    class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 shadow-sm"
+                >
+                    <svg
+                        class="w-11 h-11 text-blue-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        ></path>
+                    </svg>
+                </div>
+                <h1
+                    class="text-3xl font-extrabold tracking-tight text-slate-900"
+                >
+                    邀请家人查看
+                </h1>
+                <p class="text-sm text-slate-500 mt-3 leading-relaxed px-4">
+                    分享后，家人可以更方便地关注你的血压变化，及时了解最近记录。
+                </p>
+            </header>
+
+            <!-- 核心说明卡片 -->
+            <!-- <section class="glass-card rounded-[32px] p-6 mb-8">
+                <div class="flex items-start gap-4 mb-5">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 shrink-0"
+                    >
+                        <svg
+                            class="w-6 h-6"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M9 12l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                stroke-width="2.3"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            ></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-extrabold text-slate-900">
+                            分享后家人可查看
+                        </h2>
+                        <p class="text-sm text-slate-500 mt-1">
+                            最近记录、健康趋势，以及你后续新增的共享数据。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                        <span class="text-sm text-slate-700"
+                            >最近一次血压与心率记录</span
+                        >
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                        <span class="text-sm text-slate-700"
+                            >近期趋势和异常变化提醒</span
+                        >
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                        <span class="text-sm text-slate-700"
+                            >后续新增的共享健康数据</span
+                        >
+                    </div>
+                </div>
+            </section> -->
+
+            <!-- 微信聊天预览 -->
+            <section class="mb-10">
+                <div class="flex items-center justify-between mb-4 px-1">
+                    <h3
+                        class="text-[11px] font-bold uppercase tracking-widest text-slate-400"
+                    >
+                        发送效果预览
+                    </h3>
+                    <span class="text-[11px] text-slate-300">微信聊天卡片</span>
+                </div>
+
+                <div class="wechat-bg">
+                    <div class="flex items-start gap-3">
+                        <div
+                            class="w-10 h-10 bg-slate-300 rounded-md shrink-0"
+                        ></div>
+                        <div class="wechat-bubble">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div
+                                    class="w-4 h-4 bg-blue-600 rounded-sm flex items-center justify-center text-[8px] text-white font-bold"
+                                >
+                                    万
+                                </div>
+                                <span
+                                    class="text-[10px] text-slate-400 font-bold"
+                                    >来自儿女的关心</span
+                                >
+                            </div>
+
+                            <h4
+                                class="text-sm font-bold text-slate-800 leading-tight"
+                            >
+                                邀请你查看「万笋」的血压记录
+                            </h4>
+
+                            <div
+                                class="mini-card rounded-2xl p-3 mt-3 flex items-center gap-3"
+                            >
+                                <div
+                                    class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold shrink-0"
+                                >
+                                    万
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div
+                                        class="text-sm font-bold text-slate-900 truncate"
+                                    >
+                                        来自儿女的关心
+                                    </div>
+                                    <div
+                                        class="text-[11px] text-slate-500 mt-1 truncate"
+                                    >
+                                        点击查看最近血压与健康趋势
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                class="mt-3 pt-3 border-t border-slate-50 flex items-center justify-between"
+                            >
+                                <span class="text-[10px] text-slate-300"
+                                    >小程序</span
+                                >
+                                <div
+                                    class="w-3 h-3 bg-slate-100 rounded-full"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA 区 -->
+            <section class="space-y-4">
+                <button
+                    class="w-full bg-[#3182F7] text-white py-5 rounded-[28px] text-lg font-bold shadow-xl shadow-blue-200 active-scale flex items-center justify-center gap-3"
+                    onclick="shareInvite()"
+                >
+                    <svg
+                        class="w-6 h-6"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12c0 1.94.55 3.75 1.51 5.3L2.1 22l4.87-1.42C8.42 21.46 10.15 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"
+                        ></path>
+                    </svg>
+                    分享给家人
+                </button>
+
+                <button
+                    class="w-full py-4 text-slate-400 font-medium active-scale"
+                    onclick="history.back()"
+                >
+                    取消并返回
+                </button>
+
+                <p class="text-[11px] text-center text-slate-400">
+                    已自动生成安全邀请链接，家人点击后即可加入查看
+                </p>
+            </section>
+        </main>
+
+        <script>
+            function shareInvite() {
+                alert("这里触发微信分享邀请逻辑");
+            }
+        </script>
+    </body>
+</html>

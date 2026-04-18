@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 家庭管理 (头像交互增强版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        :root {
+            --brand-blue: #3182F7;
+            --danger-red: #EF4444;
+            --bg-slate: #EEF3FB;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-slate); -webkit-tap-highlight-color: transparent; }
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+        
+        .glass-card { 
+            background: white; 
+            border-radius: 40px; 
+            box-shadow: 0 4px 30px rgba(49, 130, 247, 0.04); 
+        }
+
+        /* 半屏弹窗样式 */
+        .slide-up-modal {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 40px 40px 0 0;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.05);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+
+        .avatar-ring-danger {
+            position: relative;
+        }
+        .avatar-ring-danger::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 2px solid var(--danger-red);
+            border-radius: 999px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.1); opacity: 0.1; }
+            100% { transform: scale(1); opacity: 0.4; }
+        }
+
+        .wx-capsule { width: 87px; height: 32px; background: white; border-radius: 16px; border: 0.5px solid rgba(0,0,0,0.08); }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="pb-24">
+
+    <!-- Header -->
+    <div class="fixed top-0 left-0 right-0 z-40 bg-[#EEF3FB]/90 backdrop-blur-md">
+        <div class="h-10"></div>
+        <div class="h-11 flex items-center justify-between px-6">
+            <h1 class="text-2xl font-extrabold text-slate-900">家庭档案</h1>
+            <div class="flex items-center gap-3">
+                <button class="px-5 py-1.5 bg-white text-blue-600 rounded-full text-sm font-bold shadow-sm active-scale">设置</button>
+                <div class="wx-capsule opacity-40"></div>
+            </div>
+        </div>
+    </div>
+
+    <main class="px-4 pt-28">
+        
+        <!-- 档案卡片 -->
+        <section class="glass-card p-8 mb-8 relative">
+            <div class="flex items-center gap-5 mb-10">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-blue-100 avatar-ring-danger">
+                    万
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-2xl font-extrabold text-slate-900">万笋</h2>
+                            <span class="text-xs px-2.5 py-0.5 bg-slate-100 text-slate-400 rounded-lg font-bold">51岁</span>
+                        </div>
+                        <button class="text-blue-500 text-sm font-bold flex items-center gap-1 active-scale">
+                            编辑
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="3"></path></svg>
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-1 font-medium tracking-wide">1975年出生</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="flex justify-between items-center py-4 border-b border-slate-50">
+                    <span class="text-sm font-bold text-slate-400 uppercase tracking-widest">当前血压</span>
+                    <span class="text-2xl font-extrabold text-red-500">167 / 117 <small class="text-[10px] font-bold ml-1 uppercase">mmHg</small></span>
+                </div>
+                <div class="flex justify-between items-center py-4">
+                    <span class="text-sm font-bold text-slate-400 uppercase tracking-widest">紧急联系人</span>
+                    <span class="text-base font-extrabold text-red-500">新一 · 1845...489</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 家庭成员 (横排 V1 风格) -->
+        <h3 class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mb-4 px-4 text-center">点击头像管理权限</h3>
+        <div class="flex justify-between px-4 mb-10">
+            <div class="flex flex-col items-center gap-2">
+                <div class="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg shadow-blue-100">我</div>
+                <span class="text-[10px] font-bold text-slate-900">我 (管)</span>
+            </div>
+            <!-- 点击触发弹窗 -->
+            <div class="flex flex-col items-center gap-2 active-scale" onclick="openModal('hank')">
+                <div class="w-14 h-14 bg-white border-2 border-blue-50 rounded-full flex items-center justify-center text-blue-500 font-bold">h</div>
+                <span class="text-[10px] font-bold text-slate-500">hank</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 active-scale" onclick="openModal('魔女')">
+                <div class="w-14 h-14 bg-white border-2 border-blue-50 rounded-full flex items-center justify-center text-blue-500 font-bold">魔</div>
+                <span class="text-[10px] font-bold text-slate-500">魔女</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 active-scale">
+                <div class="w-14 h-14 border-2 border-dashed border-slate-200 rounded-full flex items-center justify-center text-slate-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-width="2.5"></path></svg>
+                </div>
+                <span class="text-[10px] font-bold text-blue-500">邀请</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-[32px] shadow-sm flex items-center gap-4 active-scale">
+            <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2"></path></svg>
+            </div>
+            <div class="flex-1">
+                <h4 class="font-extrabold text-slate-900">生成就诊报告</h4>
+                <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider">导出专业图表数据</p>
+            </div>
+            <svg class="w-5 h-5 text-slate-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="3"></path></svg>
+        </div>
+    </main>
+
+    <!-- Tab Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 h-20 bg-white/90 backdrop-blur-xl border-t border-slate-50 px-16 flex items-center justify-between z-50">
+        <div class="flex flex-col items-center gap-1 text-slate-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z" stroke-width="2"/></svg>
+            <span class="text-[9px] font-bold">数据</span>
+        </div>
+        <div class="flex flex-col items-center gap-1 text-blue-500">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <span class="text-[9px] font-bold">家庭</span>
+        </div>
+    </nav>
+
+    <!-- 权限设置弹窗 (Action Sheet) -->
+    <div id="modal-overlay" class="fixed inset-0 bg-slate-900/40 z-50 hidden opacity-0 transition-opacity duration-300" onclick="closeModal()"></div>
+    <div id="modal-content" class="fixed bottom-0 left-0 right-0 z-50 slide-up-modal p-8 translate-y-full">
+        <!-- 拖动手柄 -->
+        <div class="w-12 h-1 bg-slate-100 rounded-full mx-auto mb-8"></div>
+        
+        <div class="flex items-center gap-4 mb-10">
+            <div id="modal-avatar" class="w-14 h-14 bg-blue-50 border-2 border-blue-100 rounded-full flex items-center justify-center text-blue-500 font-bold text-xl uppercase">h</div>
+            <div>
+                <h4 class="text-xl font-extrabold text-slate-900"><span id="modal-name">hank</span> 的权限</h4>
+                <p class="text-xs text-slate-400 mt-0.5">管理员可实时调整成员操作权限</p>
+            </div>
+        </div>
+
+        <div class="space-y-8 mb-10">
+            <div class="flex justify-between items-center">
+                <div>
+                    <span class="block font-bold text-slate-800">允许录入数据</span>
+                    <span class="text-[10px] text-slate-400 font-medium">该成员可以为你添加测量记录</span>
+                </div>
+                <div class="w-12 h-7 bg-blue-500 rounded-full relative p-1 transition-colors">
+                    <div class="w-5 h-5 bg-white rounded-full shadow-sm ml-auto"></div>
+                </div>
+            </div>
+            <div class="flex justify-between items-center">
+                <div>
+                    <span class="block font-bold text-slate-800">允许编辑/删除</span>
+                    <span class="text-[10px] text-slate-400 font-medium">该成员可以修改历史记录</span>
+                </div>
+                <div class="w-12 h-7 bg-slate-200 rounded-full relative p-1 transition-colors">
+                    <div class="w-5 h-5 bg-white rounded-full shadow-sm"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 危险区隔离 -->
+        <div class="pt-8 border-t border-slate-50">
+            <button class="w-full py-4 bg-red-50 text-red-500 rounded-2xl font-bold active-scale">移除该成员</button>
+            <button onclick="closeModal()" class="w-full py-4 text-slate-300 font-bold mt-2">取消</button>
+        </div>
+    </div>
+
+    <script>
+        const overlay = document.getElementById('modal-overlay');
+        const content = document.getElementById('modal-content');
+        const modalName = document.getElementById('modal-name');
+        const modalAvatar = document.getElementById('modal-avatar');
+
+        function openModal(name) {
+            modalName.innerText = name;
+            modalAvatar.innerText = name.charAt(0);
+            overlay.classList.remove('hidden');
+            setTimeout(() => {
+                overlay.classList.add('opacity-100');
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        function closeModal() {
+            overlay.classList.remove('opacity-100');
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 300);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 就诊报告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        :root {
+            --brand-blue: #3182F7;
+            --danger-red: #EF4444;
+            --bg-slate: #EEF3FB;
+        }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-slate);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(49, 130, 247, 0.05);
+        }
+
+        /* 报告专用：医学文档质感 */
+        .report-content {
+            background: #FFFFFF;
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+
+        .alert-pulse {
+            animation: alert-glow 2s infinite;
+        }
+        @keyframes alert-glow {
+            0% { background-color: rgba(239, 68, 68, 0.1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.2); }
+            50% { background-color: rgba(239, 68, 68, 0.15); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { background-color: rgba(239, 68, 68, 0.1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .wx-capsule { width: 87px; height: 32px; background: rgba(0,0,0,0.05); border-radius: 16px; }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="pb-32">
+
+    <!-- 微信自定义 Header 模拟 -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#EEF3FB]/80 backdrop-blur-md">
+        <div class="h-10"></div>
+        <div class="h-11 flex items-center justify-between px-6">
+            <h2 class="text-xl font-bold text-slate-900">就诊报告</h2>
+            <div class="wx-capsule"></div>
+        </div>
+        <!-- 周期切换 (Sticky 下方) -->
+        <div class="px-6 py-4 flex gap-2">
+            <button class="flex-1 py-2 rounded-xl text-xs font-bold bg-blue-500 text-white shadow-md shadow-blue-100">近7天</button>
+            <button class="flex-1 py-2 rounded-xl text-xs font-medium bg-white text-slate-400">近30天</button>
+            <button class="flex-1 py-2 rounded-xl text-xs font-medium bg-white text-slate-400">近90天</button>
+        </div>
+    </div>
+
+    <main class="px-4 pt-44">
+        
+        <div class="report-content space-y-8" id="report-main">
+            <!-- 标题区 -->
+            <header class="border-b border-slate-50 pb-6">
+                <h1 class="text-2xl font-extrabold text-slate-900">血压心率就诊报告</h1>
+                <p class="text-[10px] text-slate-400 mt-2 uppercase tracking-widest font-bold">Generated at 2026/04/17 23:56</p>
+            </header>
+
+            <!-- 患者档案 (支持脱敏) -->
+            <section class="grid grid-cols-2 gap-y-4">
+                <div class="flex flex-col">
+                    <span class="text-[10px] text-slate-400 font-bold uppercase">患者姓名</span>
+                    <span class="text-base font-bold text-slate-800 privacy-target">万笋 (51岁)</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[10px] text-slate-400 font-bold uppercase">主要用药</span>
+                    <span class="text-base font-bold text-slate-800">爱迪克缓释胶囊</span>
+                </div>
+                <div class="flex flex-col col-span-2">
+                    <span class="text-[10px] text-slate-400 font-bold uppercase">紧急联系人</span>
+                    <span class="text-base font-bold text-red-500 privacy-target">新一 · 18456765489</span>
+                </div>
+            </section>
+
+            <!-- 核心警示 -->
+            <div class="alert-pulse rounded-2xl p-4 flex items-start gap-3 border border-red-100">
+                <div class="w-2 h-2 rounded-full bg-red-500 mt-1.5 animate-ping"></div>
+                <div>
+                    <h3 class="text-red-600 font-bold">血压过高风险</h3>
+                    <p class="text-xs text-red-500/80 mt-0.5 leading-relaxed">存在极高血压测量值，建议近期就医并遵医嘱调整用药。</p>
+                </div>
+            </div>
+
+            <!-- 数据摘要网格 (UX 增强：大字号、分栏清晰) -->
+            <section>
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">数据统计摘要</h4>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                        <span class="text-2xl font-extrabold text-slate-900 block">4</span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase mt-1">测量总次数</span>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                        <span class="text-xl font-extrabold text-slate-900 block">152/103</span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase mt-1 leading-tight">血压均值<br>(mmHg)</span>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                        <span class="text-2xl font-extrabold text-red-500 block">4</span>
+                        <span class="text-[10px] text-red-400/60 font-bold uppercase mt-1">血压异常(次)</span>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                        <span class="text-2xl font-extrabold text-orange-500 block">2</span>
+                        <span class="text-[10px] text-orange-400/60 font-bold uppercase mt-1">心率异常(次)</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 趋势简图 (仿真预览) -->
+            <section>
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest">血压波动趋势</h4>
+                    <span class="text-[10px] text-slate-300 font-bold">单位: mmHg</span>
+                </div>
+                <div class="h-32 w-full">
+                    <svg class="w-full h-full" viewBox="0 0 300 120">
+                        <path d="M20 40 L80 45 L140 38 L200 48 L260 55" fill="none" stroke="#3182F7" stroke-width="3" stroke-linecap="round" />
+                        <path d="M20 90 L80 92 L140 85 L200 95 L260 98" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" />
+                        <circle cx="140" cy="38" r="5" fill="#EF4444" stroke="white" stroke-width="1.5" />
+                        <line x1="0" y1="40" x2="300" y2="40" stroke="#EF4444" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.3" />
+                    </svg>
+                </div>
+            </section>
+
+            <!-- 最近详细记录 -->
+            <section>
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">最近异常明细</h4>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-3 border-b border-slate-50">
+                        <div>
+                            <span class="text-xs font-bold text-slate-800">04/17 13:44</span>
+                            <p class="text-[10px] text-red-500 font-bold mt-1 uppercase">血压偏高 · 心率偏快</p>
+                        </div>
+                        <span class="text-lg font-extrabold text-slate-900">123/89 <small class="text-[10px] font-normal text-slate-400 uppercase">87bpm</small></span>
+                    </div>
+                    <div class="flex justify-between items-center py-3">
+                        <div>
+                            <span class="text-xs font-bold text-slate-800">04/17 08:47</span>
+                            <p class="text-[10px] text-red-500 font-bold mt-1 uppercase tracking-tight">血压很高 · 严重异常</p>
+                        </div>
+                        <span class="text-lg font-extrabold text-slate-900">155/94 <small class="text-[10px] font-normal text-slate-400 uppercase">84bpm</small></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 免责声明 -->
+            <footer class="pt-8 border-t border-slate-100">
+                <p class="text-[9px] text-slate-300 leading-relaxed">本报告仅供健康记录与就诊沟通参考，不作为诊断、治疗或用药依据。个体情况存在差异，请以医生诊疗结果及医嘱为准。</p>
+            </footer>
+        </div>
+    </main>
+
+    <!-- 底部操作栏 (Fixed) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-slate-100 px-6 py-4 flex flex-col gap-4 z-50">
+        <div class="flex items-center justify-between">
+            <div class="flex flex-col">
+                <span class="text-sm font-bold text-slate-800">隐藏敏感信息</span>
+                <span class="text-[10px] text-slate-400 italic">导出图片中显示为 ***</span>
+            </div>
+            <button id="privacy-toggle" class="w-12 h-6 bg-slate-200 rounded-full relative p-1 transition-colors duration-300">
+                <div class="w-4 h-4 bg-white rounded-full shadow-sm transform transition-transform duration-300"></div>
+            </button>
+        </div>
+        <button class="w-full bg-[#3182F7] text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200 active-scale flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-width="2.5"></path></svg>
+            保存报告图片
+        </button>
+    </div>
+
+    <script>
+        // 模拟隐私脱敏交互
+        const toggle = document.getElementById('privacy-toggle');
+        const targets = document.querySelectorAll('.privacy-target');
+        let isHidden = false;
+
+        const originalData = Array.from(targets).map(t => t.innerText);
+
+        toggle.addEventListener('click', () => {
+            isHidden = !isHidden;
+            toggle.classList.toggle('bg-blue-500');
+            toggle.querySelector('div').classList.toggle('translate-x-6');
+            
+            targets.forEach((t, i) => {
+                t.innerText = isHidden ? '***' : originalData[i];
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 数据页 (空状态)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
+        body { font-family: 'Inter', -apple-system, sans-serif; background: linear-gradient(160deg, #F8FAFC 0%, #EEF3FB 100%); min-height: 100vh; color: #0F172A; }
+        .premium-shadow { box-shadow: 0 20px 25px -5px rgba(49, 130, 247, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.6); }
+        .squircle-card { border-radius: 40px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(30px); border: 0.5px solid rgba(255, 255, 255, 0.5); }
+        .active-scale { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .active-scale:active { transform: scale(0.95); }
+        .mesh-gradient { position: absolute; top: -10%; right: -10%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(49, 130, 247, 0.1) 0%, transparent 70%); z-index: 0; filter: blur(40px); }
+    </style>
+</head>
+<body class="pb-32 overflow-x-hidden">
+    <nav class="h-24 flex items-end justify-between px-8 pb-4 sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-2.5 h-2.5 bg-slate-200 rounded-full shadow-sm"></div>
+            <h1 class="text-xl font-black tracking-tight">尚未记录数据</h1>
+        </div>
+    </nav>
+
+    <main class="px-6 relative">
+        <div class="mesh-gradient"></div>
+
+        <!-- 情感化引导卡片 -->
+        <section class="squircle-card p-10 mb-8 premium-shadow relative overflow-hidden flex flex-col items-center text-center">
+            <div class="w-32 h-32 bg-blue-50 rounded-full flex items-center justify-center mb-8 relative">
+                <svg class="w-16 h-16 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" stroke-width="1.5"></path></svg>
+                <div class="absolute inset-0 border-4 border-dashed border-blue-100 rounded-full animate-[spin_10s_linear_infinite]"></div>
+            </div>
+            
+            <h2 class="text-2xl font-black tracking-tight text-slate-800 mb-3">开启你的健康记录</h2>
+            <p class="text-sm text-slate-400 font-medium leading-relaxed px-4">
+                每天定时测量并记录，我们将为你生成专业的健康趋势分析。
+            </p>
+        </section>
+
+        <!-- 图表占位区 -->
+        <section class="mb-10">
+            <div class="flex justify-between items-center mb-6 px-2">
+                <h3 class="text-sm font-black uppercase tracking-widest text-slate-300">趋势预览</h3>
+            </div>
+            <div class="squircle-card p-8 premium-shadow border-dashed border-2 border-slate-100 bg-transparent flex flex-col items-center justify-center min-h-[180px]">
+                <div class="flex gap-2 items-end h-16 mb-4">
+                    <div class="w-6 bg-slate-50 rounded-t-lg h-8"></div>
+                    <div class="w-6 bg-slate-50 rounded-t-lg h-12"></div>
+                    <div class="w-6 bg-slate-50 rounded-t-lg h-6"></div>
+                    <div class="w-6 bg-slate-50 rounded-t-lg h-14"></div>
+                    <div class="w-6 bg-slate-50 rounded-t-lg h-10"></div>
+                </div>
+                <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">连续记录 3 次后开启分析</p>
+            </div>
+        </section>
+
+        <!-- 列表占位 -->
+        <div class="space-y-6">
+            <h3 class="text-sm font-black uppercase tracking-widest text-slate-300 px-2">测量记录</h3>
+            <div class="flex items-center gap-6 opacity-30">
+                <div class="w-14 h-14 squircle-card bg-slate-100 flex items-center justify-center">
+                    <div class="w-6 h-2 bg-slate-200 rounded"></div>
+                </div>
+                <div class="flex-1 space-y-2">
+                    <div class="w-32 h-4 bg-slate-200 rounded"></div>
+                    <div class="w-20 h-2 bg-slate-200 rounded"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FAB 极其突出 -->
+    <div class="fixed bottom-10 left-0 right-0 flex flex-col items-center gap-4">
+        <span class="text-[10px] font-black text-blue-500 uppercase tracking-[0.3em] animate-bounce">立即添加第一条记录</span>
+        <button class="w-20 h-20 bg-[#3182F7] rounded-[30px] shadow-[0_25px_50px_rgba(49,130,247,0.4)] flex items-center justify-center text-white active-scale">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-width="4" stroke-linecap="round"></path></svg>
+        </button>
+    </div>
+</body>
+</html>

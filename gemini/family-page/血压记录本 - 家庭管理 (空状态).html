@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 家庭管理 (空状态)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
+        body { font-family: 'Inter', -apple-system, sans-serif; background: linear-gradient(160deg, #F8FAFC 0%, #EEF3FB 100%); min-height: 100vh; color: #0F172A; }
+        .premium-shadow { box-shadow: 0 20px 25px -5px rgba(49, 130, 247, 0.04); }
+        .squircle-card { border-radius: 44px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(40px); border: 0.5px solid rgba(255, 255, 255, 0.6); }
+        .active-scale { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .active-scale:active { transform: scale(0.95); }
+    </style>
+</head>
+<body class="pb-32 px-6 overflow-x-hidden">
+
+    <header class="h-28 flex items-end justify-between pb-4">
+        <h1 class="text-3xl font-black tracking-tighter text-slate-900">家庭档案</h1>
+    </header>
+
+    <main class="space-y-10 relative">
+        
+        <!-- 空状态占位卡片 -->
+        <section class="squircle-card p-10 premium-shadow active-scale border-2 border-dashed border-blue-100 bg-blue-50/20">
+            <div class="flex flex-col items-center text-center">
+                <div class="w-20 h-20 bg-white rounded-[32px] flex items-center justify-center text-blue-500 shadow-sm mb-8">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3" stroke-linecap="round"></path></svg>
+                </div>
+                <h2 class="text-xl font-black tracking-tight text-slate-800">建立首个健康档案</h2>
+                <p class="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-3">让关爱有迹可循</p>
+                
+                <button class="mt-8 px-8 py-4 bg-blue-600 text-white rounded-2xl text-sm font-black active-scale shadow-lg shadow-blue-100">
+                    去建立档案
+                </button>
+            </div>
+        </section>
+
+        <!-- 成员管理 -->
+        <section>
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 mb-6 px-4">成员管理</h3>
+            <div class="flex gap-6">
+                <div class="flex flex-col items-center gap-3">
+                    <div class="w-16 h-16 bg-blue-600 rounded-[24px] flex items-center justify-center text-white font-black shadow-lg shadow-blue-100">我</div>
+                    <span class="text-[9px] font-black text-slate-900 uppercase">管理员</span>
+                </div>
+                <div class="flex flex-col items-center gap-3 active-scale opacity-50">
+                    <div class="w-16 h-16 border-2 border-dashed border-slate-200 rounded-[24px] flex items-center justify-center text-slate-300">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-width="3"></path></svg>
+                    </div>
+                    <span class="text-[9px] font-black text-slate-300 uppercase">邀请家人</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 锁定状态的服务卡片 -->
+        <section class="space-y-4">
+            <div class="squircle-card p-8 flex items-center justify-between premium-shadow opacity-40 grayscale">
+                <div class="space-y-1">
+                    <h4 class="text-lg font-black tracking-tight">就诊报告</h4>
+                    <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">建立档案后开启智能分析</p>
+                </div>
+                <div class="w-12 h-12 bg-slate-200 rounded-2xl flex items-center justify-center text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="2.5"></path></svg>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>

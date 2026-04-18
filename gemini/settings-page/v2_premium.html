@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>系统设置 - 顶级美学版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(160deg, #F8FAFC 0%, #EEF3FB 100%); min-height: 100vh; color: #0F172A; -webkit-tap-highlight-color: transparent; }
+        .premium-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 20px 25px -5px rgba(49, 130, 247, 0.04); }
+        .squircle-card { border-radius: 40px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(30px); border: 0.5px solid rgba(255, 255, 255, 0.5); }
+        .stepper-btn { width: 48px; height: 48px; background: #FFFFFF; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: #3182F7; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .active-scale:active { transform: scale(0.95); transition: 0.1s; }
+        .lab-tag { background: linear-gradient(90deg, #3182F7, #60A5FA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="pb-24 px-6 pt-12">
+
+    <header class="flex items-center gap-4 mb-12">
+        <button class="w-12 h-12 squircle-card flex items-center justify-center active-scale shadow-sm">
+            <svg class="w-6 h-6 text-slate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3"></path></svg>
+        </button>
+        <h1 class="text-2xl font-black tracking-tight">Settings</h1>
+    </header>
+
+    <main class="space-y-10">
+        
+        <!-- 健康目标调节: 顶级交互质感 -->
+        <section class="space-y-4">
+            <h3 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] ml-4">Health Targets</h3>
+            <div class="squircle-card p-8 premium-shadow space-y-10">
+                <div class="flex items-center justify-between">
+                    <div class="space-y-1">
+                        <span class="text-sm font-black text-slate-800">Systolic Limit</span>
+                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">High Pressure Line</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button class="stepper-btn active-scale font-black text-xl">−</button>
+                        <span class="text-2xl font-black text-slate-900 w-12 text-center">135</span>
+                        <button class="stepper-btn active-scale font-black text-xl">+</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="space-y-1">
+                        <span class="text-sm font-black text-slate-800">Diastolic Limit</span>
+                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Low Pressure Line</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button class="stepper-btn active-scale font-black text-xl">−</button>
+                        <span class="text-2xl font-black text-slate-900 w-12 text-center">85</span>
+                        <button class="stepper-btn active-scale font-black text-xl">+</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 视觉偏好 -->
+        <section class="space-y-4">
+            <h3 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] ml-4">Appearance</h3>
+            <div class="squircle-card p-8 premium-shadow">
+                <div class="flex justify-between items-center mb-8">
+                    <span class="text-sm font-black text-slate-800 tracking-tight">Font Scale</span>
+                    <span class="text-[10px] font-black text-blue-500 uppercase">Standard</span>
+                </div>
+                <div class="flex bg-slate-100/50 p-1.5 rounded-3xl">
+                    <button class="flex-1 py-3 bg-white rounded-[20px] text-[10px] font-black uppercase tracking-widest shadow-sm">Std</button>
+                    <button class="flex-1 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-50">Large</button>
+                    <button class="flex-1 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-50">Extra</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 实验室功能: 去除生硬的“开发中”，改用发光标签 -->
+        <section class="space-y-4">
+            <h3 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] ml-4">Lab Features</h3>
+            <div class="squircle-card p-8 premium-shadow space-y-8">
+                <div class="flex items-center justify-between opacity-80">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-width="2.5"></path></svg>
+                        </div>
+                        <span class="text-sm font-black text-slate-700">Health Alerts</span>
+                    </div>
+                    <span class="text-[8px] font-black px-2 py-1 bg-blue-50 rounded-lg lab-tag uppercase tracking-widest">Beta</span>
+                </div>
+                <div class="flex items-center justify-between opacity-80">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-width="2.5"></path></svg>
+                        </div>
+                        <span class="text-sm font-black text-slate-700">Medication AI</span>
+                    </div>
+                    <span class="text-[8px] font-black px-2 py-1 bg-orange-50 rounded-lg text-orange-400 uppercase tracking-widest">Beta</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-20 text-center space-y-2 opacity-30">
+        <p class="text-[9px] font-black uppercase tracking-[0.4em]">Vital Blue • 2026</p>
+        <p class="text-[8px] font-bold uppercase tracking-widest italic leading-none">Powered by Ethereal Care Design System</p>
+    </footer>
+
+</body>
+</html>

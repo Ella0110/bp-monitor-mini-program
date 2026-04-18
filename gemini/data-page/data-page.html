@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 数据页 (组件整合版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        :root {
+            --brand-blue: #3182F7;
+            --danger-red: #EF4444;
+            --success-green: #10B981;
+            --bg-slate: #EEF3FB;
+        }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-slate); -webkit-tap-highlight-color: transparent; }
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+        .glass-card { background: white; border-radius: 32px; box-shadow: 0 8px 30px rgba(49, 130, 247, 0.05); }
+        .wx-capsule { width: 87px; height: 32px; background: rgba(255,255,255,0.8); border: 0.5px solid rgba(0,0,0,0.1); border-radius: 16px; }
+        .chart-area-green { fill: #10B981; fill-opacity: 0.08; }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="pb-28">
+
+    <!-- Header: 标题 + 胶囊 -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#EEF3FB]/90 backdrop-blur-md">
+        <div class="h-10"></div>
+        <div class="h-11 flex items-center justify-between px-6">
+            <div class="flex items-center gap-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse"></div>
+                <h1 class="text-xl font-extrabold text-slate-900">万笋的记录</h1>
+            </div>
+            <div class="wx-capsule"></div>
+        </div>
+    </div>
+
+    <main class="px-4 pt-24 space-y-6">
+        
+        <!-- 组件 1: 核心血压卡片 -->
+        <section class="bg-white rounded-[32px] p-8 shadow-sm">
+            <div class="flex items-center gap-2 mb-6">
+                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                <span class="text-red-500 text-xs font-bold">血压偏高 (Grade 2)</span>
+            </div>
+            
+            <div class="flex items-baseline font-bold tracking-tighter mb-10">
+                <span class="text-7xl text-slate-900">158</span>
+                <span class="text-4xl text-slate-200 mx-3">/</span>
+                <span class="text-6xl text-slate-800">88</span>
+                <span class="text-xl text-slate-400 ml-4 font-normal">mmHg</span>
+            </div>
+
+            <div class="flex items-center gap-12 border-t border-slate-50 pt-6">
+                <div>
+                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">最近心率</span>
+                    <div class="text-2xl font-bold text-slate-800 mt-1">78 <small class="text-xs font-normal text-slate-400">bpm</small></div>
+                </div>
+                <div>
+                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">测量时间</span>
+                    <div class="text-sm font-bold text-slate-600 mt-1.5">今天 23:55</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 组件 2: 趋势图表卡片 -->
+        <section class="bg-white rounded-[32px] p-6 shadow-sm">
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex bg-slate-100 p-1 rounded-2xl">
+                    <button class="px-4 py-2 rounded-xl text-xs font-bold bg-white shadow-sm text-blue-600">7天</button>
+                    <button class="px-4 py-2 text-xs font-medium text-slate-400">30天</button>
+                    <button class="px-4 py-2 text-xs font-medium text-slate-400">90天</button>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-[10px] font-bold text-slate-300">数据对比</span>
+                    <div class="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center text-blue-500">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-width="2.5"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-10">
+                <!-- 血压趋势图 -->
+                <div>
+                    <h4 class="text-xs font-extrabold text-slate-900 mb-4">血压趋势 (mmHg)</h4>
+                    <div class="h-32 w-full">
+                        <svg class="w-full h-full" viewBox="0 0 300 120">
+                            <rect x="0" y="40" width="300" height="40" class="chart-area-green" />
+                            <line x1="0" y1="40" x2="300" y2="40" stroke="#EF4444" stroke-width="0.5" stroke-dasharray="3,3" opacity="0.3" />
+                            <line x1="0" y1="80" x2="300" y2="80" stroke="#10B981" stroke-width="0.5" stroke-dasharray="3,3" opacity="0.3" />
+                            <path d="M20 50 L80 45 L140 35 L200 48 L260 42" fill="none" stroke="#3182F7" stroke-width="3" stroke-linecap="round" />
+                            <path d="M20 90 L80 88 L140 82 L200 92 L260 85" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" />
+                            <circle cx="140" cy="35" r="5" fill="#EF4444" stroke="white" stroke-width="2" />
+                            <circle cx="260" cy="42" r="4" fill="#3182F7" stroke="white" stroke-width="1.5" />
+                        </svg>
+                    </div>
+                </div>
+                <!-- 心率变化图 -->
+                <div>
+                    <h4 class="text-xs font-extrabold text-slate-900 mb-4">心率变化 (bpm)</h4>
+                    <div class="h-20 w-full flex items-end justify-between px-2">
+                        <div class="w-2.5 bg-blue-500 rounded-t-sm h-12 opacity-80"></div>
+                        <div class="w-2.5 bg-blue-500 rounded-t-sm h-10 opacity-80"></div>
+                        <div class="w-2.5 bg-blue-500 rounded-t-sm h-16 opacity-80"></div>
+                        <div class="w-2.5 bg-blue-500 rounded-t-sm h-11 opacity-80"></div>
+                        <div class="w-2.5 bg-blue-500 rounded-t-sm h-13 opacity-80"></div>
+                        <div class="absolute w-full border-t border-slate-100 mb-10 left-0"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 组件 3: 列表头部 -->
+        <div class="flex items-center justify-between px-2">
+            <h2 class="text-xl font-bold text-slate-900">历史明细</h2>
+            <span class="text-sm font-bold text-blue-500">全部记录 ></span>
+        </div>
+
+        <!-- 组件 4: 记录条目 -->
+        <div class="bg-white p-5 rounded-[32px] shadow-sm flex items-center gap-5 active-scale">
+            <div class="w-14 h-14 bg-slate-50 rounded-2xl flex flex-col items-center justify-center text-slate-400">
+                <span class="text-[9px] font-bold">今天</span>
+                <span class="text-sm font-bold text-slate-700">23:55</span>
+            </div>
+            <div class="flex-1">
+                <div class="flex items-baseline gap-1.5">
+                    <span class="text-2xl font-bold text-slate-900">158 / 88</span>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase">mmHg</span>
+                </div>
+                <div class="text-[10px] font-bold text-orange-500 mt-1 uppercase tracking-wider">血压偏高 · 心率 78</div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 组件 5: FAB 悬浮按钮 -->
+    <button class="fixed bottom-10 right-6 w-16 h-16 bg-[#3182F7] rounded-full shadow-2xl shadow-blue-400 flex items-center justify-center text-white active-scale z-50">
+        <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-width="3" stroke-linecap="round"></path></svg>
+    </button>
+
+</body>
+</html>

@@ -102,6 +102,7 @@ Page({
     quickSaving: false,
     bpBarActive: -1,
     canWrite: true,
+    dataRefreshing: false,
   },
 
   onLoad() {
@@ -113,6 +114,29 @@ Page({
     this.setData({ fontSizeClass: cls, fontSizeStyle: makeFontSizeStyle(cls) })
     syncTabBar.call(this, 0, cls)
     this.loadRecords()
+  },
+
+  async refreshDataPage() {
+    const app = getApp()
+    if (typeof app.refreshSession === 'function') await app.refreshSession()
+    await this.loadRecords()
+  },
+
+  async onPullDownRefresh() {
+    try {
+      await this.refreshDataPage()
+    } finally {
+      wx.stopPullDownRefresh()
+    }
+  },
+
+  async onDataRefresherRefresh() {
+    this.setData({ dataRefreshing: true })
+    try {
+      await this.refreshDataPage()
+    } finally {
+      this.setData({ dataRefreshing: false })
+    }
   },
 
   setNavMetrics() {
@@ -134,11 +158,13 @@ Page({
   },
 
   async loadRecords() {
+    if (this._loadingRecords) return
+    this._loadingRecords = true
     const app = getApp()
     await app.loginReady
     const role = app.globalData.role
     const perms = app.globalData.memberPermissions || {}
-    const canWrite = role === 'admin' || role === '' || perms.canWrite === true
+    const canWrite = !app.globalData.familyId || role === 'admin' || perms.canWrite === true
     this.setData({ canWrite })
     if (!app.globalData.familyId) {
       this.setData({
@@ -154,6 +180,7 @@ Page({
         hasChartRecords: false,
         loading: false,
       })
+      this._loadingRecords = false
       return
     }
     this.setData({ loading: true })
@@ -219,6 +246,7 @@ Page({
       wx.showToast({ title: '数据加载失败，请重试', icon: 'none' })
     } finally {
       this.setData({ loading: false })
+      this._loadingRecords = false
     }
   },
 
@@ -240,7 +268,7 @@ Page({
         if (!canvas) return
         const width = result.width
         const height = result.height
-        const dpr = wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2
+        const dpr = Math.min(wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2, 2)
         canvas.width = width * dpr
         canvas.height = height * dpr
         const ctx = canvas.getContext('2d')
@@ -434,7 +462,11 @@ Page({
         wx.showToast({ title: res.result.error || '保存失败', icon: 'none' })
         return
       }
-      if (res.result.familyId) app.globalData.familyId = res.result.familyId
+      if (res.result.familyId && typeof app.refreshSession === 'function') {
+        await app.refreshSession()
+      } else if (res.result.familyId) {
+        app.globalData.familyId = res.result.familyId
+      }
       this.setData({
         quickForm: { systolic: '', diastolic: '', heartRate: '' },
         quickEntryActive: false,
@@ -490,7 +522,7 @@ Page({
         const width = 750
         const height = 900
         const chartHeight = height - 80
-        const dpr = wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2
+        const dpr = Math.min(wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2, 2)
         canvas.width = width * dpr
         canvas.height = height * dpr
         const ctx = canvas.getContext('2d')

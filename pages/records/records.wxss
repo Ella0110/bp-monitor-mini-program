@@ -7,6 +7,11 @@
 .nav-back-text { line-height: 1; }
 .empty { text-align: center; color: #64748B; font-size: 32rpx; margin-top: 160rpx; }
 .group { margin-bottom: 24rpx; }
+.records-actions { display: flex; gap: 18rpx; margin-bottom: 24rpx; }
+.records-action { flex: 1; min-height: 82rpx; border-radius: 8rpx; font-size: 28rpx; font-weight: 800; display: flex; align-items: center; justify-content: center; line-height: 1; margin: 0; padding: 0; }
+.records-action::after { border: 0; }
+.records-action.primary { background: #3182F7; color: #fff; }
+.records-action.secondary { background: #EAF2FF; color: #1761D4; }
 
 /* ── 组头 ── */
 .group-head { min-height: var(--gh-h, 80rpx); background: #fff; border-radius: 24rpx 24rpx 0 0; display: flex; align-items: center; padding: 0 28rpx; gap: 12rpx; }
@@ -40,3 +45,14 @@
 .actions { display: flex; align-items: center; gap: 18rpx; font-size: 24rpx; white-space: nowrap; }
 .edit { color: #3182F7; }
 .delete { color: #FF3B30; }
+.mask { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.36); z-index: 60; }
+.import-modal { position: fixed; left: 0; right: 0; bottom: 0; z-index: 61; background: #fff; border-radius: 32rpx 32rpx 0 0; padding: 36rpx 32rpx calc(36rpx + env(safe-area-inset-bottom)); box-shadow: 0 -8rpx 40rpx rgba(15, 23, 42, 0.16); box-sizing: border-box; }
+.import-title { display: block; color: #0F172A; font-size: 36rpx; font-weight: 800; margin-bottom: 10rpx; }
+.import-hint { display: block; color: #64748B; font-size: 25rpx; line-height: 1.5; margin-bottom: 20rpx; }
+.import-textarea { width: 100%; min-height: 300rpx; background: #F8FAFF; border-radius: 8rpx; padding: 22rpx; box-sizing: border-box; color: #0F172A; font-size: 28rpx; line-height: 1.45; }
+.import-actions { display: flex; gap: 18rpx; margin-top: 22rpx; }
+.import-cancel, .import-confirm { flex: 1; min-height: 88rpx; border-radius: 8rpx; font-size: 30rpx; font-weight: 800; display: flex; align-items: center; justify-content: center; line-height: 1; margin: 0; padding: 0; }
+.import-cancel::after, .import-confirm::after { border: 0; }
+.import-cancel { background: #F1F5F9; color: #64748B; }
+.import-confirm { background: #3182F7; color: #fff; }
+.export-canvas { position: fixed; left: -9999px; top: -9999px; width: 750px; height: 1200px; }

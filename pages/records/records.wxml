@@ -5,6 +5,10 @@
   </view>
 
   <scroll-view scroll-y class="container" style="{{contentStyle}}">
+    <view class="records-actions">
+      <button wx:if="{{allRecords.length}}" class="records-action primary" bindtap="onDownloadRecords">导出数据图片</button>
+      <button wx:if="{{canWrite}}" class="records-action secondary" bindtap="onImportRecordsTap">导入数据</button>
+    </view>
     <view wx:if="{{!groups.length && !loading}}" class="empty">暂无记录</view>
     <view wx:for="{{groups}}" wx:for-index="groupIndex" wx:key="date" class="group">
       <view class="group-head" bindtap="toggleGroup" data-index="{{groupIndex}}">
@@ -35,4 +39,17 @@
       </view>
     </view>
   </scroll-view>
+
+  <view wx:if="{{importPanelOpen}}" class="mask" bindtap="onCloseImportPanel"></view>
+  <view wx:if="{{importPanelOpen}}" class="import-modal">
+    <text class="import-title">导入数据</text>
+    <text class="import-hint">粘贴按导出图片识别出的文字，支持“4月17日 08:47 155 94 84”这类行格式。</text>
+    <textarea class="import-textarea" value="{{importText}}" maxlength="-1" placeholder="血压心率数据记录&#10;数据记录时间：2026年4月11日-4月17日&#10;4月17日 08:47 155 94 84" bindinput="onImportTextInput"></textarea>
+    <view class="import-actions">
+      <button class="import-cancel" bindtap="onCloseImportPanel">取消</button>
+      <button class="import-confirm" loading="{{importing}}" bindtap="onConfirmImportRecords">导入</button>
+    </view>
+  </view>
+
+  <canvas id="recordsExportCanvas" type="2d" class="export-canvas"></canvas>
 </view>

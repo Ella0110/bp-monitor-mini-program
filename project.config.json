@@ -9,6 +9,8 @@
         "enhance": true,
         "postcss": true,
         "minified": true,
+        "ignoreDevUnusedFiles": false,
+        "ignoreUploadUnusedFiles": false,
         "babelSetting": {
             "ignore": [],
             "disablePlugins": [],
@@ -25,5 +27,6 @@
     "editorSetting": {
         "tabIndent": "insertSpaces",
         "tabSize": 4
-    }
+    },
+    "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
 }

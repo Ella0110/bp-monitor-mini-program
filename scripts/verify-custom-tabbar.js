@@ -11,9 +11,16 @@ function assertIncludes(path, text) {
 }
 
 const app = JSON.parse(read('app.json'))
+const projectConfig = JSON.parse(read('project.config.json'))
+const dataPage = JSON.parse(read('pages/data/data.json'))
+const familyPage = JSON.parse(read('pages/family/family.json'))
 assert.strictEqual(app.tabBar.custom, true)
 assert.strictEqual(app.tabBar.color, '#94A3B8')
 assert.strictEqual(app.tabBar.selectedColor, '#3182F7')
+assert.strictEqual(projectConfig.setting.ignoreDevUnusedFiles, false)
+assert.strictEqual(projectConfig.setting.ignoreUploadUnusedFiles, false)
+assert.deepStrictEqual(dataPage.usingComponents, {})
+assert.deepStrictEqual(familyPage.usingComponents, {})
 
 for (const file of [
   'custom-tab-bar/index.js',

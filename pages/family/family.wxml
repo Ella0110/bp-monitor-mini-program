@@ -45,10 +45,10 @@
       <view class="mem-card">
         <scroll-view scroll-x class="mem-row">
           <view wx:for="{{family.members}}" wx:key="openid" class="mc" bindtap="onMemberTap" data-openid="{{item.openid}}">
-            <view class="mav {{item.role === 'admin' ? 'admin' : ''}} {{permissionPanelOpen && selectedMember && selectedMember.openid === item.openid ? 'mav-selected' : ''}}">{{item.nickname ? item.nickname[0] : '家'}}</view>
-            <text class="mn">{{item.role === 'admin' ? (item.nickname || '我') + '（管）' : (item.nickname || '家人')}}</text>
+            <view class="mav {{item.role === 'admin' ? 'admin' : ''}} {{permissionPanelOpen && selectedMember && selectedMember.openid === item.openid ? 'mav-selected' : ''}}">{{item.displayInitial}}</view>
+            <text class="mn">{{item.displayLabel}}</text>
           </view>
-          <view class="mc" bindtap="onInviteTap">
+          <view wx:if="{{canManage}}" class="mc" bindtap="onInviteTap">
             <view class="mav invite">＋</view>
             <text class="mn">邀请</text>
           </view>

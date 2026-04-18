@@ -22,4 +22,12 @@ assert.strictEqual(hr.records[1].abnormal, true)
 assert.strictEqual(hr.range.min <= 60, true)
 assert.strictEqual(hr.range.max >= 86, true)
 
+const customBp = buildBloodPressureChart(records, { systolic: 150, diastolic: 95 })
+assert.deepStrictEqual(customBp.refs, [150, 95])
+assert.strictEqual(customBp.records[1].abnormal, false)
+
+const customHr = buildHeartRateChart(records, { hrMin: 55, hrMax: 90 })
+assert.deepStrictEqual(customHr.refs, [55, 90])
+assert.strictEqual(customHr.records[1].abnormal, false)
+
 console.log('chart data checks passed')

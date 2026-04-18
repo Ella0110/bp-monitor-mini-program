@@ -52,6 +52,26 @@ function getMemberStatusText(member) {
   return '当前：仅可查看'
 }
 
+function getMemberDisplayName(member, isCurrent) {
+  const nickname = member.nickname || ''
+  if (isCurrent) return nickname && nickname !== '家人' ? nickname : '我'
+  if (!nickname || member.nickname === '我') return member.role === 'admin' ? '管理员' : '家人'
+  return nickname
+}
+
+function formatMemberViews(members, currentOpenid) {
+  return (members || []).map((member) => {
+    const isCurrent = member.openid === currentOpenid
+    const displayName = getMemberDisplayName(member, isCurrent)
+    return {
+      ...member,
+      isCurrent,
+      displayInitial: displayName[0] || (member.role === 'admin' ? '管' : '家'),
+      displayLabel: `${displayName}${member.role === 'admin' ? '（管）' : ''}`,
+    }
+  })
+}
+
 function syncTabBar(selected, fontSizeClass) {
   if (typeof this.getTabBar !== 'function' || !this.getTabBar()) return
   this.getTabBar().setData({
@@ -111,6 +131,13 @@ Page({
     this.loadFamily()
   },
 
+  async onPullDownRefresh() {
+    const app = getApp()
+    if (typeof app.refreshSession === 'function') await app.refreshSession()
+    await this.loadFamily()
+    wx.stopPullDownRefresh()
+  },
+
   setNavMetrics() {
     this.setData(buildNavMetrics())
   },
@@ -136,12 +163,13 @@ Page({
       const latestRecord = (recordRes.result.records || [])[0] || null
       const profile = normalizeProfile(family.profile || {})
       const settings = normalizeSettings(family.settings || {})
+      const members = formatMemberViews(family.members || [], app.globalData.openid)
       const fontSizeClass = settings.fontSize || 'standard'
       app.globalData.fontSizeClass = fontSizeClass
       const fontSizeStyle = makeFontSizeStyle(fontSizeClass)
       this.setData({
         loading: false,
-        family: { ...family, profile, settings },
+        family: { ...family, profile, settings, members },
         currentMember: res.result.member || null,
         canManage: res.result.member && res.result.member.role === 'admin',
         hasProfileInfo: hasProfileInfo(profile),
@@ -168,6 +196,7 @@ Page({
   },
 
   onInviteTap() {
+    if (!this.data.canManage) return
     this.setData({ sharePanelOpen: true })
     hideTabBar.call(this)
   },

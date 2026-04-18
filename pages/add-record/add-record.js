@@ -106,7 +106,11 @@ Page({
         wx.showToast({ title: res.result.error || '保存失败', icon: 'none' })
         return
       }
-      if (res.result.familyId) app.globalData.familyId = res.result.familyId
+      if (res.result.familyId && typeof app.refreshSession === 'function') {
+        await app.refreshSession()
+      } else if (res.result.familyId) {
+        app.globalData.familyId = res.result.familyId
+      }
       wx.showToast({ title: '保存成功', icon: 'success' })
       wx.navigateBack()
     } finally {

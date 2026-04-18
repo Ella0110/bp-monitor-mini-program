@@ -39,8 +39,9 @@ function createDefaultProfile() {
     targetDiastolic: 85,
     targetHRMin: 60,
     targetHRMax: 80,
-    medications: '',
-    emergencyContact: '',
+    medicationsText: '',
+    emergencyContactName: '',
+    emergencyContactPhone: '',
   }
 }
 

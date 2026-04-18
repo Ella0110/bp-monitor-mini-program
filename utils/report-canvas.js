@@ -249,13 +249,16 @@ function drawSummary(ctx, report, W, y) {
   txt(ctx, '摘要', PAD, y, 26, C.title, '700')
   y += 38
 
-  const avgBp = report.avg.systolic === '--' ? '--' : report.avg.systolic + '/' + report.avg.diastolic + ' mmHg'
+  const avgBp  = report.avg.systolic === '--' ? '--' : report.avg.systolic + '/' + report.avg.diastolic
+  const total  = report.totalCount
+  const bpAtt  = Number(report.stats.bp.attention)
+  const hrAtt  = Number(report.stats.hr.attention)
+
   const items = [
-    { v: String(report.totalCount),           l: '记录次数',        warn: false },
-    { v: avgBp,                               l: '血压均值',        warn: false },
-    { v: String(report.avg.heartRate),        l: '心率均值 (bpm)',  warn: false },
-    { v: String(report.stats.bp.attention),   l: '血压需关注',      warn: Number(report.stats.bp.attention) > 0 },
-    { v: String(report.stats.hr.attention),   l: '心率需关注',      warn: Number(report.stats.hr.attention) > 0 },
+    { v: avgBp,                            l: '血压均值 (mmHg)', warn: false },
+    { v: String(report.avg.heartRate),     l: '心率均值 (bpm)',  warn: false },
+    { v: bpAtt + '/' + total + '次',       l: '血压超参考',      warn: bpAtt > 0 },
+    { v: hrAtt + '/' + total + '次',       l: '心率超参考',      warn: hrAtt > 0 },
   ]
 
   const colW = INNER / 2
@@ -268,7 +271,7 @@ function drawSummary(ctx, report, W, y) {
     txt(ctx, item.l, ix, iy + 28, 20, C.muted)
   })
 
-  return y + 3 * 70 + 20
+  return y + 2 * 70 + 20
 }
 
 function drawBPSection(ctx, report, W, y) {
@@ -363,9 +366,49 @@ function drawDisclaimer(ctx, report, W, y) {
 // ── Public API ────────────────────────────────────────────────────────────────
 
 function reportImageHeight(report) {
-  const recordHeight = Math.max(report.recentRecords.length, 1) * 70
-  // Generous estimate covers all sections; unused bottom space is acceptable
-  return 1920 + recordHeight
+  const n  = report.rawRecords.length
+  const rc = report.recentRecords.length
+  let y = 48
+
+  // Header: title + familyName + periodTitle + divider
+  y += 46 + 34 + 36 + 32
+
+  // Profile: section title + name + meds (1 line est.) + optional contact + divider
+  y += 38 + 34 + 34
+  if (report.profileEmergencyName || report.profileEmergencyPhone) y += 34
+  y += 32
+
+  // Status card
+  y += 84 + 28
+
+  // Summary: title + 2 rows × 70 + pad
+  y += 38 + 2 * 70 + 20
+
+  // BP section
+  y += 36
+  if (n === 0)    y += 72 + 24
+  else if (n < 3) y += 104 + (n - 1) * 124 + 20
+  else            y += 240 + 24
+
+  // HR section
+  y += 36
+  if (n === 0)    y += 72 + 24
+  else if (n < 3) y += 66 + (n - 1) * 86 + 20
+  else            y += 220 + 24
+
+  // RefLineNote
+  if (report.refLineText) y += 56
+
+  // Recent records
+  y += rc > 0 ? 36 + rc * 68 : 36 + 40
+
+  // Disclaimer: divider + ~2 lines of Chinese text
+  y += 32 + 60
+
+  // Bottom padding
+  y += 48
+
+  return y
 }
 
 function drawReportImage(ctx, report, width, height, options) {

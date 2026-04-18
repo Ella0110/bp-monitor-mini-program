@@ -44,23 +44,36 @@
         <view class="section">
           <text class="section-title">摘要</text>
           <view class="summary-grid">
-            <view class="summary-item"><text class="summary-value">{{report.totalCount}}</text><text class="summary-label">记录次数</text></view>
-            <view class="summary-item"><text class="summary-value">{{report.avg.systolic}}/{{report.avg.diastolic}}</text><text class="summary-label">血压均值</text></view>
-            <view class="summary-item"><text class="summary-value">{{report.avg.heartRate}}</text><text class="summary-label">心率均值</text></view>
-            <view class="summary-item"><text class="summary-value warn">{{report.stats.bp.attention}}</text><text class="summary-label">血压需关注</text></view>
-            <view class="summary-item"><text class="summary-value warn">{{report.stats.hr.attention}}</text><text class="summary-label">心率需关注</text></view>
+            <view class="summary-item"><text class="summary-value">{{report.avg.systolic}}/{{report.avg.diastolic}}</text><text class="summary-label">血压均值 mmHg</text></view>
+            <view class="summary-item"><text class="summary-value">{{report.avg.heartRate}}</text><text class="summary-label">心率均值 bpm</text></view>
+            <view class="summary-item"><text class="summary-value {{report.stats.bp.attention > 0 ? 'warn' : ''}}">{{report.stats.bp.attention}}/{{report.totalCount}}次</text><text class="summary-label">血压超参考</text></view>
+            <view class="summary-item"><text class="summary-value {{report.stats.hr.attention > 0 ? 'warn' : ''}}">{{report.stats.hr.attention}}/{{report.totalCount}}次</text><text class="summary-label">心率超参考</text></view>
           </view>
         </view>
 
         <view class="section">
           <text class="section-title">血压趋势</text>
-          <canvas wx:if="{{report.bpChart.records.length}}" id="reportBPChart" type="2d" class="chart"></canvas>
+          <view wx:if="{{isSparseData}}" class="sparse-view">
+            <view wx:for="{{report.recentRecords}}" wx:key="id" class="sparse-row">
+              <text class="sparse-time">{{item.time}}</text>
+              <text class="sparse-bp">{{item.bpText}}</text>
+              <text class="sparse-status">血压{{item.bpStatus}}</text>
+            </view>
+          </view>
+          <canvas wx:elif="{{report.bpChart.records.length}}" id="reportBPChart" type="2d" class="chart"></canvas>
           <view wx:else class="chart-empty">当前周期暂无记录</view>
         </view>
 
         <view class="section">
           <text class="section-title">心率趋势</text>
-          <canvas wx:if="{{report.hrChart.records.length}}" id="reportHRChart" type="2d" class="chart"></canvas>
+          <view wx:if="{{isSparseData}}" class="sparse-view">
+            <view wx:for="{{report.recentRecords}}" wx:key="id" class="sparse-row">
+              <text class="sparse-time">{{item.time}}</text>
+              <text class="sparse-bp">{{item.heartRateText}}</text>
+              <text class="sparse-status">心率{{item.hrStatus}}</text>
+            </view>
+          </view>
+          <canvas wx:elif="{{report.hrChart.records.length}}" id="reportHRChart" type="2d" class="chart"></canvas>
           <view wx:else class="chart-empty">当前周期暂无记录</view>
         </view>
 

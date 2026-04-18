@@ -32,6 +32,7 @@ Page({
     loading: true,
     error: '',
     hidePrivacy: false,
+    isSparseData: false,
     statusLevel: 'normal',
     statusTitle: '',
     statusDesc: '',
@@ -69,7 +70,8 @@ Page({
       const records = recordsRes.result.records || []
       const report = buildReportData({ family, records, period: this.data.period })
       const statusInfo = this._calcStatusInfo(report)
-      this.setData({ family, records, report, loading: false, ...statusInfo })
+      const isSparseData = report.rawRecords.length > 0 && report.rawRecords.length < 3
+      this.setData({ family, records, report, loading: false, isSparseData, ...statusInfo })
       this.drawPreviewCharts()
     } catch (err) {
       console.error('Load report failed', err)
@@ -126,7 +128,7 @@ Page({
         if (!canvas || !this.data.report) return
         const width = result.width
         const height = result.height
-        const dpr = wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2
+        const dpr = Math.min(wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2, 2)
         canvas.width = width * dpr
         canvas.height = height * dpr
         const ctx = canvas.getContext('2d')
@@ -155,7 +157,7 @@ Page({
 
         const width = 750
         const height = reportImageHeight(this.data.report)
-        const dpr = wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2
+        const dpr = Math.min(wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : 2, 2)
         canvas.width = width * dpr
         canvas.height = height * dpr
         const ctx = canvas.getContext('2d')

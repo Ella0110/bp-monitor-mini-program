@@ -64,3 +64,9 @@
 .privacy-sub { display: block; font-size: 22rpx; color: #94A3B8; margin-top: 6rpx; }
 .save { min-height: 88rpx; margin-top: 28rpx; background: #3182F7; color: #fff; border-radius: 16rpx; font-size: 30rpx; font-weight: 900; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .export-canvas { position: fixed; left: -9999px; top: -9999px; width: 750px; height: 1400px; }
+.sparse-view { background: #F8FAFC; border-radius: 20rpx; overflow: hidden; }
+.sparse-row { padding: 20rpx 24rpx; border-top: 2rpx solid #EEF3FB; }
+.sparse-row:first-child { border-top: none; }
+.sparse-time { display: block; color: #64748B; font-size: 22rpx; }
+.sparse-bp { display: block; color: #0F172A; font-size: 30rpx; font-weight: 800; margin-top: 4rpx; }
+.sparse-status { display: block; color: #64748B; font-size: 22rpx; margin-top: 2rpx; }

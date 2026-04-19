@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 全部记录 (家属只读态)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #F8FAFC; min-height: 100vh; color: #0F172A; }
+        .glass-header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+        .squircle-card { border-radius: 28px; background: white; border: 0.5px solid rgba(0,0,0,0.03); }
+        .readonly-badge { background: rgba(245, 158, 11, 0.1); color: #F59E0B; padding: 4px 12px; border-radius: 999px; font-size: 9px; font-weight: 900; text-transform: uppercase; }
+        .sticky-header { position: sticky; top: 110px; z-index: 30; background: rgba(248, 250, 252, 0.9); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="pb-10 overflow-x-hidden">
+
+    <!-- Header: 移除添加/导出入口 -->
+    <nav class="h-28 flex items-end justify-between px-8 pb-4 sticky top-0 z-50 glass-header">
+        <div class="flex items-center gap-4">
+            <button class="w-10 h-10 squircle-card flex items-center justify-center shadow-sm">
+                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </button>
+            <div>
+                <h1 class="text-xl font-black tracking-tight leading-none">万笋 的记录</h1>
+                <div class="flex items-center gap-2 mt-1.5">
+                    <span class="readonly-badge">Read-only Access</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="px-6 pt-6">
+        
+        <!-- 只读权限说明卡片 -->
+        <div class="p-5 bg-orange-50 rounded-[28px] border border-orange-100/50 mb-10 flex items-center gap-4">
+            <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-orange-400 shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2.5"></path></svg>
+            </div>
+            <p class="text-[10px] text-orange-600/80 leading-relaxed font-bold uppercase tracking-wider">您作为家属身份查看，无法对记录进行修改、删除或补录操作。</p>
+        </div>
+
+        <!-- 月份分组 -->
+        <div class="mb-12">
+            <div class="sticky-header py-4 px-2 mb-6">
+                <h3 class="text-xs font-black uppercase tracking-[0.4em] text-blue-500">April 2026</h3>
+            </div>
+            
+            <div class="space-y-6">
+                <!-- 记录项 (点击后不会呼出编辑面板) -->
+                <div class="flex items-center gap-6 opacity-80">
+                    <div class="w-14 h-14 squircle-card flex flex-col items-center justify-center shadow-sm">
+                        <span class="text-[9px] font-black text-slate-300 uppercase">Fri</span>
+                        <span class="text-sm font-black text-slate-700">17</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-2xl font-black text-slate-900">158 / 88</span>
+                            <span class="text-[10px] font-bold text-slate-300 uppercase">mmHg</span>
+                        </div>
+                        <p class="text-[10px] font-black text-red-500 uppercase mt-1">Grade 2 Hypertension</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6 opacity-80">
+                    <div class="w-14 h-14 squircle-card flex flex-col items-center justify-center shadow-sm">
+                        <span class="text-[9px] font-black text-slate-300 uppercase">Thu</span>
+                        <span class="text-sm font-black text-slate-700">16</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-2xl font-black text-slate-900">121 / 78</span>
+                            <span class="text-[10px] font-bold text-slate-300 uppercase">mmHg</span>
+                        </div>
+                        <p class="text-[10px] font-black text-emerald-500 uppercase mt-1">Normal</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>

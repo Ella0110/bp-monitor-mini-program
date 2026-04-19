@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 完善健康档案</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #3182F7;
+            --bg-slate: #EEF3FB;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-slate);
+            color: #0F172A;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(49, 130, 247, 0.08);
+        }
+
+        .active-scale:active {
+            transform: scale(0.96);
+            transition: transform 0.1s ease;
+        }
+
+        .choice-card {
+            background: white;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .choice-card.selected {
+            border-color: var(--brand-blue);
+            background: rgba(49, 130, 247, 0.03);
+        }
+
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="pb-12">
+
+    <main class="px-6 pt-20">
+        
+        <header class="mb-12">
+            <h1 class="text-3xl font-black tracking-tight">完善健康档案</h1>
+            <p class="text-slate-400 text-sm mt-3 leading-relaxed">为了提供更准确的血压评估建议，请补充您的基础健康信息。</p>
+        </header>
+
+        <!-- 性别选择 -->
+        <section class="mb-10">
+            <h3 class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-4 ml-2">您的性别</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="select('sex', 'male')" class="choice-card p-6 rounded-[32px] flex flex-col items-center gap-3 active-scale selected" id="sex-male">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg>
+                    </div>
+                    <span class="font-bold">男</span>
+                </button>
+                <button onclick="select('sex', 'female')" class="choice-card p-6 rounded-[32px] flex flex-col items-center gap-3 active-scale" id="sex-female">
+                    <div class="w-12 h-12 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg>
+                    </div>
+                    <span class="font-bold">女</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 出生年份 (模拟选择器) -->
+        <section class="mb-10">
+            <h3 class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-4 ml-2">出生年份</h3>
+            <div class="glass-card rounded-[32px] p-6 flex items-center justify-between">
+                <span class="text-2xl font-black text-slate-800" id="year-display">1975 <small class="text-sm font-bold text-slate-400">年</small></span>
+                <div class="flex gap-2">
+                    <button onclick="changeYear(-1)" class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 active-scale">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 12H4" stroke-width="3"></path></svg>
+                    </button>
+                    <button onclick="changeYear(1)" class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500 active-scale">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 长期服药 -->
+        <section class="mb-12">
+            <h3 class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-4 ml-2">长期服用降压药？</h3>
+            <div class="flex gap-4">
+                <button onclick="select('med', 'no')" class="choice-card flex-1 py-4 rounded-2xl font-bold active-scale selected" id="med-no">否</button>
+                <button onclick="select('med', 'yes')" class="choice-card flex-1 py-4 rounded-2xl font-bold active-scale" id="med-yes">是</button>
+            </div>
+        </section>
+
+        <!-- 完成按钮 -->
+        <button class="w-full bg-[#3182F7] text-white py-5 rounded-[24px] font-bold text-lg shadow-lg shadow-blue-200 active-scale">
+            进入记录本
+        </button>
+
+    </main>
+
+    <script>
+        let currentYear = 1975;
+        function select(group, value) {
+            // 清除组内所有选中态
+            if (group === 'sex') {
+                document.getElementById('sex-male').classList.remove('selected');
+                document.getElementById('sex-female').classList.remove('selected');
+            } else if (group === 'med') {
+                document.getElementById('med-no').classList.remove('selected');
+                document.getElementById('med-yes').classList.remove('selected');
+            }
+            // 设为当前选中
+            document.getElementById(group + '-' + value).classList.add('selected');
+        }
+
+        function changeYear(delta) {
+            currentYear += delta;
+            document.getElementById('year-display').innerHTML = `${currentYear} <small class="text-sm font-bold text-slate-400">年</small>`;
+        }
+    </script>
+
+</body>
+</html>

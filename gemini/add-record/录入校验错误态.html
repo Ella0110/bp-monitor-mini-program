@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 录入校验错误</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+        :root { --danger-red: #EF4444; }
+        body { font-family: 'Inter', sans-serif; background: #EEF3FB; display: flex; align-items: flex-end; height: 100vh; margin: 0; }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); border-radius: 40px 40px 0 0; width: 100%; padding: 32px; box-shadow: 0 -10px 40px rgba(0,0,0,0.05); }
+        .error-shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+    </style>
+</head>
+<body>
+
+    <div class="glass-card">
+        <div class="w-12 h-1 bg-slate-100 rounded-full mx-auto mb-8"></div>
+        
+        <!-- 数值展示区 (带错误反馈) -->
+        <div class="flex justify-around mb-12">
+            <div class="text-center">
+                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-2">Systolic</span>
+                <span class="text-4xl font-black text-slate-900">120</span>
+            </div>
+            <div class="text-center error-shake">
+                <span class="text-[10px] text-red-400 font-bold uppercase tracking-widest block mb-2 underline decoration-2">Diastolic</span>
+                <span class="text-4xl font-black text-red-500">--</span>
+                <p class="text-[9px] text-red-400 font-bold mt-2">必填</p>
+            </div>
+            <div class="text-center opacity-30">
+                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-2">Pulse</span>
+                <span class="text-4xl font-black text-slate-900">--</span>
+            </div>
+        </div>
+
+        <!-- 错误提示条 (Toast 风格嵌入) -->
+        <div class="bg-red-50 text-red-500 p-4 rounded-2xl flex items-center gap-3 mb-8">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2.5"></path></svg>
+            <p class="text-xs font-bold">请完整填写血压数值后再保存</p>
+        </div>
+
+        <!-- 禁用状态的保存按钮 -->
+        <button class="w-full bg-slate-200 text-slate-400 py-5 rounded-[24px] font-black text-lg cursor-not-allowed">
+            确认保存
+        </button>
+    </div>
+
+</body>
+</html>

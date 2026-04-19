@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 等待数据</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        :root { --brand-blue: #3182F7; --bg-slate: #EEF3FB; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-slate); color: #0F172A; }
+        .glass-card { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 32px; box-shadow: 0 10px 30px rgba(49, 130, 247, 0.05); }
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+        .avatar-ring { position: relative; }
+        .avatar-ring::after { content: ''; position: absolute; inset: -3px; border: 2px solid var(--brand-blue); border-radius: 999px; }
+    </style>
+</head>
+<body class="pb-12 px-6 pt-24">
+
+    <main class="flex flex-col items-center text-center">
+        <!-- 成功的连接状态 -->
+        <div class="flex items-center gap-4 mb-12">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-12 h-12" alt="Me">
+            </div>
+            <div class="flex flex-col items-center gap-1">
+                <div class="flex gap-1">
+                    <div class="w-1 h-1 bg-blue-300 rounded-full"></div>
+                    <div class="w-1 h-1 bg-blue-300 rounded-full"></div>
+                    <div class="w-1 h-1 bg-blue-300 rounded-full"></div>
+                </div>
+                <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+            </div>
+            <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-xl font-bold avatar-ring">万</div>
+        </div>
+
+        <h1 class="text-2xl font-black tracking-tight mb-4">连接已建立</h1>
+        <p class="text-slate-400 text-sm leading-relaxed mb-12 px-8">
+            您已成功加入 <span class="text-slate-900 font-bold">万笋</span> 的记录本。目前对方尚未录入血压数据。
+        </p>
+
+        <!-- 情感化占位卡片 -->
+        <div class="glass-card w-full p-10 mb-10">
+            <div class="w-20 h-20 bg-blue-50 rounded-[24px] flex items-center justify-center text-blue-200 mx-auto mb-6">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2.5" stroke-linecap="round"></path></svg>
+            </div>
+            <p class="text-slate-500 font-bold">静候第一条记录</p>
+            <p class="text-[10px] text-slate-300 font-bold uppercase tracking-[0.2em] mt-2">Waiting for first measurement</p>
+        </div>
+
+        <button class="w-full bg-[#3182F7] text-white py-5 rounded-[24px] font-bold text-lg active-scale shadow-lg shadow-blue-100 mb-4">
+            提醒对方测量
+        </button>
+        <button class="w-full py-4 text-slate-400 font-medium active-scale">
+            返回我的主页
+        </button>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 提醒设置</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #EEF3FB; padding: 24px; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border-radius: 32px; border: 1px solid rgba(255, 255, 255, 0.4); padding: 24px; }
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+        .switch-active { background: #3182F7; }
+    </style>
+</head>
+<body class="pt-16">
+
+    <header class="mb-10 px-4">
+        <h1 class="text-3xl font-black tracking-tight">测压提醒</h1>
+        <p class="text-xs text-slate-400 font-medium mt-2">养成定时测压的好习惯</p>
+    </header>
+
+    <div class="space-y-6">
+        <!-- 早起提醒 -->
+        <div class="glass-card flex items-center justify-between">
+            <div>
+                <span class="block font-bold text-slate-800">早晨提醒</span>
+                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Morning Reminder</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-lg font-black text-slate-800">08:00</span>
+                <div class="w-12 h-6 switch-active rounded-full relative p-1">
+                    <div class="w-4 h-4 bg-white rounded-full absolute right-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 睡前提醒 -->
+        <div class="glass-card flex items-center justify-between">
+            <div>
+                <span class="block font-bold text-slate-800">睡前提醒</span>
+                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Evening Reminder</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-lg font-black text-slate-800">21:30</span>
+                <div class="w-12 h-6 bg-slate-200 rounded-full relative p-1">
+                    <div class="w-4 h-4 bg-white rounded-full absolute left-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <p class="px-6 text-[10px] text-slate-400 leading-relaxed font-bold uppercase tracking-wider italic">注：提醒将通过微信订阅消息发送。请确保已在微信设置中开启通知权限。</p>
+    </div>
+
+</body>
+</html>

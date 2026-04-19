@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 邀请海报</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: #EEF3FB;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+
+        /* 海报容器：黄金比例与深度阴影 */
+        .poster-card {
+            background: linear-gradient(160deg, #FFFFFF 0%, #F8FAFC 100%);
+            width: 100%;
+            max-width: 340px;
+            border-radius: 44px;
+            overflow: hidden;
+            box-shadow: 0 40px 80px -20px rgba(49, 130, 247, 0.2);
+            position: relative;
+        }
+
+        .mesh-bg {
+            position: absolute;
+            top: -20%; right: -20%;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(49, 130, 247, 0.1) 0%, transparent 70%);
+            filter: blur(40px);
+            z-index: 0;
+        }
+
+        .qr-code-box {
+            background: white;
+            padding: 16px;
+            border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+    </style>
+</head>
+<body>
+
+    <div class="poster-card p-10 relative">
+        <div class="mesh-bg"></div>
+
+        <div class="relative z-10">
+            <!-- 品牌标识 -->
+            <div class="flex items-center gap-2 mb-12">
+                <div class="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center text-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2.5"></path></svg>
+                </div>
+                <span class="text-xs font-black tracking-widest uppercase text-slate-400">BP Monitor</span>
+            </div>
+
+            <h1 class="text-3xl font-black tracking-tight leading-tight text-slate-900 mb-6">
+                邀请您查看<br/>我的健康档案
+            </h1>
+            
+            <p class="text-sm text-slate-400 font-medium leading-relaxed mb-12">
+                加入记录本，实时关注我的血压波动，让关爱更近一步。
+            </p>
+
+            <div class="flex items-center gap-5 mb-12">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-blue-100">
+                    万
+                </div>
+                <div>
+                    <h2 class="text-lg font-black text-slate-900">万笋</h2>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Health Organizer</p>
+                </div>
+            </div>
+
+            <!-- 二维码模拟 -->
+            <div class="flex flex-col items-center gap-4">
+                <div class="qr-code-box w-40 h-40 flex items-center justify-center relative">
+                    <div class="w-32 h-32 border-4 border-slate-50 flex items-center justify-center">
+                         <svg class="w-20 h-20 text-slate-100" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm13 0h5v2h-2v2h2v2h-2v2h-2v-2h-2v-2h2v-2h1v-2z"></path></svg>
+                    </div>
+                    <!-- 二维码中心的微缩头像 -->
+                    <div class="absolute w-10 h-10 bg-white rounded-xl shadow-md p-1 flex items-center justify-center">
+                         <div class="w-full h-full bg-blue-600 rounded-lg"></div>
+                    </div>
+                </div>
+                <span class="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">Scan to join</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="w-full max-w-[340px] mt-10 grid grid-cols-1 gap-4">
+        <button class="w-full bg-[#3182F7] text-white py-5 rounded-[24px] font-bold text-lg active-scale shadow-xl shadow-blue-200 flex items-center justify-center gap-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-width="2.5"></path></svg>
+            保存海报并邀请
+        </button>
+        <button class="w-full py-4 text-slate-400 font-medium active-scale">
+            直接发送链接给好友
+        </button>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>血压记录本 - 产品原型总览蓝图 (全量交付版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #F1F5F9; color: #1E293B; padding-bottom: 100px; }
+        .stage-lane { background: rgba(255, 255, 255, 0.5); border-radius: 32px; padding: 32px; margin-bottom: 40px; border: 1px solid rgba(0,0,0,0.05); }
+        .page-card { background: white; border-radius: 20px; padding: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid transparent; width: 180px; flex-shrink: 0; }
+        .page-card:hover { transform: translateY(-5px); border-color: #3182F7; box-shadow: 0 10px 20px rgba(49, 130, 247, 0.1); }
+        .arrow { color: #CBD5E1; font-weight: bold; flex-shrink: 0; }
+        .tag { font-size: 9px; padding: 2px 8px; border-radius: 6px; font-weight: 900; text-transform: uppercase; margin-top: 8px; display: inline-block; }
+        .tag-main { background: #DBEAFE; color: #1E40AF; }
+        .tag-edge { background: #F1F5F9; color: #64748B; }
+        .tag-error { background: #FEE2E2; color: #B91C1C; }
+        .tag-p1 { background: #FEF3C7; color: #92400E; }
+    </style>
+</head>
+<body>
+
+    <header class="p-10 border-b border-slate-200 bg-white mb-10 flex justify-between items-end">
+        <div>
+            <h1 class="text-3xl font-black tracking-tight">产品原型总览蓝图</h1>
+            <p class="text-slate-500 mt-2">全量交付版 (含 P0/P1 逻辑补漏)</p>
+        </div>
+        <div class="bg-emerald-500 text-white px-4 py-2 rounded-full text-xs font-black uppercase">Ready for Dev</div>
+    </header>
+
+    <main class="px-10">
+
+        <!-- Stage A -->
+        <section class="stage-lane">
+            <h2 class="text-sm font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Stage A: 入场 (Onboarding)</h2>
+            <div class="flex items-center gap-6 overflow-x-auto pb-4 no-scrollbar">
+                <div class="page-card">
+                    <p class="text-xs font-bold text-slate-800">微信授权登录</p>
+                    <span class="tag tag-main">起点</span>
+                </div>
+                <div class="arrow">→</div>
+                <div class="page-card">
+                    <p class="text-xs font-bold text-slate-800">初始档案设置</p>
+                    <span class="tag tag-main">必经</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stage B -->
+        <section class="stage-lane">
+            <h2 class="text-sm font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Stage B: 核心记录 (The Loop)</h2>
+            <div class="flex items-center gap-6 overflow-x-auto pb-4 no-scrollbar">
+                <div class="page-card"><p class="text-xs font-bold text-slate-800">数据页 (实/空)</p></div>
+                <div class="arrow">→</div>
+                <div class="page-card"><p class="text-xs font-bold text-slate-800">快速录入面板</p></div>
+                <div class="arrow">→</div>
+                <div class="flex flex-col gap-4">
+                    <div class="page-card border-red-100"><p class="text-xs font-bold text-slate-800">录入校验错误</p><span class="tag tag-error">P0 补漏</span></div>
+                    <div class="page-card border-red-100"><p class="text-xs font-bold text-slate-800">高危紧急指引</p><span class="tag tag-error">异常干预</span></div>
+                    <div class="page-card border-emerald-100"><p class="text-xs font-bold text-slate-800">成功反馈 Toast</p><span class="tag tag-main">反馈</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stage C -->
+        <section class="stage-lane">
+            <h2 class="text-sm font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Stage C: 回顾 (Analysis)</h2>
+            <div class="flex items-center gap-6">
+                <div class="page-card"><p class="text-xs font-bold text-slate-800">全部历史记录</p></div>
+                <div class="arrow">→</div>
+                <div class="page-card"><p class="text-xs font-bold text-slate-800">就诊报告页</p></div>
+                <div class="arrow">→</div>
+                <div class="page-card border-amber-100"><p class="text-xs font-bold text-slate-800">测压提醒设置</p><span class="tag tag-p1">P1 补漏</span></div>
+            </div>
+        </section>
+
+        <!-- Stage D -->
+        <section class="stage-lane">
+            <h2 class="text-sm font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Stage D: 协作 (Family)</h2>
+            <div class="flex items-center gap-6 overflow-x-auto pb-4 no-scrollbar">
+                <div class="page-card"><p class="text-xs font-bold text-slate-800">家庭管理 (实/空)</p></div>
+                <div class="arrow">→</div>
+                <div class="page-card border-amber-100"><p class="text-xs font-bold text-slate-800">修改成员备注</p><span class="tag tag-p1">P1 补漏</span></div>
+                <div class="arrow">→</div>
+                <div class="page-card"><p class="text-xs font-bold text-slate-800">邀请家人海报</p></div>
+                <div class="arrow">→</div>
+                <div class="page-card"><p class="text-xs font-bold text-slate-800">接受邀请页</p></div>
+            </div>
+        </section>
+
+        <!-- Stage E -->
+        <section class="stage-lane bg-slate-200/20">
+            <h2 class="text-sm font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Stage E: 防御性设计 (Defensive)</h2>
+            <div class="flex gap-4">
+                <div class="page-card"><p class="text-xs font-bold text-slate-800">网络异常页</p><span class="tag tag-error">P0</span></div>
+                <div class="page-card"><p class="text-xs font-bold text-slate-800">邀请失效页</p><span class="tag tag-error">P0</span></div>
+                <div class="page-card"><p class="text-xs font-bold text-slate-800">相册权限引导</p><span class="tag tag-error">P1</span></div>
+                <div class="page-card"><p class="text-xs font-bold text-slate-800">家属只读模式</p><span class="tag tag-error">P1</span></div>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>

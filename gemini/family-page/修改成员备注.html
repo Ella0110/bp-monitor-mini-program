@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 修改备注</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #EEF3FB; padding: 24px; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .glass-dialog { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: 40px; padding: 40px 32px; width: 100%; max-width: 360px; box-shadow: 0 25px 50px rgba(0,0,0,0.1); }
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+    </style>
+</head>
+<body>
+
+    <div class="glass-dialog">
+        <h2 class="text-2xl font-black text-slate-900 mb-2 tracking-tight">修改备注</h2>
+        <p class="text-xs text-slate-400 font-medium mb-10">为您的家人设置一个亲切的称呼</p>
+
+        <div class="bg-slate-50 rounded-2xl p-4 mb-10 border border-slate-100">
+            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-2">备注名</span>
+            <input type="text" class="w-full bg-transparent text-lg font-bold text-slate-800 outline-none" value="万笋" placeholder="请输入备注...">
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <button class="w-full bg-[#3182F7] text-white py-5 rounded-[24px] font-black text-lg shadow-xl shadow-blue-100 active-scale">
+                确认修改
+            </button>
+            <button class="w-full py-2 text-slate-400 font-bold active-scale">
+                取消
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>

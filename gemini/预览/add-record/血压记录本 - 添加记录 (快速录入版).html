@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 添加记录 (快速录入版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #3182F7;
+            --danger-red: #EF4444;
+            --bg-slate: #EEF3FB;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-slate);
+            overflow: hidden; /* 防止背景滚动 */
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .active-scale:active {
+            transform: scale(0.96);
+            transition: transform 0.1s ease;
+        }
+
+        /* 模拟键盘按键阴影 */
+        .key-shadow {
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        /* 焦点输入框指示器 */
+        .input-focus-line {
+            height: 4px;
+            width: 40px;
+            background: var(--brand-blue);
+            border-radius: 2px;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+        }
+
+        /* 预设背景模拟 */
+        .bg-mockup {
+            filter: blur(8px);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col justify-end">
+
+    <!-- 背景模拟 (数据页) -->
+    <div class="fixed inset-0 bg-mockup p-6">
+        <div class="h-12 w-32 bg-white/50 rounded-full mb-8"></div>
+        <div class="h-48 w-full bg-white/50 rounded-[32px] mb-6"></div>
+        <div class="h-64 w-full bg-white/50 rounded-[32px]"></div>
+    </div>
+
+    <!-- 底部半屏录入面板 -->
+    <main class="glass-card rounded-t-[40px] w-full p-8 relative z-50 animate-[slide-up_0.4s_ease-out]">
+        
+        <!-- 顶部把手与标题 -->
+        <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-8"></div>
+        
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900">记录血压</h1>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Today, 23:55</p>
+            </div>
+            <button class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 active-scale">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2.5" stroke-linecap="round"></path></svg>
+            </button>
+        </header>
+
+        <!-- 数值输入区 -->
+        <section class="grid grid-cols-3 gap-4 mb-12">
+            <!-- 高压 -->
+            <div class="flex flex-col items-center group" onclick="setFocus('sys')">
+                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Systolic</span>
+                <div class="text-4xl font-black text-slate-900 flex items-baseline">
+                    <span id="val-sys" class="transition-colors duration-200">120</span>
+                </div>
+                <div id="line-sys" class="input-focus-line"></div>
+            </div>
+            <!-- 低压 -->
+            <div class="flex flex-col items-center group opacity-40" onclick="setFocus('dia')">
+                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Diastolic</span>
+                <div class="text-4xl font-black text-slate-900 flex items-baseline">
+                    <span id="val-dia">--</span>
+                </div>
+                <div id="line-dia" class="input-focus-line opacity-0"></div>
+            </div>
+            <!-- 心率 -->
+            <div class="flex flex-col items-center group opacity-40" onclick="setFocus('pul')">
+                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Pulse</span>
+                <div class="text-4xl font-black text-slate-900 flex items-baseline">
+                    <span id="val-pul">--</span>
+                </div>
+                <div id="line-pul" class="input-focus-line opacity-0"></div>
+            </div>
+        </section>
+
+        <!-- 自定义大数字键盘 -->
+        <section class="grid grid-cols-3 gap-3 mb-8">
+            <button class="h-16 bg-white rounded-2xl text-2xl font-bold text-slate-800 active-scale key-shadow" onclick="append(1)">1</button>
+            <button class="h-16 bg-white rounded-2xl text-2xl font-bold text-slate-800 active-scale key-shadow" onclick="append(2)">2</button>
+            <button class="h-16 bg-white rounded-2xl text-2xl font-bold text-slate-800 active-scale key-shadow" onclick="append(3)">3</button>
+            <button class="h-16 bg-white rounded-2xl text-2xl font-bold text-slate-800 active-scale key-shadow" onclick="append(4)">4</button>
+            <button class="h-16 bg-white rounded-2xl text-2xl font-bold text-slate-800 active-scale key-shadow" onclick="append(5)">5</button>
+            <button class="h-16 bg-white rounded-2xl text-2xl font-bold text-slate-800 active-scale key-shadow" onclick="append(6)">6</button>
+            <button class="h-16 bg-white rounded-2xl text-2xl font-bold text-slate-800 active-scale key-shadow" onclick="append(7)">7</button>
+            <button class="h-16 bg-white rounded-2xl text-2xl font-bold text-slate-800 active-scale key-shadow" onclick="append(8)">8</button>
+            <button class="h-16 bg-white rounded-2xl text-2xl font-bold text-slate-800 active-scale key-shadow" onclick="append(9)">9</button>
+            <button class="h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 active-scale" onclick="clearAll()">C</button>
+            <button class="h-16 bg-white rounded-2xl text-2xl font-bold text-slate-800 active-scale key-shadow" onclick="append(0)">0</button>
+            <button class="h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 active-scale" onclick="backspace()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414A2 2 0 0010.828 19H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" stroke-width="2"></path></svg>
+            </button>
+        </section>
+
+        <!-- 保存按钮 -->
+        <button class="w-full bg-[#3182F7] text-white py-5 rounded-[24px] font-bold text-lg shadow-lg shadow-blue-200 active-scale transition-all duration-300" id="btn-save">
+            确认保存
+        </button>
+
+    </main>
+
+    <script>
+        let currentFocus = 'sys';
+        let values = { sys: '', dia: '', pul: '' };
+
+        function setFocus(target) {
+            currentFocus = target;
+            // 更新 UI 状态
+            ['sys', 'dia', 'pul'].forEach(id => {
+                const parent = document.getElementById('val-' + id).parentElement.parentElement;
+                const line = document.getElementById('line-' + id);
+                if (id === target) {
+                    parent.classList.remove('opacity-40');
+                    line.classList.remove('opacity-0');
+                    line.classList.add('w-10');
+                } else {
+                    parent.classList.add('opacity-40');
+                    line.classList.add('opacity-0');
+                    line.classList.remove('w-10');
+                }
+            });
+        }
+
+        function append(num) {
+            if (values[currentFocus].length < 3) {
+                values[currentFocus] += num;
+                updateDisplay();
+                checkAutoSwitch();
+            }
+        }
+
+        function backspace() {
+            values[currentFocus] = values[currentFocus].slice(0, -1);
+            updateDisplay();
+        }
+
+        function clearAll() {
+            values[currentFocus] = '';
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const el = document.getElementById('val-' + currentFocus);
+            el.innerText = values[currentFocus] || '--';
+            
+            // 实时预警校验 (示例: 高压 > 140 变红)
+            if (currentFocus === 'sys') {
+                const num = parseInt(values.sys);
+                if (num > 140) {
+                    el.classList.add('text-red-500');
+                } else {
+                    el.classList.remove('text-red-500');
+                }
+            }
+        }
+
+        function checkAutoSwitch() {
+            // 简单的逻辑：输入满3位自动跳下一个，或者特定数值后跳
+            if (values[currentFocus].length === 3) {
+                if (currentFocus === 'sys') setFocus('dia');
+                else if (currentFocus === 'dia') setFocus('pul');
+            }
+        }
+
+        // 初始高亮高压
+        setFocus('sys');
+    </script>
+
+</body>
+</html>

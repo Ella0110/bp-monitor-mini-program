@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 邀请失效</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        :root { --brand-blue: #3182F7; --bg-slate: #EEF3FB; }
+        body { font-family: 'Inter', sans-serif; background: #F8FAFC; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+        .glass-card { background: white; border-radius: 32px; box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.05); }
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+    </style>
+</head>
+<body>
+
+    <main class="w-full max-w-[340px] glass-card p-10 text-center">
+        <!-- 邀请失效图标 (倒计时的沙漏或失效的信封) -->
+        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-8 text-slate-300">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2.5" stroke-linecap="round"></path></svg>
+        </div>
+
+        <h1 class="text-2xl font-black tracking-tight text-slate-900 mb-4">邀请链接已失效</h1>
+        <p class="text-sm text-slate-400 font-medium leading-relaxed mb-12">
+            该邀请链接已过期，或已被其他家人领取。请联系家人重新发送。
+        </p>
+
+        <div class="space-y-4">
+            <button class="w-full bg-[#3182F7] text-white py-5 rounded-[24px] font-black text-lg shadow-xl shadow-blue-100 active-scale">
+                联系家人重发
+            </button>
+            <button class="w-full py-4 text-slate-400 font-bold active-scale">
+                返回我的主页
+            </button>
+        </div>
+    </main>
+
+</body>
+</html>

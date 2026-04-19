@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 权限引导</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background: rgba(15, 23, 42, 0.4); display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; backdrop-filter: blur(10px); }
+        .glass-dialog { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(30px); border-radius: 40px; padding: 40px 32px; width: 90%; max-width: 360px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2); }
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+        .step-icon { width: 44px; height: 44px; background: #EEF3FB; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #3182F7; }
+    </style>
+</head>
+<body>
+
+    <div class="glass-dialog">
+        <header class="text-center mb-10">
+            <h2 class="text-2xl font-black text-slate-900 mb-3 tracking-tight">无法保存图片</h2>
+            <p class="text-sm text-slate-400 font-medium">需要开启“相册写入”权限</p>
+        </header>
+
+        <div class="space-y-6 mb-12">
+            <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-3xl">
+                <div class="step-icon">1</div>
+                <div class="flex-1">
+                    <p class="text-sm font-bold text-slate-800">点击下方“去设置”按钮</p>
+                    <p class="text-[10px] text-slate-400 uppercase mt-0.5">Go to system settings</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-3xl">
+                <div class="step-icon">2</div>
+                <div class="flex-1">
+                    <p class="text-sm font-bold text-slate-800">将“添加到相册”设为允许</p>
+                    <p class="text-[10px] text-slate-400 uppercase mt-0.5">Allow Add to Photos</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <button class="w-full bg-[#3182F7] text-white py-5 rounded-[24px] font-black text-lg shadow-xl shadow-blue-100 active-scale">
+                去设置
+            </button>
+            <button class="w-full py-3 text-slate-300 font-bold active-scale">
+                暂不下载
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>

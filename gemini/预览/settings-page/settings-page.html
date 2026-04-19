@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 系统设置</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        :root {
+            --brand-blue: #3182F7;
+            --bg-slate: #EEF3FB;
+        }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-slate);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+        
+        .settings-group {
+            background: #FFFFFF;
+            border-radius: 28px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+
+        /* 触感步进器 */
+        .stepper-btn {
+            width: 44px;
+            height: 44px;
+            background: #F1F5F9;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-blue);
+            font-size: 20px;
+            font-bold: 800;
+        }
+
+        .stepper-value {
+            min-width: 60px;
+            text-align: center;
+            font-family: 'Inter', monospace;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* 字号选择器选中态 */
+        .size-btn.active {
+            background-color: var(--brand-blue);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(49, 130, 247, 0.3);
+        }
+
+        .wx-capsule { width: 87px; height: 32px; background: rgba(0,0,0,0.05); border-radius: 16px; }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="pb-12 transition-all duration-300" id="body-container">
+
+    <!-- 微信 Header 模拟 -->
+    <div class="fixed top-0 left-0 right-0 z-50 bg-[#EEF3FB]/90 backdrop-blur-md">
+        <div class="h-10"></div>
+        <div class="h-11 flex items-center justify-between px-6">
+            <div class="flex items-center gap-2 active-scale" onclick="history.back()">
+                <svg class="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <h2 class="text-xl font-bold text-slate-900">系统设置</h2>
+            </div>
+            <div class="wx-capsule"></div>
+        </div>
+    </div>
+
+    <main class="px-4 pt-24">
+        
+        <!-- 第一组：提醒与目标 (核心功能) -->
+        <h3 class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-3 ml-4">健康监测目标</h3>
+        <div class="settings-group">
+            <!-- 高压参考线 -->
+            <div class="p-5 flex items-center justify-between border-b border-slate-50">
+                <div>
+                    <span class="block font-bold text-slate-800">高压参考线</span>
+                    <span class="text-[10px] text-slate-400">收缩压报警阈值 (mmHg)</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="stepper-btn active-scale" onclick="updateValue('sys', -5)">−</button>
+                    <span class="stepper-value" id="val-sys">135</span>
+                    <button class="stepper-btn active-scale" onclick="updateValue('sys', 5)">+</button>
+                </div>
+            </div>
+            <!-- 低压参考线 -->
+            <div class="p-5 flex items-center justify-between border-b border-slate-50">
+                <div>
+                    <span class="block font-bold text-slate-800">低压参考线</span>
+                    <span class="text-[10px] text-slate-400">舒张压报警阈值 (mmHg)</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="stepper-btn active-scale" onclick="updateValue('dia', -5)">−</button>
+                    <span class="stepper-value" id="val-dia">85</span>
+                    <button class="stepper-btn active-scale" onclick="updateValue('dia', 5)">+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第二组：显示设置 -->
+        <h3 class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-3 ml-4">个性化显示</h3>
+        <div class="settings-group">
+            <div class="p-5">
+                <div class="flex justify-between items-end mb-6">
+                    <div>
+                        <span class="block font-bold text-slate-800">字号大小</span>
+                        <span class="text-[10px] text-slate-400">选择最适合你的阅读比例</span>
+                    </div>
+                    <span class="text-xs text-blue-500 font-bold" id="size-preview">标准模式</span>
+                </div>
+                <div class="flex bg-slate-100 p-1.5 rounded-2xl">
+                    <button onclick="changeFontSize('standard')" class="size-btn active-scale flex-1 py-2 rounded-xl text-sm font-bold active" id="btn-std">标准</button>
+                    <button onclick="changeFontSize('large')" class="size-btn active-scale flex-1 py-2 rounded-xl text-sm font-bold" id="btn-lg">大号</button>
+                    <button onclick="changeFontSize('xlarge')" class="size-btn active-scale flex-1 py-2 rounded-xl text-sm font-bold" id="btn-xl">超大</button>
+                </div>
+                <p class="mt-4 text-[11px] text-slate-400 leading-relaxed italic">注：超大模式将优化所有核心数值展示，适合视力不便者使用。</p>
+            </div>
+        </div>
+
+        <!-- 第三组：实验室功能 (优雅处理未上线功能) -->
+        <h3 class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-3 ml-4">进阶功能 (实验室)</h3>
+        <div class="settings-group">
+            <div class="p-5 flex items-center justify-between border-b border-slate-50 opacity-60">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-width="2"></path></svg>
+                    </div>
+                    <div>
+                        <span class="block font-bold text-slate-700 text-sm">异常血压通知</span>
+                        <span class="text-[10px] text-slate-400">微信订阅消息即时提醒</span>
+                    </div>
+                </div>
+                <span class="px-2 py-0.5 bg-slate-100 text-slate-400 text-[9px] font-bold rounded-md uppercase">开发中</span>
+            </div>
+            <div class="p-5 flex items-center justify-between opacity-60">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center text-orange-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-width="2"></path></svg>
+                    </div>
+                    <div>
+                        <span class="block font-bold text-slate-700 text-sm">用药管理助手</span>
+                        <span class="text-[10px] text-slate-400">扫码识别药品与服用提醒</span>
+                    </div>
+                </div>
+                <span class="px-2 py-0.5 bg-slate-100 text-slate-400 text-[9px] font-bold rounded-md uppercase">开发中</span>
+            </div>
+        </div>
+
+        <!-- 底部信息 -->
+        <div class="text-center py-6">
+            <p class="text-[10px] text-slate-300 font-bold uppercase tracking-widest">Version 1.0.0 (Build 2026.0418)</p>
+            <p class="text-[10px] text-slate-300 mt-1">© 2026 Vital-Blue Health System</p>
+        </div>
+
+    </main>
+
+    <script>
+        // 步进器逻辑
+        function updateValue(id, delta) {
+            const el = document.getElementById('val-' + id);
+            let current = parseInt(el.innerText);
+            current += delta;
+            if (current < 40) current = 40;
+            if (current > 250) current = 250;
+            el.innerText = current;
+        }
+
+        // 字号切换预览逻辑
+        function changeFontSize(size) {
+            const body = document.getElementById('body-container');
+            const preview = document.getElementById('size-preview');
+            const buttons = document.querySelectorAll('.size-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            if(size === 'standard') {
+                body.style.fontSize = '16px';
+                preview.innerText = '标准模式';
+                document.getElementById('btn-std').classList.add('active');
+            } else if(size === 'large') {
+                body.style.fontSize = '18px';
+                preview.innerText = '大号模式 (1.1x)';
+                document.getElementById('btn-lg').classList.add('active');
+            } else if(size === 'xlarge') {
+                body.style.fontSize = '21px';
+                preview.innerText = '超大模式 (1.3x)';
+                document.getElementById('btn-xl').classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

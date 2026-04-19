@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 高危血压指引</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --danger-red: #EF4444;
+            --brand-blue: #3182F7;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #0F172A; /* 深色背景模拟模态框遮罩 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .glass-modal {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 40px;
+            padding: 40px 32px;
+            width: 90%;
+            max-width: 360px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: modal-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modal-up {
+            from { opacity: 0; transform: translateY(40px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .pulse-red {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .active-scale:active {
+            transform: scale(0.96);
+            transition: 0.1s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-modal text-center">
+        <!-- 警示图标 -->
+        <div class="w-20 h-20 bg-red-500 rounded-[28px] flex items-center justify-center text-white mx-auto mb-8 pulse-red">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+
+        <h1 class="text-2xl font-black text-slate-900 mb-3 tracking-tight">血压显著偏高</h1>
+        <p class="text-red-500 font-bold text-lg mb-8">当前数值：188 / 115</p>
+
+        <!-- 紧急建议列表 -->
+        <div class="space-y-4 mb-10 text-left">
+            <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl">
+                <div class="w-6 h-6 bg-slate-200 rounded-full flex items-center justify-center text-xs font-bold shrink-0">1</div>
+                <p class="text-sm text-slate-600 leading-tight">请立即<span class="font-bold text-slate-900">原地坐下或平卧</span>，避免跌倒风险。</p>
+            </div>
+            <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl">
+                <div class="w-6 h-6 bg-slate-200 rounded-full flex items-center justify-center text-xs font-bold shrink-0">2</div>
+                <p class="text-sm text-slate-600 leading-tight">保持<span class="font-bold text-slate-900">深呼吸</span>，情绪放松，不要剧动。</p>
+            </div>
+            <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-2xl">
+                <div class="w-6 h-6 bg-slate-200 rounded-full flex items-center justify-center text-xs font-bold shrink-0">3</div>
+                <p class="text-sm text-slate-600 leading-tight">若伴有头晕、胸痛、气短，<span class="font-bold text-slate-900">请立即寻求医疗救助</span>。</p>
+            </div>
+        </div>
+
+        <!-- 紧急行动按钮 -->
+        <div class="grid grid-cols-1 gap-4">
+            <button class="w-full bg-red-500 text-white py-5 rounded-2xl font-black text-lg active-scale flex items-center justify-center gap-3">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+                紧急呼叫 120
+            </button>
+            <button class="w-full bg-blue-50 text-blue-600 py-4 rounded-2xl font-bold active-scale">
+                通知家人：新一
+            </button>
+            <button class="w-full py-4 text-slate-400 font-medium active-scale">
+                我知道了，已在休息
+            </button>
+        </div>
+
+    </div>
+
+</body>
+</html>

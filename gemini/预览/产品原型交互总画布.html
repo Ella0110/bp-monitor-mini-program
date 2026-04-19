@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>血压记录本 - 全量页面交互总画布 v4.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background: #0F172A; color: #F8FAFC; }
+        .canvas-bg { background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 40px 40px; }
+        
+        /* 预览容器 */
+        .preview-card { flex-shrink: 0; width: 320px; }
+        
+        /* 模拟真实的手机长比例视口，但通过 scale 缩小 */
+        .device-wrapper {
+            width: 375px; height: 780px; 
+            transform: scale(0.85); 
+            transform-origin: top left;
+            background: #000; border-radius: 50px; padding: 12px;
+            border: 4px solid #1E293B; box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);
+            margin-bottom: -110px; 
+        }
+
+        .device-screen {
+            width: 100%; height: 100%; border-radius: 38px;
+            overflow: hidden; background: #EEF3FB; position: relative;
+            display: flex; flex-direction: column;
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* 分区样式 */
+        .section-header { margin: 100px 0 30px 40px; display: flex; align-items: center; gap: 15px; }
+        .section-dot { width: 12px; height: 12px; background: #3182F7; border-radius: 50%; box-shadow: 0 0 15px #3182F7; }
+        .section-title { font-size: 24px; font-weight: 900; letter-spacing: 0.1em; color: #E2E8F0; }
+
+        .horizontal-scroller { display: flex; gap: 40px; overflow-x: auto; padding: 20px 40px 120px; scroll-behavior: smooth; }
+        .horizontal-scroller::-webkit-scrollbar { height: 6px; }
+        .horizontal-scroller::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        /* 元信息 */
+        .meta { padding: 0 10px; margin-top: 10px; }
+        .meta-title { font-size: 15px; font-weight: 800; color: #F8FAFC; margin-bottom: 4px; }
+        .meta-path { font-size: 10px; font-family: monospace; color: #64748B; }
+        .type-tag { font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 6px; background: #3182F7; margin-bottom: 8px; display: inline-block; }
+        
+        .btn-open { position: absolute; top: 20px; right: 20px; z-index: 1000; background: #3182F7; color: white; font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 8px; box-shadow: 0 4px 12px rgba(49, 130, 247, 0.4); }
+    </style>
+</head>
+<body class="canvas-bg min-h-screen">
+
+    <header class="p-10 bg-slate-900/90 backdrop-blur-2xl sticky top-0 z-[2000] border-b border-slate-800 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-black tracking-tighter">原型全量交互总画布 <span class="text-blue-500">v4.0</span></h1>
+            <p class="text-slate-400 mt-2 text-sm">全高度智能缩放 · <span class="text-white font-bold">22个</span> 业务原型全量收录</p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-2xl font-black text-xs uppercase shadow-lg shadow-blue-500/20">
+                PROTOTYPE READY
+            </div>
+        </div>
+    </header>
+
+    <!-- 01. 入场与登录 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">01. 入场与引导 / Onboarding</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="login-page/微信授权登录.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="login-page/微信授权登录.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">微信授权登录</p><p class="meta-path">login-page/微信授权登录.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="settings-page/初始档案设置.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="settings-page/初始档案设置.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">完善健康档案</p><p class="meta-path">settings-page/初始档案设置.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="settings-page/测压提醒设置.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="settings-page/测压提醒设置.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">提醒设置详情</p><p class="meta-path">settings-page/测压提醒设置.html</p></div>
+        </div>
+    </div>
+
+    <!-- 02. 数据首页 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">02. 数据首页 / Dashboard</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="data-page/血压记录本 - 数据页终版v1.htm" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="data-page/血压记录本 - 数据页终版v1.htm"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Main</span><p class="meta-title">首页 (含折线图重构)</p><p class="meta-path">data-page/...数据页终版v1.htm</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="data-page/血压记录本 - 数据页 (空状态).html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="data-page/血压记录本 - 数据页 (空状态).html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Empty</span><p class="meta-title">首页 (空状态引导)</p><p class="meta-path">data-page/数据页(空状态).html</p></div>
+        </div>
+    </div>
+
+    <!-- 03. 记录链路 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">03. 记录交互链路 / Measurement Loop</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="add-record/血压记录本 - 添加记录 (快速录入版).html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="add-record/血压记录本 - 添加记录 (快速录入版).html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Sheet</span><p class="meta-title">快速录入面板</p><p class="meta-path">add-record/快速录入版.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="add-record/录入校验错误态.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="add-record/录入校验错误态.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-red-500">Validation</span><p class="meta-title">数值校验拦截</p><p class="meta-path">add-record/录入校验错误态.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="add-record/高危血压紧急指引.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="add-record/高危血压紧急指引.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-red-500">Alert</span><p class="meta-title">180+ 紧急指引</p><p class="meta-path">add-record/高危血压紧急指引.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="add-record/录入成功反馈.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="add-record/录入成功反馈.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-emerald-500">Success</span><p class="meta-title">录入成功反馈</p><p class="meta-path">add-record/录入成功反馈.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="add-record/删除确认弹窗.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="add-record/删除确认弹窗.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-red-500">Delete</span><p class="meta-title">记录删除确认</p><p class="meta-path">add-record/删除确认弹窗.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="records-page/全部记录-家属只读态.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="records-page/全部记录-家属只读态.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-amber-500">Readonly</span><p class="meta-title">全部记录 (家属只读态)</p><p class="meta-path">records-page/全部记录-家属只读态.html</p></div>
+        </div>
+    </div>
+
+    <!-- 04. 记录回顾 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">04. 数据回顾与报告 / Analysis</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="records-page/血压记录本 - 全部记录.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="records-page/血压记录本 - 全部记录.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">全部历史记录</p><p class="meta-path">records-page/全部记录.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="report-page/report-page.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="report-page/report-page.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Report</span><p class="meta-title">就诊报告导出页</p><p class="meta-path">report-page/report-page.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="report-page/权限挽回弹窗.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="report-page/权限挽回弹窗.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Modal</span><p class="meta-title">相册权限挽回</p><p class="meta-path">report-page/权限挽回弹窗.html</p></div>
+        </div>
+    </div>
+
+    <!-- 05. 家庭协作 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">05. 家庭协作体系 / Family</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="family-page/血压记录本 - 家庭管理最终版v.htm" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="family-page/血压记录本 - 家庭管理最终版v.htm"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">家庭管理 (已建立)</p><p class="meta-path">family-page/家庭管理最终版v.htm</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="family-page/血压记录本 - 家庭管理 (空状态).html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="family-page/血压记录本 - 家庭管理 (空状态).html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Empty</span><p class="meta-title">家庭管理 (未建立)</p><p class="meta-path">family-page/家庭管理(空状态).html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="family-page/已加入家庭-无数据.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="family-page/已加入家庭-无数据.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Empty</span><p class="meta-title">已加入-无数据态</p><p class="meta-path">family-page/已加入家庭-无数据.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="family-page/修改成员备注.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="family-page/修改成员备注.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Modal</span><p class="meta-title">修改成员备注名</p><p class="meta-path">family-page/修改成员备注.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="invite-flow/邀请家人海报.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="invite-flow/邀请家人海报.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Poster</span><p class="meta-title">邀请家人海报页</p><p class="meta-path">invite-flow/邀请家人海报.html</p></div>
+        </div>
+    </div>
+
+    <!-- 06. 邀请流转 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">06. 邀请流转 / Flows</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="invite-flow/接受邀请 - 最终版 v1.htm" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="invite-flow/接受邀请 - 最终版 v1.htm"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Landing</span><p class="meta-title">接受邀请着陆页</p><p class="meta-path">...接受邀请 - 最终版 v1.htm</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="invite-flow/邀请家人查看 - 最终版 v1.htm" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="invite-flow/邀请家人查看 - 最终版 v1.htm"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">发送邀请详情页</p><p class="meta-path">...邀请家人查看 - 最终版 v1.htm</p></div>
+        </div>
+    </div>
+
+    <!-- 07. 异常兜底 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">07. 异常与系统 / Defensive</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper border-red-500/20">
+                <a href="exception/网络异常.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="exception/网络异常.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-red-500">P0</span><p class="meta-title">全局网络异常</p><p class="meta-path">exception/网络异常.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper border-red-500/20">
+                <a href="invite-flow/邀请失效.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="invite-flow/邀请失效.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-red-500">P0</span><p class="meta-title">邀请链接失效</p><p class="meta-path">invite-flow/邀请失效.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="settings-page/settings-page.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="settings-page/settings-page.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">系统设置首页</p><p class="meta-path">settings-page/settings-page.html</p></div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<!-- saved from url=(0179)file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B%E4%BA%A4%E4%BA%92%E6%80%BB%E7%94%BB%E5%B8%83.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>血压记录本 - 全量页面交互总画布 v4.0</title>
+    <script src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/saved_resource"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background: #0F172A; color: #F8FAFC; }
+        .canvas-bg { background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 40px 40px; }
+        
+        /* 核心修复：预览容器 */
+        .preview-card { flex-shrink: 0; width: 320px; }
+        
+        /* 模拟真实的手机长比例视口，但通过 scale 缩小 */
+        .device-wrapper {
+            width: 375px; height: 780px; /* 足够容纳长页面和底部弹窗 */
+            transform: scale(0.85); /* 整体缩放以适应屏幕 */
+            transform-origin: top left;
+            background: #000; border-radius: 50px; padding: 12px;
+            border: 4px solid #1E293B; box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);
+            margin-bottom: -110px; /* 抵消缩放产生的空白 */
+        }
+
+        .device-screen {
+            width: 100%; height: 100%; border-radius: 38px;
+            overflow: hidden; background: #EEF3FB; position: relative;
+            display: flex; flex-direction: column;
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* 分区样式 */
+        .section-header { margin: 100px 0 30px 40px; display: flex; align-items: center; gap: 15px; }
+        .section-dot { width: 12px; height: 12px; background: #3182F7; border-radius: 50%; box-shadow: 0 0 15px #3182F7; }
+        .section-title { font-size: 24px; font-weight: 900; letter-spacing: 0.1em; color: #E2E8F0; }
+
+        .horizontal-scroller { display: flex; gap: 40px; overflow-x: auto; padding: 20px 40px 120px; scroll-behavior: smooth; }
+        .horizontal-scroller::-webkit-scrollbar { height: 6px; }
+        .horizontal-scroller::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        /* 元信息 */
+        .meta { padding: 0 10px; margin-top: 10px; }
+        .meta-title { font-size: 15px; font-weight: 800; color: #F8FAFC; margin-bottom: 4px; }
+        .meta-path { font-size: 10px; font-family: monospace; color: #64748B; }
+        .type-tag { font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 6px; background: #3182F7; margin-bottom: 8px; display: inline-block; }
+        
+        .btn-open { position: absolute; top: 20px; right: 20px; z-index: 1000; background: #3182F7; color: white; font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 8px; box-shadow: 0 4px 12px rgba(49, 130, 247, 0.4); }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.sticky{position:sticky}.top-0{top:0px}.z-\[2000\]{z-index:2000}.mt-2{margin-top:0.5rem}.flex{display:flex}.min-h-screen{min-height:100vh}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-4{gap:1rem}.rounded-2xl{border-radius:1rem}.border-b{border-bottom-width:1px}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.border-red-500\/20{border-color:rgb(239 68 68 / 0.2)}.bg-blue-500{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.bg-slate-900\/90{background-color:rgb(15 23 42 / 0.9)}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11 / var(--tw-bg-opacity, 1))}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.p-10{padding:2.5rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.uppercase{text-transform:uppercase}.tracking-tighter{letter-spacing:-0.05em}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-blue-500\/20{--tw-shadow-color:rgb(59 130 246 / 0.2);--tw-shadow:var(--tw-shadow-colored)}.backdrop-blur-2xl{--tw-backdrop-blur:blur(40px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}</style></head>
+<body class="canvas-bg min-h-screen">
+
+    <header class="p-10 bg-slate-900/90 backdrop-blur-2xl sticky top-0 z-[2000] border-b border-slate-800 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-black tracking-tighter">原型全量交互总画布 <span class="text-blue-500">v4.0</span></h1>
+            <p class="text-slate-400 mt-2 text-sm">修复显示被截断问题 · 采用全高度智能缩放 · <span class="text-white font-bold">22个</span> 业务原型全量收录</p>
+        </div>
+        <div class="flex gap-4">
+            <div class="flex items-center gap-2 px-5 py-2.5 bg-blue-500 text-white rounded-2xl font-black text-xs uppercase shadow-lg shadow-blue-500/20">
+                PROTOTYPE READY
+            </div>
+        </div>
+    </header>
+
+    <!-- 分区渲染函数模拟 -->
+    <!-- 01. 入场与登录 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">01. 入场与初始化 / Onboarding</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/login-page/%E5%BE%AE%E4%BF%A1%E6%8E%88%E6%9D%83%E7%99%BB%E5%BD%95.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/微信授权登录.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">微信授权登录</p><p class="meta-path">login-page/微信授权登录.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/settings-page/%E5%88%9D%E5%A7%8B%E6%A1%A3%E6%A1%88%E8%AE%BE%E7%BD%AE.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/初始档案设置.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">完善健康档案</p><p class="meta-path">settings-page/初始档案设置.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/settings-page/%E6%B5%8B%E5%8E%8B%E6%8F%90%E9%86%92%E8%AE%BE%E7%BD%AE.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/测压提醒设置.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">提醒设置详情</p><p class="meta-path">settings-page/测压提醒设置.html</p></div>
+        </div>
+    </div>
+
+    <!-- 02. 数据首页 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">02. 数据首页 / Dashboard</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/data-page/%E8%A1%80%E5%8E%8B%E8%AE%B0%E5%BD%95%E6%9C%AC%20-%20%E6%95%B0%E6%8D%AE%E9%A1%B5%E7%BB%88%E7%89%88v1.htm" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/血压记录本 - 数据页终版v1.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Main</span><p class="meta-title">首页 (含折线图重构)</p><p class="meta-path">data-page/...数据页终版v1.htm</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/data-page/%E8%A1%80%E5%8E%8B%E8%AE%B0%E5%BD%95%E6%9C%AC%20-%20%E6%95%B0%E6%8D%AE%E9%A1%B5%20(%E7%A9%BA%E7%8A%B6%E6%80%81).html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/血压记录本 - 数据页 (空状态).html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Empty</span><p class="meta-title">首页 (空状态引导)</p><p class="meta-path">data-page/数据页(空状态).html</p></div>
+        </div>
+    </div>
+
+    <!-- 03. 记录链路 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">03. 记录交互链路 / Measurement Loop</h2></div>
+    <div class="horizontal-scroller">
+        <!-- 快速录入面板 -->
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/add-record/%E8%A1%80%E5%8E%8B%E8%AE%B0%E5%BD%95%E6%9C%AC%20-%20%E6%B7%BB%E5%8A%A0%E8%AE%B0%E5%BD%95%20(%E5%BF%AB%E9%80%9F%E5%BD%95%E5%85%A5%E7%89%88).html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/血压记录本 - 添加记录 (快速录入版).html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Sheet</span><p class="meta-title">快速录入面板</p><p class="meta-path">add-record/快速录入版.html</p></div>
+        </div>
+        <!-- 校验拦截 -->
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/add-record/%E5%BD%95%E5%85%A5%E6%A0%A1%E9%AA%8C%E9%94%99%E8%AF%AF%E6%80%81.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/录入校验错误态.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-red-500">Validation</span><p class="meta-title">数值校验拦截</p><p class="meta-path">add-record/录入校验错误态.html</p></div>
+        </div>
+        <!-- 180+ 指引 -->
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/add-record/%E9%AB%98%E5%8D%B1%E8%A1%80%E5%8E%8B%E7%B4%A7%E6%80%A5%E6%8C%87%E5%BC%95.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/高危血压紧急指引.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-red-500">Alert</span><p class="meta-title">180+ 紧急指引</p><p class="meta-path">add-record/高危血压紧急指引.html</p></div>
+        </div>
+        <!-- 录入成功 -->
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/add-record/%E5%BD%95%E5%85%A5%E6%88%90%E5%8A%9F%E5%8F%8D%E9%A6%88.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/录入成功反馈.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-emerald-500">Success</span><p class="meta-title">录入成功反馈</p><p class="meta-path">add-record/录入成功反馈.html</p></div>
+        </div>
+        <!-- 删除确认 -->
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/add-record/%E5%88%A0%E9%99%A4%E7%A1%AE%E8%AE%A4%E5%BC%B9%E7%AA%97.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/删除确认弹窗.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-red-500">Delete</span><p class="meta-title">记录删除确认</p><p class="meta-path">add-record/删除确认弹窗.html</p></div>
+        </div>
+        <!-- 家属只读 -->
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/records-page/%E5%85%A8%E9%83%A8%E8%AE%B0%E5%BD%95-%E5%AE%B6%E5%B1%9E%E5%8F%AA%E8%AF%BB%E6%80%81.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/全部记录-家属只读态.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-amber-500">Readonly</span><p class="meta-title">全部记录 (家属只读态)</p><p class="meta-path">records-page/全部记录-家属只读态.html</p></div>
+        </div>
+    </div>
+
+    <!-- 04. 记录回顾 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">04. 数据回顾与报告 / Analysis</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/records-page/%E8%A1%80%E5%8E%8B%E8%AE%B0%E5%BD%95%E6%9C%AC%20-%20%E5%85%A8%E9%83%A8%E8%AE%B0%E5%BD%95.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/血压记录本 - 全部记录.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">全部历史记录</p><p class="meta-path">records-page/全部记录.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/report-page/report-page.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/report-page.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Report</span><p class="meta-title">就诊报告导出页</p><p class="meta-path">report-page/report-page.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/report-page/%E6%9D%83%E9%99%90%E6%8C%BD%E5%9B%9E%E5%BC%B9%E7%AA%97.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/权限挽回弹窗.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Modal</span><p class="meta-title">相册权限挽回</p><p class="meta-path">report-page/权限挽回弹窗.html</p></div>
+        </div>
+    </div>
+
+    <!-- 05. 家庭协作 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">05. 家庭协作体系 / Family</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/family-page/%E8%A1%80%E5%8E%8B%E8%AE%B0%E5%BD%95%E6%9C%AC%20-%20%E5%AE%B6%E5%BA%AD%E7%AE%A1%E7%90%86%E6%9C%80%E7%BB%88%E7%89%88v.htm" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/血压记录本 - 家庭管理最终版v.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">家庭管理 (已建立)</p><p class="meta-path">family-page/家庭管理最终版v.htm</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/family-page/%E8%A1%80%E5%8E%8B%E8%AE%B0%E5%BD%95%E6%9C%AC%20-%20%E5%AE%B6%E5%BA%AD%E7%AE%A1%E7%90%86%20(%E7%A9%BA%E7%8A%B6%E6%80%81).html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/血压记录本 - 家庭管理 (空状态).html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Empty</span><p class="meta-title">家庭管理 (未建立)</p><p class="meta-path">family-page/家庭管理(空状态).html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/family-page/%E5%B7%B2%E5%8A%A0%E5%85%A5%E5%AE%B6%E5%BA%AD-%E6%97%A0%E6%95%B0%E6%8D%AE.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/已加入家庭-无数据.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Empty</span><p class="meta-title">已加入-无数据态</p><p class="meta-path">family-page/已加入家庭-无数据.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/family-page/%E4%BF%AE%E6%94%B9%E6%88%90%E5%91%98%E5%A4%87%E6%B3%A8.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/修改成员备注.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Modal</span><p class="meta-title">修改成员备注名</p><p class="meta-path">family-page/修改成员备注.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/invite-flow/%E9%82%80%E8%AF%B7%E5%AE%B6%E4%BA%BA%E6%B5%B7%E6%8A%A5.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/邀请家人海报.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Poster</span><p class="meta-title">邀请家人海报页</p><p class="meta-path">invite-flow/邀请家人海报.html</p></div>
+        </div>
+    </div>
+
+    <!-- 06. 邀请着陆 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">06. 邀请流转 / Flows</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/invite-flow/%E6%8E%A5%E5%8F%97%E9%82%80%E8%AF%B7%20-%20%E6%9C%80%E7%BB%88%E7%89%88%20v1.htm" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/接受邀请 - 最终版 v1.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Landing</span><p class="meta-title">接受邀请着陆页</p><p class="meta-path">...接受邀请 - 最终版 v1.htm</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/invite-flow/%E9%82%80%E8%AF%B7%E5%AE%B6%E4%BA%BA%E6%9F%A5%E7%9C%8B%20-%20%E6%9C%80%E7%BB%88%E7%89%88%20v1.htm" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/邀请家人查看 - 最终版 v1.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">发送邀请详情页</p><p class="meta-path">...邀请家人查看 - 最终版 v1.htm</p></div>
+        </div>
+    </div>
+
+    <!-- 07. 异常兜底 -->
+    <div class="section-header"><div class="section-dot"></div><h2 class="section-title">07. 异常与系统 / Defensive</h2></div>
+    <div class="horizontal-scroller">
+        <div class="preview-card">
+            <div class="device-wrapper border-red-500/20">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/exception/%E7%BD%91%E7%BB%9C%E5%BC%82%E5%B8%B8.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/网络异常.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-red-500">P0</span><p class="meta-title">全局网络异常</p><p class="meta-path">exception/网络异常.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper border-red-500/20">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/invite-flow/%E9%82%80%E8%AF%B7%E5%A4%B1%E6%95%88.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/邀请失效.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag bg-red-500">P0</span><p class="meta-title">邀请链接失效</p><p class="meta-path">invite-flow/邀请失效.html</p></div>
+        </div>
+        <div class="preview-card">
+            <div class="device-wrapper">
+                <a href="file:///Users/ella/Documents/Code/Demo/WeChatProjects/bp-monitor-mini-program-chatgpt/gemini/settings-page/settings-page.html" target="_blank" class="btn-open">FULL VIEW</a>
+                <div class="device-screen"><iframe src="./血压记录本 - 全量页面交互总画布 v4-1.0_files/settings-page.html"></iframe></div>
+            </div>
+            <div class="meta"><span class="type-tag">Page</span><p class="meta-title">系统设置首页</p><p class="meta-path">settings-page/settings-page.html</p></div>
+        </div>
+    </div>
+
+
+</body></html>

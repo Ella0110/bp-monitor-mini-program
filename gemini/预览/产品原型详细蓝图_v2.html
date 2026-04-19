@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>血压记录本 - 产品原型全流程详细蓝图 v2.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #F8FAFC; color: #1E293B; padding: 40px; }
+        
+        .flow-container { display: flex; flex-direction: column; gap: 60px; min-width: 1400px; }
+        .lane-title { font-size: 14px; font-weight: 900; color: #64748B; text-transform: uppercase; letter-spacing: 0.3em; border-left: 4px solid #3182F7; padding-left: 16px; margin-bottom: 30px; }
+        
+        /* 节点卡片样式库 */
+        .node-card { width: 220px; background: white; border-radius: 20px; padding: 16px; border: 1.5px solid #E2E8F0; position: relative; transition: all 0.2s; }
+        .node-card:hover { border-color: #3182F7; box-shadow: 0 10px 30px rgba(49, 130, 247, 0.1); }
+        
+        /* 类型标签 */
+        .type-tag { font-size: 9px; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+        .tag-page { background: #DBEAFE; color: #1E40AF; } /* 独立页 */
+        .tag-sheet { background: #F1F5F9; color: #475569; } /* 弹层 */
+        .tag-status { background: #DCFCE7; color: #166534; } /* 成功/反馈 */
+        .tag-error { background: #FEE2E2; color: #991B1B; } /* 拦截/错误 */
+        .tag-readonly { background: #FEF3C7; color: #92400E; } /* 只读 */
+
+        .node-title { font-size: 13px; font-weight: 700; color: #1E293B; line-height: 1.4; margin-bottom: 6px; }
+        .node-path { font-size: 9px; font-family: monospace; color: #94A3B8; word-break: break-all; }
+        
+        /* 流程线 */
+        .connector { height: 2px; width: 40px; background: #CBD5E1; align-self: center; position: relative; }
+        .connector::after { content: ''; position: absolute; right: -2px; top: -4px; border: 5px solid transparent; border-left-color: #CBD5E1; }
+        .cond-text { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 9px; font-weight: 700; color: #94A3B8; white-space: nowrap; }
+
+        /* 泳道布局 */
+        .flow-row { display: flex; align-items: flex-start; gap: 0; }
+        .group-box { border: 2px dashed #E2E8F0; border-radius: 32px; padding: 24px; display: flex; gap: 20px; position: relative; }
+        .group-label { position: absolute; top: -12px; left: 24px; background: #F8FAFC; padding: 0 8px; font-size: 10px; font-weight: 800; color: #94A3B8; }
+
+        .highlight-path { border-color: #3182F7; background: rgba(49, 130, 247, 0.02); }
+    </style>
+</head>
+<body>
+
+    <header class="mb-12 flex justify-between items-end">
+        <div>
+            <h1 class="text-4xl font-black tracking-tighter text-slate-900">产品原型详细蓝图 v2.0</h1>
+            <p class="text-slate-500 mt-2 font-medium">全路径逻辑闭环审查 & 交付开发标准地图</p>
+        </div>
+        <div class="flex gap-4">
+            <div class="bg-emerald-500 text-white px-6 py-3 rounded-2xl text-sm font-black uppercase shadow-lg shadow-emerald-100">Ready for Production</div>
+        </div>
+    </header>
+
+    <div class="flow-container">
+
+        <!-- A. 用户入场路径 -->
+        <section>
+            <h2 class="lane-title">01. 入场与初始化 (Onboarding Path)</h2>
+            <div class="flow-row">
+                <!-- 节点 1 -->
+                <div class="node-card highlight-path">
+                    <span class="type-tag tag-page">独立页面</span>
+                    <p class="node-title">微信授权登录</p>
+                    <p class="node-path">/login-page/微信授权登录.html</p>
+                </div>
+                <div class="connector"><span class="cond-text">首次/过期</span></div>
+                <!-- 节点 2 -->
+                <div class="node-card highlight-path">
+                    <span class="type-tag tag-page">独立页面</span>
+                    <p class="node-title">初始档案设置</p>
+                    <p class="node-path">/settings-page/初始档案设置.html</p>
+                </div>
+                <div class="connector"><span class="cond-text">完成设置</span></div>
+                <!-- 节点 3 -->
+                <div class="node-card highlight-path">
+                    <span class="type-tag tag-page">独立页面</span>
+                    <p class="node-title">数据首页 (空状态)</p>
+                    <p class="node-path">/data-page/数据页(空状态).html</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- B. 核心记录交互链路 -->
+        <section>
+            <h2 class="lane-title">02. 记录与反馈 (The Measurement Loop)</h2>
+            <div class="flow-row">
+                <div class="node-card highlight-path">
+                    <span class="type-tag tag-page">核心主页</span>
+                    <p class="node-title">数据首页 (含趋势图)</p>
+                    <p class="node-path">/data-page/数据页终版v1.htm</p>
+                </div>
+                <div class="connector"><span class="cond-text">点击 FAB</span></div>
+                <div class="node-card highlight-path">
+                    <span class="type-tag tag-sheet">半屏面板</span>
+                    <p class="node-title">快速录入面板 (键盘)</p>
+                    <p class="node-path">/add-record/快速录入版.html</p>
+                </div>
+                <div class="connector"><span class="cond-text">保存触发</span></div>
+                
+                <!-- 逻辑分支 -->
+                <div class="group-box">
+                    <span class="group-label">逻辑分支校验</span>
+                    <div class="node-card">
+                        <span class="type-tag tag-error">拦截态</span>
+                        <p class="node-title">录入校验错误提示</p>
+                        <p class="node-path">/add-record/录入校验错误态.html</p>
+                    </div>
+                    <div class="node-card">
+                        <span class="type-tag tag-error">高危干预</span>
+                        <p class="node-title">180+ 紧急指引弹窗</p>
+                        <p class="node-path">/add-record/高危血压紧急指引.html</p>
+                    </div>
+                    <div class="node-card">
+                        <span class="type-tag tag-status">成功反馈</span>
+                        <p class="node-title">录入成功 Toast</p>
+                        <p class="node-path">/add-record/录入成功反馈.html</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- C. 数据深度管理与分析 -->
+        <section>
+            <h2 class="lane-title">03. 数据回顾与报告 (Analysis Path)</h2>
+            <div class="flow-row">
+                <div class="node-card">
+                    <span class="type-tag tag-page">独立页面</span>
+                    <p class="node-title">全部历史记录清单</p>
+                    <p class="node-path">/records-page/全部记录.html</p>
+                </div>
+                <div class="connector"><span class="cond-text">长按/编辑</span></div>
+                <div class="node-card">
+                    <span class="type-tag tag-sheet">微型弹窗</span>
+                    <p class="node-title">记录删除确认</p>
+                    <p class="node-path">/add-record/删除确认弹窗.html</p>
+                </div>
+                <div class="connector"><span class="cond-text">点击生成</span></div>
+                <div class="node-card highlight-path">
+                    <span class="type-tag tag-page">专业输出</span>
+                    <p class="node-title">就诊报告导出页</p>
+                    <p class="node-path">/report-page/report-page.html</p>
+                </div>
+                <div class="connector"><span class="cond-text">拒权挽回</span></div>
+                <div class="node-card">
+                    <span class="type-tag tag-error">权限引导</span>
+                    <p class="node-title">相册权限挽回弹窗</p>
+                    <p class="node-path">/report-page/权限挽回弹窗.html</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- D. 家庭协作与角色权限 -->
+        <section>
+            <h2 class="lane-title">04. 家庭协作体系 (Collaboration Path)</h2>
+            <div class="flow-row">
+                <div class="group-box">
+                    <span class="group-label">成员发起端 (Admin)</span>
+                    <div class="node-card">
+                        <span class="type-tag tag-page">管理页</span>
+                        <p class="node-title">家庭管理主页</p>
+                        <p class="node-path">/family-page/家庭管理最终版v.htm</p>
+                    </div>
+                    <div class="connector"></div>
+                    <div class="node-card">
+                        <span class="type-tag tag-sheet">弹窗</span>
+                        <p class="node-title">修改成员备注名</p>
+                        <p class="node-path">/family-page/修改成员备注.html</p>
+                    </div>
+                    <div class="connector"></div>
+                    <div class="node-card">
+                        <span class="type-tag tag-page">视觉海报</span>
+                        <p class="node-title">邀请家人海报页</p>
+                        <p class="node-path">/invite-flow/邀请家人海报.html</p>
+                    </div>
+                </div>
+                
+                <div class="connector"><span class="cond-text">微信分享</span></div>
+
+                <div class="group-box">
+                    <span class="group-label">家人接收端 (Member)</span>
+                    <div class="node-card">
+                        <span class="type-tag tag-page">承接页</span>
+                        <p class="node-title">接受邀请着陆页</p>
+                        <p class="node-path">/invite-flow/接受邀请-终版.htm</p>
+                    </div>
+                    <div class="connector"></div>
+                    <div class="node-card">
+                        <span class="type-tag tag-readonly">角色视图</span>
+                        <p class="node-title">全部记录 (只读态)</p>
+                        <p class="node-path">/records-page/全部记录-家属只读态.html</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- E. 异常守护与系统设置 -->
+        <section>
+            <h2 class="lane-title">05. 异常与系统 (System & Error)</h2>
+            <div class="flow-row gap-6">
+                <div class="node-card">
+                    <span class="type-tag tag-error">P0 拦截</span>
+                    <p class="node-title">全局网络异常页</p>
+                    <p class="node-path">/exception/网络异常.html</p>
+                </div>
+                <div class="node-card">
+                    <span class="type-tag tag-error">P0 拦截</span>
+                    <p class="node-title">邀请失效/过期页</p>
+                    <p class="node-path">/invite-flow/邀请失效.html</p>
+                </div>
+                <div class="node-card">
+                    <span class="type-tag tag-page">设置页</span>
+                    <p class="node-title">测压提醒设置详情</p>
+                    <p class="node-path">/settings-page/测压提醒设置.html</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

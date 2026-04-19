@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 微信登录</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #3182F7;
+            --bg-slate: #EEF3FB;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(160deg, #F8FAFC 0%, #EEF3FB 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 80px 32px 40px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 40px;
+            box-shadow: 0 10px 40px rgba(49, 130, 247, 0.05);
+        }
+
+        .mesh-gradient {
+            position: absolute;
+            top: -10%; right: -10%;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(49, 130, 247, 0.1) 0%, transparent 70%);
+            z-index: 0;
+            filter: blur(40px);
+        }
+
+        .active-scale:active {
+            transform: scale(0.96);
+            transition: 0.1s;
+        }
+
+        .checkbox-custom:checked + label .check-box {
+            background-color: var(--brand-blue);
+            border-color: var(--brand-blue);
+        }
+    </style>
+</head>
+<body class="relative overflow-hidden">
+    <div class="mesh-gradient"></div>
+
+    <!-- 顶部：品牌形象 -->
+    <header class="text-center relative z-10">
+        <div class="w-20 h-20 bg-blue-600 rounded-[30px] shadow-xl shadow-blue-100 flex items-center justify-center text-white mx-auto mb-6">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+        <h1 class="text-3xl font-black tracking-tight text-slate-900 mb-2">血压记录本</h1>
+        <p class="text-sm font-medium text-slate-400">让关爱有迹可循</p>
+    </header>
+
+    <!-- 中部：功能利益点 -->
+    <main class="w-full glass-card p-10 relative z-10">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300 mb-8">登录后开启服务</h3>
+        <div class="space-y-6">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-width="2.5"></path></svg>
+                </div>
+                <div>
+                    <span class="block font-bold text-slate-800 text-sm">云端同步</span>
+                    <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Automatic Data Backup</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-width="2.5"></path></svg>
+                </div>
+                <div>
+                    <span class="block font-bold text-slate-800 text-sm">家庭协作</span>
+                    <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Connect with your family</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部：操作与合规 -->
+    <footer class="w-full relative z-10">
+        <button class="w-full bg-[#3182F7] text-white py-5 rounded-[24px] font-black text-lg shadow-xl shadow-blue-100 flex items-center justify-center gap-3 active-scale mb-6">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.93.55 3.73 1.5 5.26L2 22l4.83-1.46C8.24 21.42 10.05 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm4.5 13.5c-.24.66-1.23 1.21-1.73 1.27-.41.05-.93.08-2.65-.62-2.2-.9-3.62-3.14-3.73-3.29-.11-.15-.89-1.18-.89-2.26 0-1.08.57-1.61.77-1.83.2-.22.44-.28.59-.28.15 0 .3 0 .43.01.14.01.32-.05.5.38.18.43.62 1.51.68 1.63.06.12.09.26.01.42-.08.16-.12.26-.24.41-.12.14-.25.32-.36.43-.12.13-.25.27-.11.51.14.24.62 1.02 1.33 1.65.91.81 1.68 1.06 1.92 1.18.24.12.38.1.51-.05.13-.15.57-.66.72-.89.15-.23.3-.19.51-.11.21.08 1.33.63 1.56.74.23.11.38.17.44.27.06.1.06.58-.18 1.24z"/></svg>
+            微信一键授权
+        </button>
+
+        <!-- 隐私协议勾选 -->
+        <div class="flex items-center justify-center gap-2">
+            <input type="checkbox" id="privacy" class="checkbox-custom hidden" checked>
+            <label for="privacy" class="flex items-center gap-2 cursor-pointer">
+                <div class="check-box w-4 h-4 border-2 border-slate-200 rounded-md transition-colors flex items-center justify-center">
+                    <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4"></path></svg>
+                </div>
+                <span class="text-[10px] font-bold text-slate-400">我已阅读并同意 <span class="text-blue-500">隐私协议</span> 与 <span class="text-blue-500">服务条款</span></span>
+            </label>
+        </div>
+    </footer>
+
+</body>
+</html>

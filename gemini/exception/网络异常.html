@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>血压记录本 - 网络异常</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        :root { --brand-blue: #3182F7; --bg-slate: #EEF3FB; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(160deg, #F8FAFC 0%, #EEF3FB 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 40px; box-shadow: 0 10px 40px rgba(49, 130, 247, 0.05); }
+        .active-scale:active { transform: scale(0.96); transition: 0.1s; }
+        .rotate-anim { animation: rotate 2s linear infinite; display: none; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <main class="w-full max-w-[340px] glass-card p-12 text-center">
+        <!-- 异常插画 (模拟断开的线) -->
+        <div class="w-24 h-24 bg-slate-50 rounded-[32px] flex items-center justify-center mx-auto mb-8 text-slate-200">
+            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 4.243a5 5 0 010-7.072m0 0l2.829 2.829m-4.243 4.243L3 21M5.636 5.636a9 9 0 0112.728 0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+
+        <h1 class="text-2xl font-black tracking-tight text-slate-800 mb-4">网络开小差了</h1>
+        <p class="text-sm text-slate-400 font-medium leading-relaxed mb-10 px-4">
+            暂时无法连接到服务器，请检查您的手机网络或重试。
+        </p>
+
+        <button id="retry-btn" class="w-full bg-[#3182F7] text-white py-5 rounded-[24px] font-black text-lg shadow-xl shadow-blue-100 flex items-center justify-center gap-3 active-scale" onclick="handleRetry()">
+            <svg id="loading-icon" class="w-6 h-6 rotate-anim" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-width="3" stroke-linecap="round"></path></svg>
+            <span id="btn-text">点击重试</span>
+        </button>
+    </main>
+
+    <script>
+        function handleRetry() {
+            const btn = document.getElementById('retry-btn');
+            const icon = document.getElementById('loading-icon');
+            const text = document.getElementById('btn-text');
+            
+            icon.style.display = 'block';
+            text.innerText = '正在重试...';
+            btn.classList.add('opacity-80');
+            
+            // 模拟 2秒后恢复（原型演示）
+            setTimeout(() => {
+                icon.style.display = 'none';
+                text.innerText = '点击重试';
+                btn.classList.remove('opacity-80');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
